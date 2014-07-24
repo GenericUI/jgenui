@@ -1,0 +1,3 @@
+[submodule "libs/janxutils"]
+	path = libs/janxutils
+	url = https://github.com/NexusTools/janxutils.git
