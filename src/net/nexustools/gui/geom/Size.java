@@ -24,6 +24,18 @@ public class Size {
 	public float w;
 	public float h;
 	
+	public Size() {
+		this.w = 0;
+		this.h = 0;
+	}
+	public Size(Size size) {
+		this(size.w, size.h);
+	}
+	public Size(float w, float h) {
+		this.w = w;
+		this.h = h;
+	}
+	
 	public void set(float x, float y) {
 		this.w = x;
 		this.h = y;
@@ -36,4 +48,19 @@ public class Size {
 	public double distance(Size other) {
 		return Math.abs(other.w - w) + Math.abs(other.h - h);
 	}
+	
+	public Size clone() {
+		return new Size(this);
+	}
+
+	@Override
+	public String toString() {
+		return "Size[" + w + ", " + h + "]";
+	}
+
+	public Size max(Size other) {
+		return new Size(Math.max(w, other.w),
+						Math.max(h, other.h));
+	}
+	
 }

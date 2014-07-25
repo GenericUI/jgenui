@@ -50,4 +50,13 @@ public class Point {
 		return new Vec2f(this);
 	}
 	
+	public Point clone() {
+		return new Point(x, y);
+	}
+
+	@Override
+	public String toString() {
+		return "Point[" + x + ", " + y + "]";
+	}
+	
 }

@@ -19,7 +19,7 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Window extends Container {
+public interface Window extends StyleContainer {
 	
 	public String title();
 	public void setTitle(String title);

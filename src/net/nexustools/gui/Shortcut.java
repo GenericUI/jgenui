@@ -19,6 +19,16 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public class Shortcut {
+public interface Shortcut {
+	
+	public static enum Scope {
+		Platform,
+		Body,
+		Form,
+		Widget
+	}
+	
+	public Scope getScope();
+	public void setScope();
 	
 }

@@ -15,14 +15,16 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.event.ValueListener;
+
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface SingleInput<S, V> extends Input<V> {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	// Events
+	public void addSelectionListener(ValueListener<S, V> selectionListener);
+	public void removeSelectionListener(ValueListener<S, V> selectionListener);
 	
 }

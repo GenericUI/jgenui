@@ -13,16 +13,15 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.event;
 
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface EventListenerRedirect {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public boolean heavyForType(String type);
+	public void capturedEvent(String type, Event event);
 	
 }

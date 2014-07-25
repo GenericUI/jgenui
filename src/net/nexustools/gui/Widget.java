@@ -15,16 +15,21 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.event.EventListenerRedirect;
 import net.nexustools.gui.event.FocusListener;
 import net.nexustools.gui.event.MoveListener;
 import net.nexustools.gui.event.SizeListener;
 import net.nexustools.gui.event.VisibilityListener;
+import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
+import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.platform.Platform;
 import net.nexustools.gui.render.RenderTarget;
 import net.nexustools.gui.render.Renderable;
 import net.nexustools.gui.render.Renderer;
+import net.nexustools.gui.render.Style;
+import net.nexustools.gui.render.StyleSheet;
 
 /**
  *
@@ -38,6 +43,8 @@ public interface Widget extends RenderTarget, Renderable {
 	public boolean isVisible();
 	public boolean isOnscreen();
 	public void setVisible(boolean visible);
+	
+	public Menu contextMenu();
 	
 	public void show();
 	public void hide();
@@ -58,11 +65,26 @@ public interface Widget extends RenderTarget, Renderable {
 	public void removeVisibilityListener(VisibilityListener visibilityListener);
 	public void removeFocusListener(FocusListener focusListener);
 	
+	public void uninstallRedirect(EventListenerRedirect redirect);
+	public void installRedirect(EventListenerRedirect redirect);
+	
 	// Boundaries and Shape
-	public Shape getShape();
-	public Rect getBounds();
-	public Rect getVisibleBounds();
-	public Rect getTopLevelBounds();
+	public Point pos();
+	public Size size();
+	public Shape shape();
+	public Rect bounds();
+	public Rect visibleBounds();
+	public Rect topBounds();
+	
+	public void move(Point pos);
+	public void resize(Size size);
+	public void setBounds(Rect geom);
+	
+	public Size minimumSize();
+	public void setMinimumSize(Size size);
+	
+	public Size maximumSize();
+	public void setMaximumSize(Size size);
 	
 	// Heirarchy
 	public Container container();
@@ -71,6 +93,14 @@ public interface Widget extends RenderTarget, Renderable {
 	// Rendering
 	public Renderer renderer();
 	public void setRenderer(Renderer renderer);
+	
+	public StyleSheet activeStyleSheet();
+	
+	public void setPreferredSize(final Size prefSize);
+	public Size preferredSize();
+	
+	public void setStyle(Style style);
+	public Style style();
 	
 	// Implementation
 	public Platform platform();

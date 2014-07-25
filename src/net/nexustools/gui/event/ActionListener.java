@@ -13,16 +13,22 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.event;
+
+import java.util.EventListener;
 
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface ActionListener extends EventListener {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public static class ActionEvent<S> extends Event<S> {
+		public ActionEvent(S source) {
+			super(source);
+		}
+	}
+	
+	public void activated(ActionEvent event);
 	
 }

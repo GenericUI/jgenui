@@ -21,7 +21,7 @@ package net.nexustools.gui;
  */
 public interface ComboBox<I> extends List<I> {
 	
-	public boolean isStrict();
-	public void setStrict(boolean strict);
+	public boolean isEditable();
+	public void setEditable(boolean editable);
 	
 }

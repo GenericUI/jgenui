@@ -28,6 +28,9 @@ public class SwingLabel extends WidgetImpl<JLabel> implements Label {
     @Override
     protected JLabel create() {
         return new JLabel() {
+            {
+                setName("Label");
+            }
             @Override
             public void paint(Graphics g) {
                 if(!customRender((Graphics2D)g))

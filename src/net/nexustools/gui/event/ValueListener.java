@@ -13,16 +13,27 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.event;
+
+import java.util.EventListener;
 
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface ValueListener<V, S> extends EventListener {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public static class ValueEvent<V, S> extends Event<S> {
+		private final V value;
+		public ValueEvent(S source, V val) {
+			super(source);
+			this.value = val;
+		}
+		public V value() {
+			return value;
+		}
+	}
+	
+	public void valueChanged(ValueEvent<V, S> event);
 	
 }

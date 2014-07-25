@@ -15,10 +15,27 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.geom.Point;
+
 /**
  *
  * @author katelyn
  */
-public interface Menu extends Action {
+public interface Menu extends Iterable<MenuItem> {
+	
+	public void show();
+	public void show(Point at);
+	public void show(Widget from);
+	
+	public Shortcut getShortcut();
+	public void setShortcut(Shortcut shortcut);
+	
+	public void insertItem(MenuItem menuItem, int at);
+	public void insertMenu(Menu men, int at);
+	public void insertSeparator(int at);
+	
+	public void addItem(MenuItem menuItem);
+	public void addMenu(Menu menu);
+	public void addSeparator();
 	
 }

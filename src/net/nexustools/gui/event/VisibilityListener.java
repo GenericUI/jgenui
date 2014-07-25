@@ -21,18 +21,16 @@ import java.util.EventListener;
  *
  * @author katelyn
  */
-public interface VisibilityListener extends EventListener {
+public interface VisibilityListener<S> extends EventListener {
 	
-	public static class VisibilityEvent<Boolean> extends Event {
-		private final Boolean visible;
-		public VisibilityEvent(Boolean visible) {
+	public static class VisibilityEvent<S> extends Event<S> {
+		private final boolean visible;
+		public VisibilityEvent(S source, boolean visible) {
+			super(source);
 			this.visible = visible;
-		}
-		public Boolean size() {
-			return visible;
 		}
 	}
 	
-	public void visibilityChanged(VisibilityEvent event);
+	public void visibilityChanged(VisibilityEvent<S> event);
 	
 }

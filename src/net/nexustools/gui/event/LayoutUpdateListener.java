@@ -13,16 +13,23 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.event;
+
+import java.util.EventListener;
 
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface LayoutUpdateListener<S> extends EventListener {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public static class LayoutEvent<S> extends Event<S> {
+		public LayoutEvent(S source) {
+			super(source);
+		}
+	}
+	
+	public void layoutStart(LayoutEvent<S> event);
+	public void layoutFinished(LayoutEvent<S> event);
 	
 }

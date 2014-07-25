@@ -21,15 +21,13 @@ import net.nexustools.gui.Widget;
  *
  * @author katelyn
  */
-public class Event {
+public class Event<S> {
 	
-	Widget dispatcher;
-	private final long timestamp = System.currentTimeMillis();
+	public final S source;
+	public final long timestamp = System.currentTimeMillis();
 	
-	protected Event() {}
-	
-	public long timestamp() {
-		return timestamp;
+	protected Event(S source) {
+		this.source = source;
 	}
-    
+	
 }

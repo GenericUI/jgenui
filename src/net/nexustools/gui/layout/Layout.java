@@ -13,16 +13,19 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.layout;
+
+import net.nexustools.gui.Container;
+import net.nexustools.gui.geom.Size;
 
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface Layout {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public Size calculateMinimumSize(Container container);
+	public Size calculatePreferredSize(Container container);
+	public void update(Container container);
 	
 }

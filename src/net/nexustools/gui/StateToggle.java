@@ -19,10 +19,8 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface StateToggle<S, V> extends SingleInput<S, V> {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public void toggle();
 	
 }

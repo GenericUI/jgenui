@@ -7,6 +7,7 @@
 package net.nexustools.jgenui.examples;
 
 import net.nexustools.gui.event.SelectionListener;
+import net.nexustools.gui.layout.BoxLayout;
 import net.nexustools.gui.provider.swing.SwingBody;
 import net.nexustools.gui.provider.swing.SwingComboBox;
 
@@ -18,13 +19,11 @@ public class SwingThemeTester extends SwingBody {
     
     public static void main(String[] args) {
         (new SwingThemeTester()).show();
-        (new SwingThemeTester()).show();
-        (new SwingThemeTester()).show();
-        (new SwingThemeTester()).show();
     }
 
     public SwingThemeTester() {
         super("Swing Theme Tester");
+        setLayout(BoxLayout.Vertical);
         
         SwingComboBox<String> comboBox = new SwingComboBox();
         comboBox.addSelectionListener(new SelectionListener() {
@@ -33,6 +32,18 @@ public class SwingThemeTester extends SwingBody {
                 System.out.println("Selection Changed");
                 System.out.println(event.selection[0]);
                 
+                platform().setLAF((String) event.selection[0]);
+            }
+        });
+        comboBox.setOptions(platform().LAFs());
+        add(comboBox);
+        
+        comboBox = new SwingComboBox();
+        comboBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void selectionChanged(SelectionListener.SelectionEvent event) {
+                System.out.println("Selection Changed");
+                System.out.println(event.selection[0]);
                 platform().setLAF((String) event.selection[0]);
             }
         });

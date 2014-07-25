@@ -13,16 +13,18 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.render;
+
+import net.nexustools.gui.Widget;
 
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public class StyleSheet {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public Style createFor(Widget widget) {
+		return null;
+	}
 	
 }

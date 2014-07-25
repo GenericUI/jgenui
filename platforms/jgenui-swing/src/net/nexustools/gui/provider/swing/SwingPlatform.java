@@ -6,8 +6,12 @@
 
 package net.nexustools.gui.provider.swing;
 
+import java.awt.AWTEvent;
+import java.awt.EventQueue;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -28,6 +32,43 @@ import nexustools.io.format.StreamTokenizer;
  * @author katelyn
  */
 public class SwingPlatform extends Platform {
+    
+    public static class SwingEventQueue extends EventQueue {
+        private final ArrayList<Runnable> idleEvents = new ArrayList();
+        private Thread thisThread;
+        
+        public boolean onThread() {
+            return thisThread == Thread.currentThread();
+        }
+        
+        @Override
+        protected void dispatchEvent(AWTEvent event) {
+            thisThread = Thread.currentThread();
+            super.dispatchEvent(event);
+            testIdle();
+        }
+        
+        public void testIdle() {
+            if (peekEvent() == null) {
+                ListIterator<Runnable> li = idleEvents.listIterator(idleEvents.size());
+
+                while(li.hasPrevious()) {
+                    try {
+                        li.previous().run();
+                    } catch(RuntimeException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                idleEvents.clear();
+            }
+        }
+
+        private void onIdle(final Runnable run) {
+            idleEvents.add(run);
+            testIdle();
+        }
+    }
+    public static final SwingEventQueue eventQueue = new SwingEventQueue();
     
     public static SwingPlatform instance() {
         return (SwingPlatform)Platform.byClass(SwingPlatform.class);
@@ -105,14 +146,26 @@ public class SwingPlatform extends Platform {
     }
 
     @Override
-    public void invokeLater(Runnable run) {
-        SwingUtilities.invokeLater(run);
+    public void onIdle(final Runnable run) {
+        try {
+            act(new Runnable() {
+                @Override
+                public void run() {
+                    eventQueue.onIdle(run);
+                }
+            });
+        } catch (InvocationTargetException ex) {
+            ex.getCause().printStackTrace();
+        }
     }
 
     @Override
-    public void invokeAndWait(Runnable run) throws InvocationTargetException {
+    public void act(Runnable run) throws InvocationTargetException {
         try {
-            SwingUtilities.invokeAndWait(run);
+            if(EventQueue.isDispatchThread())
+                run.run();
+            else
+                eventQueue.invokeAndWait(run);
         } catch (InterruptedException ex) {
             Logger.getLogger(SwingPlatform.class.getName()).log(Level.SEVERE, null, ex);
         }

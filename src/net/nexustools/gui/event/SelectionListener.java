@@ -16,25 +16,25 @@
 package net.nexustools.gui.event;
 
 import java.util.EventListener;
-import net.nexustools.gui.List;
 
 /**
  *
  * @author katelyn
  */
-public interface SelectionListener extends EventListener {
+public interface SelectionListener<I, S> extends EventListener {
 	
-	public static class SelectionEvent<I, Size> extends Event {
+	public static class SelectionEvent<I, S> extends Event<S> {
 		public final I[] selection;
 		public final long start;
 		public final long stop;
-		public SelectionEvent(I[] selection, long start, long stop) {
+		public SelectionEvent(S source, I[] selection, long start, long stop) {
+			super(source);
 			this.selection = selection;
 			this.start = start;
 			this.stop = stop;
 		}
 	}
 	
-	public void selectionChanged(SelectionEvent event);
+	public void selectionChanged(SelectionEvent<I, S> event);
     
 }

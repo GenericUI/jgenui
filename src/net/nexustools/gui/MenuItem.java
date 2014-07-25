@@ -19,10 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Body extends Window {
-	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+public interface MenuItem extends Action {
 	
 }

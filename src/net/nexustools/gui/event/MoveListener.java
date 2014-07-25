@@ -16,23 +16,22 @@
 package net.nexustools.gui.event;
 
 import java.util.EventListener;
+import net.nexustools.gui.geom.Point;
 
 /**
  *
  * @author katelyn
  */
-public interface MoveListener extends EventListener {
+public interface MoveListener<S> extends EventListener {
 	
-	public static class MoveEvent<Point> extends Event {
-		private final Point pos;
-		public MoveEvent(Point pos) {
+	public static class MoveEvent<S> extends Event<S> {
+		public final Point pos;
+		public MoveEvent(S source, Point pos) {
+			super(source);
 			this.pos = pos;
-		}
-		public Point size() {
-			return pos;
 		}
 	}
 	
-	public void positionChanged(MoveEvent event);
+	public void positionChanged(MoveEvent<S> event);
 	
 }

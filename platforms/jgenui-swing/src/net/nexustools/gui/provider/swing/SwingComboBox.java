@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.nexustools.gui.provider.swing;
 
 import java.awt.Graphics;
@@ -26,6 +25,7 @@ import net.nexustools.gui.provider.swing.shared.WidgetImpl;
  */
 public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<I> {
 
+    private I[] options;
     public SwingComboBox() {
         super(SwingPlatform.instance());
     }
@@ -33,27 +33,46 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     @Override
     protected JComboBox create() {
         return new JComboBox() {
+            {
+                setName("ComboBox");
+            }
             @Override
             public void paint(Graphics g) {
-                if(!customRender((Graphics2D)g))
+                if (!customRender((Graphics2D) g)) {
                     super.paint(g);
+                }
             }
         };
     }
 
     @Override
-    public boolean isStrict() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean isEditable() {
+        return read(new Reader<Boolean>() {
+            @Override
+            public Boolean read() {
+                return component.isEditable();
+            }
+        });
     }
 
     @Override
-    public void setStrict(boolean strict) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setEditable(final boolean editable) {
+        act(new Runnable() {
+            @Override
+            public void run() {
+                component.setEditable(editable);
+            }
+        });
     }
 
     @Override
     public I[] options() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return read(new Reader<I[]>() {
+            @Override
+            public I[] read() {
+                return options;
+            }
+        });
     }
 
     @Override
@@ -61,6 +80,7 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
         act(new Runnable() {
             @Override
             public void run() {
+                SwingComboBox.this.options = options;
                 component.setModel(new DefaultComboBoxModel<I>(options));
             }
         });
@@ -69,7 +89,6 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     @Override
     public I[] selected() {
         return read(new Reader<I[]>() {
-
             @Override
             public I[] read() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -79,45 +98,73 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
 
     @Override
     public I value() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return read(new Reader<I>() {
+            @Override
+            public I read() {
+                return (I) component.getSelectedItem();
+            }
+        });
+    }
+
+    @Override
+    public void setValue(final I value) {
+        act(new Runnable() {
+            @Override
+            public void run() {
+                component.setSelectedItem(value);
+            }
+        });
     }
 
     private final ListenerProp<ItemListener> selectionListener = new ListenerProp<ItemListener>() {
         @Override
         public void connect() {
-            ItemListener eventListener = new ItemListener() {
-                private int index = component.getSelectedIndex();
-                
+            SwingComboBox.this.act(new Runnable() {
                 @Override
-                public void itemStateChanged(final ItemEvent e) {
-                    if(index == component.getSelectedIndex())
-                        return;
-                    
-                    index = component.getSelectedIndex();
-                    selectionDispatcher.dispatch(new EventDispatcher.Processor<SelectionListener, SelectionListener.SelectionEvent>() {
+                public void run() {
+                    ItemListener eventListener = new ItemListener() {
+                        private int index = component.getSelectedIndex();
+
                         @Override
-                        public SelectionListener.SelectionEvent create() {
-                            return new SelectionListener.SelectionEvent(component.getSelectedObjects(), index, index);
+                        public void itemStateChanged(final ItemEvent e) {
+                            if (index == component.getSelectedIndex()) {
+                                return;
+                            }
+
+                            index = component.getSelectedIndex();
+                            selectionDispatcher.dispatch(new EventDispatcher.Processor<SelectionListener, SelectionListener.SelectionEvent>() {
+                                @Override
+                                public SelectionListener.SelectionEvent create() {
+                                    return new SelectionListener.SelectionEvent(component, component.getSelectedObjects(), index, index);
+                                }
+
+                                @Override
+                                public void dispatch(SelectionListener listener, SelectionListener.SelectionEvent event) {
+                                    listener.selectionChanged(event);
+                                }
+                            });
                         }
-                        @Override
-                        public void dispatch(SelectionListener listener, SelectionListener.SelectionEvent event) {
-                            listener.selectionChanged(event);
-                        }
-                    });
+                    };
+
+                    component.addItemListener(eventListener);
+                    set(eventListener);
                 }
-            };
-            
-            component.addItemListener(eventListener);
-            set(eventListener);
+            });
+
         }
 
         @Override
         public void disconnect() {
-            component.removeItemListener(clear());
+            SwingComboBox.this.act(new Runnable() {
+                @Override
+                public void run() {
+                    component.removeItemListener(clear());
+                }
+            });
         }
     };
     public final PropDispatcher<SelectionListener, SelectionListener.SelectionEvent> selectionDispatcher = new PropDispatcher(selectionListener, platform());
-    
+
     @Override
     public void addSelectionListener(SelectionListener selectionListener) {
         selectionDispatcher.add(selectionListener);
@@ -127,5 +174,5 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     public void removeSelectionListener(SelectionListener selectionListener) {
         selectionDispatcher.remove(selectionListener);
     }
-    
+
 }

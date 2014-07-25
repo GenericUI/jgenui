@@ -149,7 +149,7 @@ public abstract class Platform extends DefaultRunQueue {
 	public abstract void setLAF(String laf);
 	public abstract String LAF();
 	
-	public abstract void invokeLater(Runnable run);
-	public abstract void invokeAndWait(Runnable run) throws InvocationTargetException;
+	public abstract void onIdle(Runnable run);
+	public abstract void act(Runnable run) throws InvocationTargetException;
     
 }

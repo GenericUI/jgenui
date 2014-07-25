@@ -15,14 +15,15 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.render.StyleSheet;
+
 /**
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface StyleContainer extends Container {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public StyleSheet stylesheet();
+	public void setStylesheet(StyleSheet styleSheet);
 	
 }

@@ -16,23 +16,22 @@
 package net.nexustools.gui.event;
 
 import java.util.EventListener;
+import net.nexustools.gui.geom.Size;
 
 /**
  *
  * @author katelyn
  */
-public interface SizeListener extends EventListener {
+public interface SizeListener<S> extends EventListener {
 	
-	public static class SizeEvent<Size> extends Event {
-		private final Size size;
-		public SizeEvent(Size size) {
+	public static class SizeEvent<S> extends Event<S> {
+		public final Size size;
+		public SizeEvent(S source, Size size) {
+			super(source);
 			this.size = size;
-		}
-		public Size size() {
-			return size;
 		}
 	}
 	
-	public void sizeChanged(SizeEvent event);
+	public void sizeChanged(SizeEvent<S> event);
 	
 }

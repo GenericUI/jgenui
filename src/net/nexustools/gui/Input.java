@@ -19,10 +19,9 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Body extends Window {
+public interface Input<V> extends Widget {
 	
-	public void setMainWidget(Widget mainWidget);
-	public Container mainContainer();
-	public Widget mainWidget();
+	public void setValue(V value);
+	public V value();
 	
 }

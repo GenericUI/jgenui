@@ -15,21 +15,18 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.MoveListener;
 import net.nexustools.gui.event.SelectionListener;
 
 /**
  *
  * @author katelyn
  */
-public interface List<I> extends Widget {
+public interface List<I> extends Input<I> {
 	
 	public I[] options();
 	public void setOptions(I[] options);
 	
 	public I[] selected();
-	
-	public I value();
 	
 	// Events
 	public void addSelectionListener(SelectionListener selectionListener);

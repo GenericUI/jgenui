@@ -15,6 +15,8 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.layout.Layout;
+
 /**
  *
  * @author katelyn
@@ -23,5 +25,8 @@ public interface Container extends Widget, Iterable<Widget> {
 	
 	public void add(Widget widget);
 	public void remove(Widget widget);
+	
+	public void setLayout(Layout layout);
+	public Layout layout();
 	
 }

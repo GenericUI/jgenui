@@ -21,24 +21,19 @@ import java.util.EventListener;
  *
  * @author katelyn
  */
-public interface FocusListener extends EventListener {
+public interface FocusListener<S> extends EventListener {
 	
-	public static class FocusEvent<Widget> extends Event {
-		private final Widget old;
-		private final Widget cur;
-		public FocusEvent(Widget old, Widget cur) {
+	public static class FocusEvent<S> extends Event<S> {
+		public final S old;
+		public final S cur;
+		public FocusEvent(S source, S old, S cur) {
+			super(source);
 			this.old = old;
 			this.cur = cur;
 		}
-		public Widget current() {
-			return cur;
-		}
-		public Widget last() {
-			return old;
-		}
 	}
 	
-	public void focusLost(FocusEvent event);
-	public void focusGained(FocusEvent event);
+	public void focusLost(FocusEvent<S> event);
+	public void focusGained(FocusEvent<S> event);
 	
 }
