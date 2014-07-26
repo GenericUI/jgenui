@@ -6,6 +6,7 @@
 
 package net.nexustools.gui.provider.swing;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JButton;
@@ -23,6 +24,10 @@ import net.nexustools.gui.provider.swing.shared.WidgetImpl;
 public class SwingButton extends WidgetImpl<JButton> implements Button {
     
     private class NativeButton extends JButton {
+        
+        public NativeButton() { // For consistency, buttons can expand infinitely by default
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        }
 
         @Override
         public void paint(Graphics g) {

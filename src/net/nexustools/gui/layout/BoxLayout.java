@@ -40,6 +40,7 @@ public class BoxLayout implements Layout {
 	}
 
 	public void update(Container container) {
+		System.out.println("Updating Layout");
 		switch(direction) {
 			case Horizontal:
 			{
@@ -92,9 +93,6 @@ public class BoxLayout implements Layout {
 	}
 
 	public Size calculatePreferredSize(Container container) {
-		System.out.println("calculatePreferredSize");
-		System.out.println(container);
-		System.out.println(direction);
 		Size size = new Size();
 		switch(direction) {
 			case Horizontal:
@@ -120,7 +118,6 @@ public class BoxLayout implements Layout {
 			}
 			break;
 		}
-		System.out.println(size);
 		return size;
 	}
 	
