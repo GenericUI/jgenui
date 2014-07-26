@@ -24,6 +24,8 @@ import net.nexustools.gui.Widget;
 import net.nexustools.gui.platform.Platform;
 import net.nexustools.gui.platform.PlatformException;
 import net.nexustools.gui.platform.RenderTargetSupportedException;
+import net.nexustools.gui.provider.swing.shared.ContainerImpl;
+import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
 import net.nexustools.gui.render.RenderTarget;
 import nexustools.io.format.StreamTokenizer;
 
@@ -141,7 +143,8 @@ public class SwingPlatform extends Platform {
                     
                     for(Window window : Window.getWindows()) {
                         SwingUtilities.updateComponentTreeUI(window);
-                        window.pack();
+                        if(window instanceof ContainerWrap)
+                            ((ContainerImpl)((ContainerWrap)window).getGenUIContainer()).invalidate();
                     }
                 }
             });

@@ -10,8 +10,10 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.LayoutManager2;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.event.DefaultEventDispatcher;
 import net.nexustools.gui.event.EventDispatcher;
@@ -31,11 +33,25 @@ public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
         public net.nexustools.gui.Container getGenUIContainer();
     }
     
-    public static class NativeLayout implements LayoutManager {
+    public static class NativeLayout implements LayoutManager2 {
+        
+        public static class Cache {
+            Dimension prefSize;
+            Dimension minSize;
+        }
         
         public final Layout layout;
+        public static final Dimension maxSize = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        public final WeakHashMap<Component, Cache> cacheMap = new WeakHashMap();
         public NativeLayout(Layout layout) {
             this.layout = layout;
+        }
+
+        @Override
+        public void addLayoutComponent(Component comp, Object constraints) {
+            System.out.println("addLayoutComponent");
+            System.out.println(comp);
+            System.out.println(constraints);
         }
 
         @Override
@@ -53,11 +69,18 @@ public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
 
         @Override
         public Dimension preferredLayoutSize(Container parent) {
+            Cache cache = cacheMap.get(parent);
+            if(cache == null) {
+                cache = new Cache();
+                cacheMap.put(parent, cache);
+            } else if(cache.prefSize != null)
+                return cache.prefSize;
+            
             try {
                 System.out.println("preferredLayoutSize");
                 Size size = layout.calculatePreferredSize(((ContainerWrap)parent).getGenUIContainer());
                 System.out.println(size);
-                return new Dimension((int)size.w, (int)size.h);
+                return cache.prefSize = new Dimension((int)size.w, (int)size.h);
             } catch(RuntimeException ex) {
                 ex.printStackTrace();
                 throw ex;
@@ -66,6 +89,13 @@ public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
 
         @Override
         public Dimension minimumLayoutSize(Container parent) {
+            Cache cache = cacheMap.get(parent);
+            if(cache == null) {
+                cache = new Cache();
+                cacheMap.put(parent, cache);
+            } else if(cache.minSize != null)
+                return cache.minSize;
+            
             try {
                 System.out.println("preferredLayoutSize");
                 Size size = layout.calculateMinimumSize(((ContainerWrap)parent).getGenUIContainer());
@@ -101,6 +131,30 @@ public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
                     listener.layoutFinished(event);
                 }
             });
+        }
+
+        @Override
+        public Dimension maximumLayoutSize(Container target) {
+            return maxSize;
+        }
+
+        @Override
+        public float getLayoutAlignmentX(Container target) {
+            return 0; // Not sure what these are for
+        }
+
+        @Override
+        public float getLayoutAlignmentY(Container target) {
+            return 0; // Not sure what these are for
+        }
+
+        @Override
+        public void invalidateLayout(Container target) {
+            cacheMap.remove(target);
+            ContainerImpl container = (ContainerImpl)((ContainerWrap)target).getGenUIContainer();
+            container = (ContainerImpl)container.container();
+            if(container != null)
+                container.invalidate();
         }
         
     }
