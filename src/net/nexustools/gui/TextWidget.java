@@ -21,7 +21,7 @@ package net.nexustools.gui;
  */
 public interface TextWidget extends Widget {
 	
-	public String getText();
+	public String text();
 	public void setText(String text);
 	
 }

@@ -6,10 +6,13 @@
 
 package net.nexustools.jgenui.examples;
 
+import net.nexustools.gui.event.ActionListener;
 import net.nexustools.gui.event.SelectionListener;
 import net.nexustools.gui.layout.BoxLayout;
 import net.nexustools.gui.provider.swing.SwingBody;
+import net.nexustools.gui.provider.swing.SwingButton;
 import net.nexustools.gui.provider.swing.SwingComboBox;
+import net.nexustools.gui.provider.swing.SwingLabel;
 
 /**
  *
@@ -34,6 +37,16 @@ public class SwingThemeTester extends SwingBody {
         });
         comboBox.setOptions(platform().LAFs());
         add(comboBox);
+        
+        SwingButton button = new SwingButton("Press Me");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void activated(ActionListener.ActionEvent event) {
+                SwingLabel label = new SwingLabel("You did what I said!");
+                add(label);
+            }
+        });
+        add(button);
     }
     
 }

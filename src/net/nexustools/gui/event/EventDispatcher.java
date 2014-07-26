@@ -16,6 +16,7 @@
 package net.nexustools.gui.event;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import nexustools.concurrent.ReadWriteLock;
 import nexustools.concurrent.ReadWriteLock.ProcessingActor;
 import nexustools.runtime.RunQueue;
@@ -24,9 +25,9 @@ import nexustools.runtime.RunQueue;
  *
  * @author katelyn
  */
-public abstract class EventDispatcher<R extends RunQueue, L, E extends Event> {
+public abstract class EventDispatcher<R extends RunQueue, L extends EventListener, E extends Event> {
 	
-	public static interface Processor<L, E extends Event> {
+	public static interface Processor<L extends EventListener, E extends Event> {
 		public E create();
 		public void dispatch(L listener, E event);
 	}

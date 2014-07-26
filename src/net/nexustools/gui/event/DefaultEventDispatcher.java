@@ -15,16 +15,14 @@
 
 package net.nexustools.gui.event;
 
-import java.util.ArrayList;
-import nexustools.concurrent.ReadWriteLock;
-import nexustools.concurrent.ReadWriteLock.ProcessingActor;
+import java.util.EventListener;
 import nexustools.runtime.RunQueue;
 
 /**
  *
  * @author katelyn
  */
-public class DefaultEventDispatcher<R extends RunQueue, L, E extends Event> extends EventDispatcher<R, L, E> {
+public class DefaultEventDispatcher<R extends RunQueue, L extends EventListener, E extends Event> extends EventDispatcher<R, L, E> {
 	
 	public DefaultEventDispatcher(R queue) {
 		super(queue);

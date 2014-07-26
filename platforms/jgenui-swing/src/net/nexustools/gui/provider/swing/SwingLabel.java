@@ -21,6 +21,10 @@ public class SwingLabel extends WidgetImpl<JLabel> implements Label {
     public SwingLabel() {
         this(SwingPlatform.instance());
     }
+    public SwingLabel(String text) {
+        this();
+        setText(text);
+    }
     SwingLabel(SwingPlatform platform) {
         super(platform);
     }
@@ -40,7 +44,7 @@ public class SwingLabel extends WidgetImpl<JLabel> implements Label {
     }
 
     @Override
-    public String getText() {
+    public String text() {
         return component.getText();
     }
 
