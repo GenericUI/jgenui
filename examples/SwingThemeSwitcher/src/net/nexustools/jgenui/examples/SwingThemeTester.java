@@ -29,21 +29,6 @@ public class SwingThemeTester extends SwingBody {
         comboBox.addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(SelectionListener.SelectionEvent event) {
-                System.out.println("Selection Changed");
-                System.out.println(event.selection[0]);
-                
-                platform().setLAF((String) event.selection[0]);
-            }
-        });
-        comboBox.setOptions(platform().LAFs());
-        add(comboBox);
-        
-        comboBox = new SwingComboBox();
-        comboBox.addSelectionListener(new SelectionListener() {
-            @Override
-            public void selectionChanged(SelectionListener.SelectionEvent event) {
-                System.out.println("Selection Changed");
-                System.out.println(event.selection[0]);
                 platform().setLAF((String) event.selection[0]);
             }
         });

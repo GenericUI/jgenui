@@ -120,24 +120,34 @@ public class SwingPlatform extends Platform {
     }
     
     @Override
-    public void setLAF(String laf) {
-        boolean foundLAF = false;
-        UIManager.LookAndFeelInfo[] lookAndFeels = UIManager.getInstalledLookAndFeels();
-        for(int i=0; i<lookAndFeels.length; i++) {
-            if(lookAndFeels[i].getName().equals(laf))
-                try {
-                    UIManager.setLookAndFeel(lookAndFeels[i].getClassName());
-                    foundLAF = true;
-                    break;
-                } catch (ClassNotFoundException ex) {} catch (InstantiationException ex) {} catch (IllegalAccessException ex) {} catch (UnsupportedLookAndFeelException ex) {}
-        }
-        if(!foundLAF)
-            return;
-        
-        for(Window window : Window.getWindows()) {
-            SwingUtilities.updateComponentTreeUI(window);
-            window.pack();
-        }
+    public void setLAF(final String laf) {
+        try {
+            act(new Runnable() {
+                
+                @Override
+                public void run() {
+                    boolean foundLAF = false;
+                    UIManager.LookAndFeelInfo[] lookAndFeels = UIManager.getInstalledLookAndFeels();
+                    for(int i=0; i<lookAndFeels.length; i++) {
+                        if(lookAndFeels[i].getName().equals(laf))
+                            try {
+                                UIManager.setLookAndFeel(lookAndFeels[i].getClassName());
+                                foundLAF = true;
+                                break;
+                            } catch (ClassNotFoundException ex) {} catch (InstantiationException ex) {} catch (IllegalAccessException ex) {} catch (UnsupportedLookAndFeelException ex) {}
+                    }
+                    if(!foundLAF)
+                        return;
+                    
+                    for(Window window : Window.getWindows()) {
+                        SwingUtilities.updateComponentTreeUI(window);
+                        window.pack();
+                    }
+                }
+            });
+        } catch (InvocationTargetException ex) {
+            ex.getCause().printStackTrace();
+        }  
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import net.nexustools.gui.Container;
+import net.nexustools.gui.event.LayoutListener;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 
 /**

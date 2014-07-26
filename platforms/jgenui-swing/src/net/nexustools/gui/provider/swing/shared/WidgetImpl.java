@@ -35,6 +35,7 @@ import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.provider.swing.SwingPlatform;
+import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
 import net.nexustools.gui.render.Painter;
 import net.nexustools.gui.render.Renderer;
 import net.nexustools.gui.render.Style;
@@ -315,7 +316,15 @@ public abstract class WidgetImpl<J extends Component> {
     }
 
     public Container container() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        java.awt.Container container = component.getParent();
+        while(container != null) {
+            if(container instanceof ContainerWrap)
+                return ((ContainerWrap)container).getGenUIContainer();
+            
+            container = container.getParent();
+        }
+        
+        return null;
     }
 
     public Container topLevel() {

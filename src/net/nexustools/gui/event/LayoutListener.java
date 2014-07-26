@@ -13,24 +13,23 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.event;
 
-import net.nexustools.gui.event.LayoutListener;
-import net.nexustools.gui.layout.Layout;
+import java.util.EventListener;
 
 /**
  *
  * @author katelyn
  */
-public interface Container extends Widget, Iterable<Widget> {
+public interface LayoutListener<S> extends EventListener {
 	
-	public void add(Widget widget);
-	public void remove(Widget widget);
+	public static class LayoutEvent<S> extends Event<S> {
+		public LayoutEvent(S source) {
+			super(source);
+		}
+	}
 	
-	public void addLayoutListener(LayoutListener listener);
-	public void removeLayoutListener(LayoutListener listener);
-	
-	public void setLayout(Layout layout);
-	public Layout layout();
+	public void layoutStart(LayoutEvent<S> event);
+	public void layoutFinished(LayoutEvent<S> event);
 	
 }

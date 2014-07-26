@@ -6,25 +6,21 @@
 
 package net.nexustools.gui.provider.swing;
 
-import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Window;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
 import net.nexustools.gui.Widget;
-import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
 import net.nexustools.gui.render.StyleSheet;
 
 /**
@@ -41,15 +37,13 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
     
     private static CloseMode exitOnCloseMode = CloseMode.ExitOnNoWindows;
     
-    private class NativeBody extends JFrame {
+    private class NativeBody extends JFrame implements ContainerWrap {
 
         public NativeBody() {
             setName("Body");
             addWindowListener(new WindowListener() {
-
                 @Override
                 public void windowOpened(WindowEvent e) {}
-
                 @Override
                 public void windowClosing(WindowEvent e) {
                     System.out.println(exitOnCloseMode.toString());
@@ -81,19 +75,14 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                     if(canExit)
                         System.exit(0);
                 }
-
                 @Override
                 public void windowClosed(WindowEvent e) {}
-
                 @Override
                 public void windowIconified(WindowEvent e) {}
-
                 @Override
                 public void windowDeiconified(WindowEvent e) {}
-
                 @Override
                 public void windowActivated(WindowEvent e) {}
-
                 @Override
                 public void windowDeactivated(WindowEvent e) {}
             });
@@ -106,11 +95,8 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
         }
 
         @Override
-        public void pack() {
-            setMinimumSize(null);
-            doLayout();
-            super.pack();
-            setMinimumSize(getSize());
+        public Container getGenUIContainer() {
+            return SwingBody.this;
         }
 
     }
@@ -178,56 +164,61 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
     public void setLayout(Layout layout) {
         mainContainer().setLayout(layout); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void invalidate() {
+        act(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Invalidating Window");
+
+                Insets inserts = component.getInsets();
+                java.awt.Container container = component.getContentPane();
+
+                Dimension size = container.getMinimumSize();
+                size.height += inserts.top + inserts.bottom;
+                size.width += inserts.left + inserts.right;
+                component.setMinimumSize(size);
+
+                size = container.getMaximumSize();
+                size.height += inserts.top + inserts.bottom;
+                size.width += inserts.left + inserts.right;
+                component.setMaximumSize(size);
+
+                size = container.getPreferredSize();
+                size.height += inserts.top + inserts.bottom;
+                size.width += inserts.left + inserts.right;
+                component.setPreferredSize(size);
+            }
+        });
+                
+    }
     
+    
+    @Override
     public void setMainWidget(final Widget mainWidget) {
         act(new Runnable() {
             @Override
             public void run() {
+                java.awt.Container container = component.getContentPane();
+                
                 SwingBody.this.mainWidget = mainWidget;
                 if(mainWidget instanceof ContainerImpl)
-                    component.setContentPane((java.awt.Container) ((ContainerImpl)mainWidget).component);
+                    container = (java.awt.Container) ((ContainerImpl)mainWidget).component;
                 else
-                    component.setContentPane(new JPanel() {
-                        {
-                            final Component component = ((WidgetImpl)mainWidget).component;
-                            addComponentListener(new ComponentListener() {
-                                @Override
-                                public void componentResized(ComponentEvent e) {
-                                    component.setSize(getSize());
-                                }
-                                @Override
-                                public void componentMoved(ComponentEvent e) {}
-                                @Override
-                                public void componentShown(ComponentEvent e) {}
-                                @Override
-                                public void componentHidden(ComponentEvent e) {}
-                            });
-                            add(component);
-                        }
-                    });
+                    throw new UnsupportedOperationException("Not supported yet.");
+                
+                component.setContentPane(container);
             }
         });
     }
+    @Override
     public Container mainContainer() {
         return read(new Reader<Container>() {
             @Override
             public Container read() {
-                if(!(mainWidget instanceof Container)) {
-                    SwingContainer sContainer = new SwingContainer() {
-                        @Override
-                        public void setPreferredSize(Size prefSize) {
-                            System.out.println("Updating Minimum Size");
-                            System.out.println(prefSize);
-                            
-                            super.setPreferredSize(prefSize);
-                            setMinimumSize(minimumSize().max(prefSize));
-                            SwingBody.this.component.invalidate();
-                        }
-                    };
-                    mainWidget = sContainer;
-                    
-                    component.setContentPane(sContainer.component);
-                }
+                if(!(mainWidget instanceof Container))
+                    setMainWidget(mainWidget = new SwingContainer());
                 
                 return (Container) mainWidget;
             }

@@ -15,21 +15,22 @@
 
 package net.nexustools.gui.event;
 
-import java.util.EventListener;
+import java.util.ArrayList;
+import nexustools.concurrent.ReadWriteLock;
+import nexustools.concurrent.ReadWriteLock.ProcessingActor;
+import nexustools.runtime.RunQueue;
 
 /**
  *
  * @author katelyn
  */
-public interface LayoutUpdateListener<S> extends EventListener {
+public class DefaultEventDispatcher<R extends RunQueue, L, E extends Event> extends EventDispatcher<R, L, E> {
 	
-	public static class LayoutEvent<S> extends Event<S> {
-		public LayoutEvent(S source) {
-			super(source);
-		}
+	public DefaultEventDispatcher(R queue) {
+		super(queue);
 	}
 	
-	public void layoutStart(LayoutEvent<S> event);
-	public void layoutFinished(LayoutEvent<S> event);
+	public void connect() {}
+	public void disconnect() {}
 	
 }

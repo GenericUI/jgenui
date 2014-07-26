@@ -40,7 +40,6 @@ public class BoxLayout implements Layout {
 	}
 
 	public void update(Container container) {
-		System.out.println("update");
 		switch(direction) {
 			case Horizontal:
 			{
