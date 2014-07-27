@@ -12,13 +12,17 @@ import net.nexustools.gui.layout.BoxLayout;
 import net.nexustools.gui.provider.swing.SwingBody;
 import net.nexustools.gui.provider.swing.SwingButton;
 import net.nexustools.gui.provider.swing.SwingComboBox;
+import net.nexustools.gui.provider.swing.SwingContainer;
 import net.nexustools.gui.provider.swing.SwingLabel;
+import net.nexustools.gui.provider.swing.SwingStringInput;
 
 /**
  *
  * @author katelyn
  */
 public class SwingThemeTester extends SwingBody {
+    
+    public static final String[] stargateNames = new String[]{"Teal'c", "Daniel", "Jack", "Samantha"};
     
     public static void main(String[] args) {
         (new SwingThemeTester()).show();
@@ -28,25 +32,23 @@ public class SwingThemeTester extends SwingBody {
         super("Swing Theme Tester");
         setLayout(BoxLayout.Vertical);
         
+        SwingContainer container = new SwingContainer(BoxLayout.Horizontal);
+        
         SwingComboBox<String> comboBox = new SwingComboBox();
-        comboBox.addSelectionListener(new SelectionListener() {
-            @Override
-            public void selectionChanged(SelectionListener.SelectionEvent event) {
-                platform().setLAF((String) event.selection[0]);
-            }
-        });
-        comboBox.setOptions(platform().LAFs());
+        comboBox.setOptions(stargateNames);
+        comboBox.setEditable(true);
+        add(comboBox);
+        comboBox = new SwingComboBox();
+        comboBox.setOptions(stargateNames);
+        comboBox.setEditable(true);
+        comboBox.setEnabled(false);
         add(comboBox);
         
-        SwingButton button = new SwingButton("Press Me");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void activated(ActionListener.ActionEvent event) {
-                SwingLabel label = new SwingLabel("You did what I said!");
-                add(label);
-            }
-        });
-        add(button);
+        SwingStringInput swingLineInput = new SwingStringInput();
+        add(swingLineInput);
+        swingLineInput = new SwingStringInput();
+        swingLineInput.setEnabled(false);
+        add(swingLineInput);
     }
     
 }

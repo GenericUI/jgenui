@@ -15,12 +15,20 @@
 
 package net.nexustools.gui.render;
 
+import java.util.ListIterator;
+import net.nexustools.gui.geom.Rect;
+import net.nexustools.gui.geom.Shape;
+
 /**
  *
  * @author katelyn
  */
 public interface Renderable {
 	
-	public abstract void render(Painter p);
+	public Shape shape();
+	public Rect bounds();
+	public void render(Painter p);
+	public void optimize(ListIterator<Painter.Instruction> instructions);
+	public void pushRedraw(Painter.Instruction[] instructions);
 	
 }

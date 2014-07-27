@@ -21,14 +21,7 @@ import net.nexustools.gui.geom.Point;
  *
  * @author katelyn
  */
-public interface Menu extends Iterable<MenuItem> {
-	
-	public void show();
-	public void show(Point at);
-	public void show(Widget from);
-	
-	public Shortcut getShortcut();
-	public void setShortcut(Shortcut shortcut);
+public interface Menu extends AbstractMenu {
 	
 	public void insertItem(MenuItem menuItem, int at);
 	public void insertMenu(Menu men, int at);

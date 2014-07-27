@@ -13,12 +13,12 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.render;
 
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public class Font {
+	
 }

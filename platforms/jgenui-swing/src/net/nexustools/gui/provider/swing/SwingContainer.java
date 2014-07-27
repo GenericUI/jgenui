@@ -10,14 +10,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import net.nexustools.gui.Container;
-import net.nexustools.gui.event.LayoutListener;
+import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 
 /**
  *
  * @author katelyn
  */
-class SwingContainer extends ContainerImpl<java.awt.Container> implements net.nexustools.gui.Container {
+public class SwingContainer extends ContainerImpl<JPanel> implements net.nexustools.gui.Container {
 
     public class NativeContainer extends JPanel implements ContainerWrap {
 
@@ -45,9 +45,13 @@ class SwingContainer extends ContainerImpl<java.awt.Container> implements net.ne
     public SwingContainer() {
         this(SwingPlatform.instance());
     }
+    public SwingContainer(Layout layout) {
+        this();
+        setLayout(layout);
+    }
 
     @Override
-    protected java.awt.Container create() {
+    protected JPanel create() {
         return new NativeContainer();
     }
 

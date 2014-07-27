@@ -19,9 +19,9 @@ package net.nexustools.gui.event;
  *
  * @author katelyn
  */
-public interface EventListenerRedirect {
+public interface EventListenerRedirect<S> {
 	
 	public boolean heavyForType(String type);
-	public void capturedEvent(String type, Event event);
+	public void capturedEvent(String type, Event<S> event);
 	
 }

@@ -15,7 +15,6 @@
 
 package net.nexustools.gui.geom;
 
-import java.util.Iterator;
 import java.util.ListIterator;
 
 /**

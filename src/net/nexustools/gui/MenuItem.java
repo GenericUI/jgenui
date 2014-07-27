@@ -19,6 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface MenuItem extends Action {
+public interface MenuItem extends Action, Base {
 	
 }

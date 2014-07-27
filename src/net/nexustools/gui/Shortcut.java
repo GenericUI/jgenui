@@ -28,7 +28,7 @@ public interface Shortcut {
 		Widget
 	}
 	
-	public Scope getScope();
+	public Scope scope();
 	public void setScope();
 	
 }

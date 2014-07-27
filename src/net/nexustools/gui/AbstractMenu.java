@@ -15,10 +15,19 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.geom.Point;
+
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface AbstractMenu extends Iterable<MenuItem>, Base {
+	
+	public void show();
+	public void show(Point at);
+	public void show(Widget from);
+	
+	public Shortcut getShortcut();
+	public void setShortcut(Shortcut shortcut);
+	
 }

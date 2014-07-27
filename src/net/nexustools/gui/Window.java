@@ -19,12 +19,12 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Window extends StyleContainer {
-	
-	public String title();
-	public void setTitle(String title);
+public interface Window extends Frame, StyleRoot {
 	
 	public Menu menu(String pos);
 	public void addMenu(String pos, Menu menu);
+	
+	public void addToolbar(Toolbar toolbar);
+	public void removeToolbar(Toolbar toolbar);
 	
 }

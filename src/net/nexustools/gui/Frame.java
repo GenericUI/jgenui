@@ -19,6 +19,9 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface Frame extends Container {
+	
+	public String title();
+	public void setTitle(String title);
+	
 }

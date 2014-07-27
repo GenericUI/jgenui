@@ -16,9 +16,8 @@
 package net.nexustools.gui;
 
 /**
- *
+ * A base GenUI object
+ * 
  * @author katelyn
  */
-public interface Image extends Widget {
-
-}
+public interface Base {}

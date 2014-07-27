@@ -25,7 +25,6 @@ import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.platform.Platform;
-import net.nexustools.gui.render.RenderTarget;
 import net.nexustools.gui.render.Renderable;
 import net.nexustools.gui.render.Renderer;
 import net.nexustools.gui.render.Style;
@@ -35,7 +34,7 @@ import net.nexustools.gui.render.StyleSheet;
  *
  * @author katelyn
  */
-public interface Widget extends RenderTarget, Renderable {
+public interface Widget extends Renderable, Base {
 	
 	public String tag();
 	public void setTag(String name);
@@ -55,18 +54,18 @@ public interface Widget extends RenderTarget, Renderable {
 	public void removeClass(String clazz);
 	
 	// Events
-	public void addMoveListener(MoveListener moveListener);
-	public void addSizeListener(SizeListener sizeListener);
-	public void addVisibilityListener(VisibilityListener visibilityListener);
-	public void addFocusListener(FocusListener focusListener);
+	public void addMoveListener(MoveListener<Widget> moveListener);
+	public void addSizeListener(SizeListener<Widget> sizeListener);
+	public void addVisibilityListener(VisibilityListener<Widget> visibilityListener);
+	public void addFocusListener(FocusListener<Widget> focusListener);
 	
-	public void removeMoveListener(MoveListener moveListener);
-	public void removeSizeListener(SizeListener sizeListener);
-	public void removeVisibilityListener(VisibilityListener visibilityListener);
-	public void removeFocusListener(FocusListener focusListener);
+	public void removeMoveListener(MoveListener<Widget> moveListener);
+	public void removeSizeListener(SizeListener<Widget> sizeListener);
+	public void removeVisibilityListener(VisibilityListener<Widget> visibilityListener);
+	public void removeFocusListener(FocusListener<Widget> focusListener);
 	
-	public void uninstallRedirect(EventListenerRedirect redirect);
-	public void installRedirect(EventListenerRedirect redirect);
+	public void uninstallRedirect(EventListenerRedirect<Widget> redirect);
+	public void installRedirect(EventListenerRedirect<Widget> redirect);
 	
 	// Boundaries and Shape
 	public Point pos();
@@ -92,9 +91,13 @@ public interface Widget extends RenderTarget, Renderable {
 	
 	// Rendering
 	public Renderer renderer();
+	public Renderer defaultRenderer();
 	public void setRenderer(Renderer renderer);
 	
 	public StyleSheet activeStyleSheet();
+	
+	public boolean enabled();
+	public void setEnabled(boolean enabled);
 	
 	public void setPreferredSize(final Size prefSize);
 	public Size preferredSize();

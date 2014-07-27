@@ -18,16 +18,28 @@ import javax.swing.SwingUtilities;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
+import net.nexustools.gui.Toolbar;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 import net.nexustools.gui.render.StyleSheet;
+import net.nexustools.gui.render.Transform;
 
 /**
  *
  * @author katelyn
  */
 public class SwingBody extends ContainerImpl<JFrame> implements Body {
+
+    @Override
+    public void addToolbar(Toolbar toolbar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeToolbar(Toolbar toolbar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     public static enum CloseMode {
         DontExitOnClose,

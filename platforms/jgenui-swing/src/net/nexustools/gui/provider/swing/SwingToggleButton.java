@@ -10,16 +10,17 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
 import net.nexustools.gui.Button;
-import net.nexustools.gui.provider.swing.shared.ButtonImpl;
+import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingButton extends ButtonImpl<JButton> implements Button {
+public class SwingToggleButton extends ToggleButtonImpl<JToggleButton> implements Button {
     
-    private class NativeButton extends JButton {
+    private class NativeButton extends JToggleButton {
         
         public NativeButton() { // For consistency, buttons can expand infinitely by default
             setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
@@ -33,19 +34,19 @@ public class SwingButton extends ButtonImpl<JButton> implements Button {
         
     }
 
-    public SwingButton() {
+    public SwingToggleButton() {
         this(SwingPlatform.instance());
     }
-    public SwingButton(String text) {
+    public SwingToggleButton(String text) {
         this();
         setText(text);
     }
-    SwingButton(SwingPlatform platform) {
+    SwingToggleButton(SwingPlatform platform) {
         super(platform);
     }
 
     @Override
-    protected JButton create() {
+    protected JToggleButton create() {
         return new NativeButton();
     }
     

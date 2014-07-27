@@ -15,23 +15,13 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.ActionListener;
-
 /**
  *
  * @author katelyn
  */
-public interface Action {
+public interface Action extends Activateable, Base {
 	
 	public String text();
 	public void setText(String text);
-	
-	public Shortcut shortcut();
-	public void setShortcut(Shortcut shortcut);
-	
-	public void addActionListener(ActionListener actionListener);
-	public void removeActionListener(ActionListener actionListener);
-	
-	public void activate();
 	
 }

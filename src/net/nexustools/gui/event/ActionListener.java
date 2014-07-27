@@ -16,19 +16,21 @@
 package net.nexustools.gui.event;
 
 import java.util.EventListener;
+import net.nexustools.gui.Action;
+import net.nexustools.gui.Activateable;
 
 /**
  *
  * @author katelyn
  */
-public interface ActionListener extends EventListener {
+public interface ActionListener<S extends Activateable> extends EventListener {
 	
-	public static class ActionEvent<S> extends Event<S> {
+	public static class ActionEvent<S extends Activateable> extends Event<S> {
 		public ActionEvent(S source) {
 			super(source);
 		}
 	}
 	
-	public void activated(ActionEvent event);
+	public void activated(ActionEvent<S> event);
 	
 }

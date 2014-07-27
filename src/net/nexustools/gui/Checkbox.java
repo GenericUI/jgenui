@@ -19,6 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Checkbox {
+public interface Checkbox extends Button {
 	
 }

@@ -15,10 +15,10 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.render.Font;
+
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
-}
+public interface FontSelector extends Input<Font> {}

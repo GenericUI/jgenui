@@ -19,6 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Button extends TextWidget, Action {
+public interface Button extends TextWidget, Activateable {
 	
 }

@@ -13,19 +13,10 @@
  * 
  */
 
-package net.nexustools.gui.render;
-
-import java.util.ListIterator;
-import net.nexustools.gui.geom.Shape;
+package net.nexustools.gui;
 
 /**
  *
  * @author katelyn
  */
-public interface RenderTarget {
-	
-	public Shape shape();
-	public void optimize(ListIterator<Painter.Instruction> instructions);
-	public void pushRedraw(Painter.Instruction[] instructions);
-	
-}
+public interface RadioButton extends Button {}

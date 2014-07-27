@@ -15,10 +15,23 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.event.ActionListener;
+
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface Activateable {
+	
+	public Shortcut shortcut();
+	public void setShortcut(Shortcut shortcut);
+	
+	public void addActionListener(ActionListener actionListener);
+	public void removeActionListener(ActionListener actionListener);
+	
+	public boolean selectable();
+	public boolean isSelected();
+	
+	public void activate();
+	
 }

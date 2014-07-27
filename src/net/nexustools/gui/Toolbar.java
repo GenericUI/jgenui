@@ -19,6 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface Toolbar {
+	
 }

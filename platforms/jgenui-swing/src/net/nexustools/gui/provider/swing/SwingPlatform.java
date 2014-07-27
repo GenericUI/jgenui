@@ -14,10 +14,13 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JCheckBox;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import net.nexustools.gui.Base;
 import net.nexustools.gui.Body;
+import net.nexustools.gui.Button;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Label;
 import net.nexustools.gui.Widget;
@@ -26,7 +29,6 @@ import net.nexustools.gui.platform.PlatformException;
 import net.nexustools.gui.platform.RenderTargetSupportedException;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
-import net.nexustools.gui.render.RenderTarget;
 import nexustools.io.format.StreamTokenizer;
 
 /**
@@ -83,11 +85,13 @@ public class SwingPlatform extends Platform {
     }
 
     @Override
-    public RenderTarget create(Class<? extends RenderTarget> type) throws RenderTargetSupportedException {
+    public Base create(Class<? extends Base> type) throws RenderTargetSupportedException {
         if(type == Container.class)
             return new SwingContainer(this);
         else if(type == Label.class)
             return new SwingLabel(this);
+        else if(type == Button.class)
+            return new SwingButton(this);
         else if(type == Body.class)
             return new SwingBody(this);
         

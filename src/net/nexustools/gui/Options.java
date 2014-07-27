@@ -15,10 +15,21 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.event.SelectionListener;
+
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface Options<I> {
+	
+	public I[] options();
+	public void setOptions(I... options);
+	
+	public I[] selected();
+	
+	// Events
+	public void addSelectionListener(SelectionListener selectionListener);
+	public void removeSelectionListener(SelectionListener selectionListener);
+	
 }

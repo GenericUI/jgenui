@@ -15,10 +15,15 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.render.Renderer;
+
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface Canvas extends Widget {
+	
+	public Renderer overlayRenderer();
+	public void setOverlayRenderer(Renderer renderer);
+	
 }

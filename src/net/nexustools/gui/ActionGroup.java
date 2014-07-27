@@ -19,6 +19,11 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface ActionGroup extends Iterable<Button> {
+	
+	public void add(Action action);
+	public void remove(Action action);
+	
+	public Action active();
+    
 }

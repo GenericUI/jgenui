@@ -21,6 +21,9 @@ package net.nexustools.gui;
  */
 public interface Input<V> extends Widget {
 	
+	public String template();
+	public void setTemplate(String template);
+	
 	public void setValue(V value);
 	public V value();
 	

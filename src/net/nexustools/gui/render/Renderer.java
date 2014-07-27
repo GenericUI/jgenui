@@ -19,9 +19,11 @@ package net.nexustools.gui.render;
  *
  * @author katelyn
  */
-public abstract class Renderer implements Renderable {
+public abstract class Renderer {
 
-	private RenderTarget target;
+	private Renderable target;
+	
+	public abstract void render(Painter painter);
 	
 	public void run() {
 		Painter painter = new Painter(target);

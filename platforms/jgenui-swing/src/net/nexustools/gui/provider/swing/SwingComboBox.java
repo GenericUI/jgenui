@@ -76,7 +76,7 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     }
 
     @Override
-    public void setOptions(final I[] options) {
+    public void setOptions(final I... options) {
         act(new Runnable() {
             @Override
             public void run() {
@@ -173,6 +173,16 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     @Override
     public void removeSelectionListener(SelectionListener selectionListener) {
         selectionDispatcher.remove(selectionListener);
+    }
+
+    @Override
+    public String template() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setTemplate(String template) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

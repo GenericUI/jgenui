@@ -19,7 +19,7 @@ import java.util.ListIterator;
 import javax.swing.SwingUtilities;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
-import net.nexustools.gui.StyleContainer;
+import net.nexustools.gui.StyleRoot;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.event.EventListenerRedirect;
 import net.nexustools.gui.event.FocusListener;
@@ -74,7 +74,7 @@ public abstract class WidgetImpl<J extends Component> {
 
                         @Override
                         public SizeEvent create() {
-                            return new SizeEvent(component, size());
+                            return new SizeEvent(internal(), size());
                         }
 
                         @Override
@@ -89,7 +89,7 @@ public abstract class WidgetImpl<J extends Component> {
 
                         @Override
                         public MoveEvent create() {
-                            return new MoveEvent(component, pos());
+                            return new MoveEvent(internal(), pos());
                         }
 
                         @Override
@@ -104,7 +104,7 @@ public abstract class WidgetImpl<J extends Component> {
 
                         @Override
                         public VisibilityEvent create() {
-                            return new VisibilityEvent(component, true);
+                            return new VisibilityEvent(internal(), true);
                         }
 
                         @Override
@@ -120,7 +120,7 @@ public abstract class WidgetImpl<J extends Component> {
 
                         @Override
                         public VisibilityEvent create() {
-                            return new VisibilityEvent(component, false);
+                            return new VisibilityEvent(internal(), false);
                         }
 
                         @Override
@@ -168,11 +168,29 @@ public abstract class WidgetImpl<J extends Component> {
     
     public WidgetImpl(SwingPlatform platform) {
         this.platform = platform;
-        this.component = create();
+        component = create();
     }
     
     public J internal() {
         return component;
+    }
+    
+    public boolean enabled() {
+        return read(new Reader<Boolean>() {
+            @Override
+            public Boolean read() {
+                return component.isEnabled();
+            }
+        });
+    }
+    
+    public void setEnabled(final boolean enabled) {
+        act(new Runnable() {
+            @Override
+            public void run() {
+                component.setEnabled(enabled);
+            }
+        });
     }
     
     protected abstract J create();
@@ -428,10 +446,10 @@ public abstract class WidgetImpl<J extends Component> {
 
     public StyleSheet activeStyleSheet() {
         Container container = container();
-        while(container != null && !(container instanceof StyleContainer))
+        while(container != null && !(container instanceof StyleRoot))
             container = container.container();
         
-        if(container instanceof StyleContainer)
+        if(container instanceof StyleRoot)
             return container.activeStyleSheet();
         
         return null;
@@ -525,6 +543,15 @@ public abstract class WidgetImpl<J extends Component> {
                 component.setMaximumSize(new Dimension((int)size.w, (int)size.h));
             }
         });
+    }
+    
+    public Renderer defaultRenderer() {
+        return new Renderer() {
+            @Override
+            public void render(Painter painter) {
+                // TODO: Paint component into painter
+            }
+        };
     }
     
 }

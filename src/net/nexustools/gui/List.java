@@ -15,21 +15,8 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.SelectionListener;
-
 /**
  *
  * @author katelyn
  */
-public interface List<I> extends Input<I> {
-	
-	public I[] options();
-	public void setOptions(I[] options);
-	
-	public I[] selected();
-	
-	// Events
-	public void addSelectionListener(SelectionListener selectionListener);
-	public void removeSelectionListener(SelectionListener selectionListener);
-	
-}
+public interface List<I> extends Input<I>, Options<I> {}

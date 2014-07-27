@@ -15,15 +15,10 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.render.StyleSheet;
+import net.nexustools.gui.render.Color;
 
 /**
  *
  * @author katelyn
  */
-public interface StyleContainer extends Container {
-	
-	public StyleSheet stylesheet();
-	public void setStylesheet(StyleSheet styleSheet);
-	
-}
+public interface ColorSelector extends Input<Color> {}

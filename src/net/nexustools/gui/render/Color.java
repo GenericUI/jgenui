@@ -13,12 +13,14 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.render;
+
+import net.nexustools.gui.geom.Vec4f;
 
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public class Color extends Vec4f {
+	
 }

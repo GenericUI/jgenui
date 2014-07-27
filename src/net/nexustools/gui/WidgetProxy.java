@@ -19,6 +19,9 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface WidgetProxy extends Widget {
+	
+	public Widget target();
+	public void setTarget(Widget other);
+	
 }

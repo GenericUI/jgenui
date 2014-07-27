@@ -20,8 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import net.nexustools.gui.Base;
 import net.nexustools.gui.Widget;
-import net.nexustools.gui.render.RenderTarget;
 import nexustools.io.format.StreamTokenizer;
 import nexustools.runtime.DefaultRunQueue;
 
@@ -141,7 +141,7 @@ public abstract class Platform extends DefaultRunQueue {
 		MultipleBodies
 	}
 	
-	public abstract RenderTarget create(Class<? extends RenderTarget> type) throws RenderTargetSupportedException;
+	public abstract Base create(Class<? extends Base> type) throws RenderTargetSupportedException;
 	public abstract Widget parse(StreamTokenizer processor) throws PlatformException;
 	public abstract boolean supports(Feature feature);
 	

@@ -15,10 +15,15 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.render.StyleSheet;
+
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget {
-
+public interface StyleRoot {
+	
+	public StyleSheet stylesheet();
+	public void setStylesheet(StyleSheet styleSheet);
+	
 }
