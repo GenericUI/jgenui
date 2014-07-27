@@ -12,9 +12,10 @@ import java.awt.event.ItemListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import net.nexustools.gui.ComboBox;
+import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.event.SelectionListener;
-import net.nexustools.gui.geom.Size;
+import net.nexustools.gui.event.ValueListener;
 import net.nexustools.gui.provider.swing.shared.ListenerProp;
 import net.nexustools.gui.provider.swing.shared.PropDispatcher;
 import net.nexustools.gui.provider.swing.shared.WidgetImpl;
@@ -92,16 +93,6 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     }
 
     @Override
-    public I[] selected() {
-        return read(new Reader<I[]>() {
-            @Override
-            public I[] read() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-    }
-
-    @Override
     public I value() {
         return read(new Reader<I>() {
             @Override
@@ -121,7 +112,7 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
         });
     }
 
-    private final ListenerProp<ItemListener> selectionListener = new ListenerProp<ItemListener>() {
+    private final ListenerProp<ItemListener> itemListener = new ListenerProp<ItemListener>() {
         @Override
         public void connect() {
             SwingComboBox.this.act(new Runnable() {
@@ -137,15 +128,15 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
                             }
 
                             index = component.getSelectedIndex();
-                            selectionDispatcher.dispatch(new EventDispatcher.Processor<SelectionListener, SelectionListener.SelectionEvent>() {
+                            valueDispatcher.dispatch(new EventDispatcher.Processor<ValueListener, ValueListener.ValueEvent>() {
                                 @Override
-                                public SelectionListener.SelectionEvent create() {
-                                    return new SelectionListener.SelectionEvent(component, component.getSelectedObjects(), index, index);
+                                public ValueListener.ValueEvent create() {
+                                    return new ValueListener.ValueEvent(component, component.getSelectedItem());
                                 }
 
                                 @Override
-                                public void dispatch(SelectionListener listener, SelectionListener.SelectionEvent event) {
-                                    listener.selectionChanged(event);
+                                public void dispatch(ValueListener listener, ValueListener.ValueEvent event) {
+                                    listener.valueChanged(event);
                                 }
                             });
                         }
@@ -168,17 +159,7 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
             });
         }
     };
-    public final PropDispatcher<SelectionListener, SelectionListener.SelectionEvent> selectionDispatcher = new PropDispatcher(selectionListener, platform());
-
-    @Override
-    public void addSelectionListener(SelectionListener selectionListener) {
-        selectionDispatcher.add(selectionListener);
-    }
-
-    @Override
-    public void removeSelectionListener(SelectionListener selectionListener) {
-        selectionDispatcher.remove(selectionListener);
-    }
+    public final PropDispatcher<ValueListener, ValueListener.ValueEvent> valueDispatcher = new PropDispatcher(itemListener, platform());
 
     @Override
     public String template() {
@@ -187,6 +168,14 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
 
     @Override
     public void setTemplate(String template) {}
+
+    public void addValueListener(ValueListener<I, SingleInput<I>> valueListener) {
+        valueDispatcher.add(valueListener);
+    }
+
+    public void removeValueListener(ValueListener<I, SingleInput<I>> valueListener) {
+        valueDispatcher.remove(valueListener);
+    }
     
     
 

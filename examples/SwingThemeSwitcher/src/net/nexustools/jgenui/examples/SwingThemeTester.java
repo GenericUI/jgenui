@@ -6,7 +6,9 @@
 
 package net.nexustools.jgenui.examples;
 
+import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.event.SelectionListener;
+import net.nexustools.gui.event.ValueListener;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.BoxLayout;
 import net.nexustools.gui.provider.swing.SwingBody;
@@ -15,6 +17,7 @@ import net.nexustools.gui.provider.swing.SwingComboBox;
 import net.nexustools.gui.provider.swing.SwingContainer;
 import net.nexustools.gui.provider.swing.SwingFrame;
 import net.nexustools.gui.provider.swing.SwingLabel;
+import net.nexustools.gui.provider.swing.SwingMultiList;
 import net.nexustools.gui.provider.swing.SwingOnOffButton;
 import net.nexustools.gui.provider.swing.SwingRadioButton;
 import net.nexustools.gui.provider.swing.SwingRangeInput;
@@ -131,22 +134,16 @@ public class SwingThemeTester extends SwingBody {
         column.add(toggleButton);
         comboBox = new SwingComboBox(platform().LAFs());
         comboBox.setTemplate("LAF: ####");
-        comboBox.addSelectionListener(new SelectionListener() {
+        comboBox.addValueListener(new ValueListener<String, SingleInput<String>>() {
             @Override
-            public void selectionChanged(SelectionListener.SelectionEvent event) {
-                platform().setLAF((String)event.selection[0]);
+            public void valueChanged(ValueListener.ValueEvent<String, SingleInput<String>> event) {
+                platform().setLAF(event.value);
             }
         });
         comboBox.setValue(platform().LAF());
         column.add(comboBox);
         comboBox = new SwingComboBox(platform().LAFs());
         comboBox.setTemplate("LAF: ####");
-        comboBox.addSelectionListener(new SelectionListener() {
-            @Override
-            public void selectionChanged(SelectionListener.SelectionEvent event) {
-                platform().setLAF((String)event.selection[0]);
-            }
-        });
         comboBox.setValue(platform().LAF());
         comboBox.setEnabled(false);
         column.add(comboBox);
@@ -162,6 +159,14 @@ public class SwingThemeTester extends SwingBody {
         frameBorder = new SwingFrame("Lowered");
         frameBorder.setRaised(false);
         column.add(frameBorder);
+        columns.add(column);
+        // End Second Column
+        
+        // Start Third Column
+        column = new SwingFrame("Frame Borders", BoxLayout.Vertical);
+        SwingMultiList<String> swingList = new SwingMultiList();
+        swingList.setOptions(new String[]{"Option 1", "Option 2", "Option 3", "Option 4"});
+        column.add(swingList);
         columns.add(column);
         // End Second Column
         

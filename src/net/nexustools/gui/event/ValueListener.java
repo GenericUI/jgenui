@@ -24,13 +24,10 @@ import java.util.EventListener;
 public interface ValueListener<V, S> extends EventListener {
 	
 	public static class ValueEvent<V, S> extends Event<S> {
-		private final V value;
+		public final V value;
 		public ValueEvent(S source, V val) {
 			super(source);
 			this.value = val;
-		}
-		public V value() {
-			return value;
 		}
 	}
 	

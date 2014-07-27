@@ -44,12 +44,12 @@ public class SwingOnOffButton extends FakeContainerImpl implements OnOffButton {
     }
 
     @Override
-    public void addValueListener(ValueListener<SingleInput<Boolean>, Boolean> selectionListener) {
+    public void addValueListener(ValueListener<Boolean, SingleInput<Boolean>> selectionListener) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void removeValueListener(ValueListener<SingleInput<Boolean>, Boolean> selectionListener) {
+    public void removeValueListener(ValueListener<Boolean, SingleInput<Boolean>> selectionListener) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

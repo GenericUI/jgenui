@@ -24,7 +24,7 @@ import net.nexustools.gui.event.ValueListener;
 public interface SingleInput<V> extends Input<V> {
 	
 	// Events
-	public void addValueListener(ValueListener<SingleInput<V>, V> selectionListener);
-	public void removeValueListener(ValueListener<SingleInput<V>, V> selectionListener);
+	public void addValueListener(ValueListener<V, SingleInput<V>> valueListener);
+	public void removeValueListener(ValueListener<V, SingleInput<V>> valueListener);
 	
 }

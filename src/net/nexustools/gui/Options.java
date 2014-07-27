@@ -26,10 +26,4 @@ public interface Options<I, S> {
 	public I[] options();
 	public void setOptions(I... options);
 	
-	public I[] selected();
-	
-	// Events
-	public void addSelectionListener(SelectionListener<I, S> selectionListener);
-	public void removeSelectionListener(SelectionListener<I, S> selectionListener);
-	
 }

@@ -19,9 +19,9 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface ComboBox<I> extends List<I>, SingleInput<I> {
+public interface ListEditor<I> extends Widget {
 	
-	public boolean isEditable();
-	public void setEditable(boolean editable);
+	public List<I> target();
+	public void setTarget(List<I> list);
 	
 }

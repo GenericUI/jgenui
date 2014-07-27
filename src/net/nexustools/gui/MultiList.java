@@ -15,13 +15,21 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.event.SelectionListener;
+
 /**
  *
  * @author katelyn
  */
-public interface ComboBox<I> extends List<I>, SingleInput<I> {
+public interface MultiList<I> extends List<I> {
 	
-	public boolean isEditable();
-	public void setEditable(boolean editable);
+	public I[] selected();
+	
+	public boolean isAllowingMultiple();
+	public void allowMultiple(boolean yes);
+	
+	// Events
+	public void addSelectionListener(SelectionListener<I, MultiList> selectionListener);
+	public void removeSelectionListener(SelectionListener<I, MultiList> selectionListener);
 	
 }
