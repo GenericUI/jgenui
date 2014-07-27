@@ -30,7 +30,7 @@ import net.nexustools.gui.provider.swing.SwingPlatform;
  *
  * @author katelyn
  */
-public abstract class ContainerImpl<J extends Container> extends FakeContainerImpl<J> {
+public abstract class ContainerImpl<J extends Container> extends AbstractContainerImpl<J> {
     
     public static interface ContainerWrap {
         public net.nexustools.gui.Container getGenUIContainer();
@@ -163,7 +163,6 @@ public abstract class ContainerImpl<J extends Container> extends FakeContainerIm
         
     }
 
-    private final ArrayList<Widget> children = new ArrayList();
     public ContainerImpl(SwingPlatform platform) {
         super(platform);
     }
@@ -178,35 +177,6 @@ public abstract class ContainerImpl<J extends Container> extends FakeContainerIm
                     parent.invalidate();
             }
         });
-        
-    }
-    
-    public void add(final Widget widget) {
-        act(new Runnable() {
-            @Override
-            public void run() {
-                if(children.contains(widget))
-                    return;
-                
-                children.add(widget);
-                component.add((Component)widget.internal());
-                invalidate();
-            }
-        });
-    }
-
-    public void remove(final Widget widget) {
-        act(new Runnable() {
-            @Override
-            public void run() {
-                if(!children.contains(widget))
-                    return;
-                
-                children.remove(widget);
-                component.remove((Component)widget.internal());
-                invalidate();
-            }
-        });
     }
     
     public final EventDispatcher<SwingPlatform, LayoutListener, LayoutEvent> layoutDispatcher = new DefaultEventDispatcher(platform());
@@ -215,41 +185,6 @@ public abstract class ContainerImpl<J extends Container> extends FakeContainerIm
     }
     public void removeLayoutListener(LayoutListener listener) {
         layoutDispatcher.remove(listener);
-    }
-
-    public Iterator<Widget> iterator() {
-        return read(new Reader<Iterator<Widget>>() {
-            @Override
-            public Iterator<Widget> read() {
-                return children.iterator();
-            }
-        });
-    }
-    
-    public void setLayout(final Layout layout) {
-        act(new Runnable() {
-            @Override
-            public void run() {
-                if(layout != null) {
-                    component.setLayout(new NativeLayout(layout));
-                    invalidate();
-                } else
-                    component.setLayout(null);
-                //ContainerImpl.this.layout = layout;
-            }
-        });
-    }
-
-    public Layout layout() {
-        return read(new Reader<Layout>() {
-            @Override
-            public Layout read() {
-                LayoutManager manager = component.getLayout();
-                if(manager instanceof NativeLayout)
-                    return ((NativeLayout)manager).layout;
-                return null;
-            }
-        });
     }
     
     public int childCount() {
@@ -302,6 +237,32 @@ public abstract class ContainerImpl<J extends Container> extends FakeContainerIm
             }
         });
                 
+    }
+    
+    public void setLayout(final Layout layout) {
+        act(new Runnable() {
+            @Override
+            public void run() {
+                if(layout != null) {
+                    component.setLayout(new ContainerImpl.NativeLayout(layout));
+                    invalidate();
+                } else
+                    component.setLayout(null);
+                //ContainerImpl.this.layout = layout;
+            }
+        });
+    }
+
+    public Layout layout() {
+        return read(new Reader<Layout>() {
+            @Override
+            public Layout read() {
+                LayoutManager manager = component.getLayout();
+                if(manager instanceof ContainerImpl.NativeLayout)
+                    return ((ContainerImpl.NativeLayout)manager).layout;
+                return null;
+            }
+        });
     }
 
 }

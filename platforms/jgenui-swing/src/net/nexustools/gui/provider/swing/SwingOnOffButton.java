@@ -8,42 +8,34 @@ package net.nexustools.gui.provider.swing;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import net.nexustools.gui.OnOffButton;
 import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.event.ValueListener;
 import net.nexustools.gui.provider.swing.shared.FakeContainerImpl;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingOnOffButton extends FakeContainerImpl<JPanel> implements OnOffButton {
-    
-    private class Native extends JPanel {
-        public final JToggleButton on = new JToggleButton("On");
-        public final JToggleButton off = new JToggleButton("Off");
-        public final ButtonGroup buttonGroup = new ButtonGroup();
-        
-        public Native() {
-            setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-            add(on);
-            add(off);
-            buttonGroup.add(on);
-            buttonGroup.add(off);
-            off.setSelected(true);
-        }
-    }
+public class SwingOnOffButton extends FakeContainerImpl implements OnOffButton {
 
+    public SwingToggleButton on = new SwingToggleButton("On");
+    public SwingToggleButton off = new SwingToggleButton("Off");
+    public ButtonGroup buttonGroup = new ButtonGroup();
+    
     public SwingOnOffButton() {
         super(SwingPlatform.instance());
-    }
+        component.setLayout(new BoxLayout(component, BoxLayout.X_AXIS));
 
-    @Override
-    protected JPanel create() {
-        return new Native();
+        on.setTag("On");
+        off.setTag("Off");
+        buttonGroup.add(on.internal());
+        buttonGroup.add(off.internal());
+        off.setSelected(true);
+        
+        add(on);
+        add(off);
+        setTag("OnOffButton");
     }
 
     @Override

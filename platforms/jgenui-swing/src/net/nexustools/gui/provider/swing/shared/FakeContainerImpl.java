@@ -6,38 +6,33 @@
 
 package net.nexustools.gui.provider.swing.shared;
 
-import java.awt.Component;
-import java.awt.Container;
-import net.nexustools.gui.Widget;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
 import net.nexustools.gui.provider.swing.SwingPlatform;
+import net.nexustools.gui.provider.swing.shared.FakeContainerImpl.FakeContainer;
 
 /**
  *
  * @author katelyn
  */
-public abstract class FakeContainerImpl<J extends Container> extends WidgetImpl<J> {
+public abstract class FakeContainerImpl extends AbstractContainerImpl<FakeContainer> {
+    
+    protected class FakeContainer extends JPanel {
+        @Override
+        public void paint(Graphics g) {
+            if(!customRender((Graphics2D)g))
+                super.paint(g);
+        }
+    }
 
     public FakeContainerImpl(SwingPlatform platform) {
         super(platform);
     }
-    
+
     @Override
-    public void setEnabled(final boolean enabled) {
-        // TODO: Improve to act as an override, and not just to set all the children
-        act(new Runnable() {
-            @Override
-            public void run() {
-                setDeep(component);
-            }
-            public void setDeep(Container parent) {
-                for(Component component : parent.getComponents()) {
-                    if(component instanceof Container)
-                        setDeep((Container)component);
-                    else
-                        component.setEnabled(enabled);
-                }
-            }
-        });
+    protected FakeContainer create() {
+        return new FakeContainer();
     }
     
 }
