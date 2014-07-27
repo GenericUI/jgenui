@@ -9,20 +9,21 @@ package net.nexustools.gui.provider.swing;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import javax.swing.JToggleButton;
-import net.nexustools.gui.Button;
+import javax.swing.JRadioButton;
+import net.nexustools.gui.RadioButton;
 import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingToggleButton extends ToggleButtonImpl<JToggleButton> implements Button {
+public class SwingRadioButton extends ToggleButtonImpl<JRadioButton> implements RadioButton {
     
-    private class NativeButton extends JToggleButton {
+    private class NativeButton extends JRadioButton {
         
         public NativeButton() { // For consistency, buttons can expand infinitely by default
             setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            setName("RadioButton");
         }
 
         @Override
@@ -33,19 +34,19 @@ public class SwingToggleButton extends ToggleButtonImpl<JToggleButton> implement
         
     }
 
-    public SwingToggleButton() {
+    public SwingRadioButton() {
         this(SwingPlatform.instance());
     }
-    public SwingToggleButton(String text) {
+    public SwingRadioButton(String text) {
         this();
         setText(text);
     }
-    SwingToggleButton(SwingPlatform platform) {
+    SwingRadioButton(SwingPlatform platform) {
         super(platform);
     }
 
     @Override
-    protected JToggleButton create() {
+    protected JRadioButton create() {
         return new NativeButton();
     }
     

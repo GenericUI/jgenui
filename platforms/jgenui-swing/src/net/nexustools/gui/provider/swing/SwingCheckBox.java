@@ -9,20 +9,21 @@ package net.nexustools.gui.provider.swing;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import javax.swing.JToggleButton;
-import net.nexustools.gui.Button;
+import javax.swing.JCheckBox;
+import net.nexustools.gui.CheckBox;
 import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingToggleButton extends ToggleButtonImpl<JToggleButton> implements Button {
+public class SwingCheckBox extends ToggleButtonImpl<JCheckBox> implements CheckBox {
     
-    private class NativeButton extends JToggleButton {
+    private class NativeButton extends JCheckBox {
         
         public NativeButton() { // For consistency, buttons can expand infinitely by default
             setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            setName("CheckBox");
         }
 
         @Override
@@ -33,19 +34,19 @@ public class SwingToggleButton extends ToggleButtonImpl<JToggleButton> implement
         
     }
 
-    public SwingToggleButton() {
+    public SwingCheckBox() {
         this(SwingPlatform.instance());
     }
-    public SwingToggleButton(String text) {
+    public SwingCheckBox(String text) {
         this();
         setText(text);
     }
-    SwingToggleButton(SwingPlatform platform) {
+    SwingCheckBox(SwingPlatform platform) {
         super(platform);
     }
 
     @Override
-    protected JToggleButton create() {
+    protected JCheckBox create() {
         return new NativeButton();
     }
     

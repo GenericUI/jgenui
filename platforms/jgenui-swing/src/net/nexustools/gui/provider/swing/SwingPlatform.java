@@ -7,9 +7,13 @@
 package net.nexustools.gui.provider.swing;
 
 import java.awt.AWTEvent;
+import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Window;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.logging.Level;
@@ -186,6 +190,27 @@ public class SwingPlatform extends Platform {
         } catch (InterruptedException ex) {
             Logger.getLogger(SwingPlatform.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void open(String url) {
+        try {
+            open(new URI(url));
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void open(URI uri) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else
+            throw new UnsupportedOperationException();
     }
     
 }

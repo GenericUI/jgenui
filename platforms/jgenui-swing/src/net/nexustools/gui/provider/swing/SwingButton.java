@@ -23,6 +23,7 @@ public class SwingButton extends ButtonImpl<JButton> implements Button {
         
         public NativeButton() { // For consistency, buttons can expand infinitely by default
             setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            setName("Button");
         }
 
         @Override

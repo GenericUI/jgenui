@@ -19,4 +19,4 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface RadioButton extends Button {}
+public interface RadioButton extends ToggleButton {}

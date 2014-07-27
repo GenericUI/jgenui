@@ -19,6 +19,4 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Checkbox extends Button {
-	
-}
+public interface Spacer extends Widget {}

@@ -19,7 +19,7 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface StateToggle<S, V> extends SingleInput<S, V> {
+public interface StateToggle<V> extends SingleInput<V> {
 	
 	public void toggle();
 	

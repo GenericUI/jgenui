@@ -15,24 +15,10 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.ActionListener;
-
 /**
  *
  * @author katelyn
  */
-public interface Activateable {
-	
-	public Shortcut shortcut();
-	public void setShortcut(Shortcut shortcut);
-	
-	public void addActionListener(ActionListener actionListener);
-	public void removeActionListener(ActionListener actionListener);
-	
-	public boolean selectable();
-	public void setSelected(boolean selected);
-	public boolean isSelected();
-	
-	public void activate();
+public interface CheckBox extends ToggleButton {
 	
 }

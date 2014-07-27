@@ -16,6 +16,9 @@
 package net.nexustools.gui;
 
 import net.nexustools.gui.event.LayoutListener;
+import net.nexustools.gui.geom.Point;
+import net.nexustools.gui.geom.Rect;
+import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.Layout;
 
 /**
@@ -26,6 +29,11 @@ public interface Container extends Widget, Iterable<Widget> {
 	
 	public void add(Widget widget);
 	public void remove(Widget widget);
+	public int childCount();
+	
+	public Rect contentBounds();
+	public Point contentOffset();
+	public Size contentSize();
 	
 	public void addLayoutListener(LayoutListener listener);
 	public void removeLayoutListener(LayoutListener listener);

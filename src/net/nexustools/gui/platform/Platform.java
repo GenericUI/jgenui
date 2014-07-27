@@ -151,5 +151,7 @@ public abstract class Platform extends DefaultRunQueue {
 	
 	public abstract void onIdle(Runnable run);
 	public abstract void act(Runnable run) throws InvocationTargetException;
+	
+	public abstract void open(String url);
     
 }

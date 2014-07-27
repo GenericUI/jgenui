@@ -107,4 +107,8 @@ public abstract class ButtonImpl<B extends AbstractButton> extends WidgetImpl<B>
         return false;
     }
     
+    public void setSelected(boolean selected) {
+        throw new UnsupportedOperationException();
+    }
+    
 }

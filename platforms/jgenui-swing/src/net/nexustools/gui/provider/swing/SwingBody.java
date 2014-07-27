@@ -20,10 +20,10 @@ import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
 import net.nexustools.gui.Toolbar;
 import net.nexustools.gui.Widget;
+import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 import net.nexustools.gui.render.StyleSheet;
-import net.nexustools.gui.render.Transform;
 
 /**
  *
@@ -203,9 +203,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                 component.setPreferredSize(size);
             }
         });
-                
     }
-    
     
     @Override
     public void setMainWidget(final Widget mainWidget) {
@@ -224,6 +222,13 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
             }
         });
     }
+
+    @Override
+    public void setMainWidget(Widget mainWidget, String title) {
+        setMainWidget(mainWidget);
+        setTitle(title);
+    }
+    
     @Override
     public Container mainContainer() {
         return read(new Reader<Container>() {
@@ -236,6 +241,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
             }
         });
     }
+    @Override
     public Widget mainWidget() {
         return read(new Reader<Widget>() {
             @Override

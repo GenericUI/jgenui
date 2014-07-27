@@ -9,6 +9,7 @@ package net.nexustools.gui.provider.swing.shared;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import net.nexustools.gui.event.DefaultEventDispatcher;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.event.LayoutListener;
 import net.nexustools.gui.event.LayoutListener.LayoutEvent;
+import net.nexustools.gui.geom.Point;
+import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.provider.swing.SwingPlatform;
@@ -27,7 +30,7 @@ import net.nexustools.gui.provider.swing.SwingPlatform;
  *
  * @author katelyn
  */
-public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
+public abstract class ContainerImpl<J extends Container> extends FakeContainerImpl<J> {
     
     public static interface ContainerWrap {
         public net.nexustools.gui.Container getGenUIContainer();
@@ -77,10 +80,10 @@ public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
                 return cache.prefSize;
             
             try {
-                System.out.println("preferredLayoutSize");
                 Size size = layout.calculatePreferredSize(((ContainerWrap)parent).getGenUIContainer());
                 System.out.println(size);
-                return cache.prefSize = new Dimension((int)size.w, (int)size.h);
+                Insets insets = parent.getInsets();
+                return cache.prefSize = new Dimension((int)size.w+insets.left+insets.right, (int)size.h+insets.top+insets.bottom);
             } catch(RuntimeException ex) {
                 ex.printStackTrace();
                 throw ex;
@@ -100,7 +103,8 @@ public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
                 System.out.println("preferredLayoutSize");
                 Size size = layout.calculateMinimumSize(((ContainerWrap)parent).getGenUIContainer());
                 System.out.println(size);
-                return new Dimension((int)size.w, (int)size.h);
+                Insets insets = parent.getInsets();
+                return cache.prefSize = new Dimension((int)size.w+insets.left+insets.right, (int)size.h+insets.top+insets.bottom);
             } catch(RuntimeException ex) {
                 ex.printStackTrace();
                 throw ex;
@@ -246,6 +250,58 @@ public abstract class ContainerImpl<J extends Container> extends WidgetImpl<J> {
                 return null;
             }
         });
+    }
+    
+    public int childCount() {
+        return read(new Reader<Integer>() {
+            @Override
+            public Integer read() {
+                return component.getComponentCount();
+            }
+        });
+    }
+    
+    public Rect contentBounds() {
+        return read(new Reader<Rect>() {
+
+            @Override
+            public Rect read() {
+                Rect rect = bounds();
+                Insets insets = component.getInsets();
+                rect.topLeft.x += insets.left;
+                rect.topLeft.y += insets.top;
+                rect.size.w -= insets.left + insets.right;
+                rect.size.h -= insets.top + insets.bottom;
+                return rect;
+            }
+        });
+    }
+    
+    public Point contentOffset() {
+        return read(new Reader<Point>() {
+            @Override
+            public Point read() {
+                Point pos = pos();
+                Insets insets = component.getInsets();
+                pos.x += insets.left;
+                pos.y += insets.top;
+                return pos;
+            }
+        });
+    }
+    
+    public Size contentSize() {
+        return read(new Reader<Size>() {
+            @Override
+            public Size read() {
+                Size size = size();
+                Insets insets = component.getInsets();
+                size.w -= insets.left + insets.right;
+                size.h -= insets.top + insets.bottom;
+                return size;
+            }
+        });
+                
     }
 
 }

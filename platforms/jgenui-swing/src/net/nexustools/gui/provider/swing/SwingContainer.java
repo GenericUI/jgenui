@@ -6,6 +6,7 @@
 
 package net.nexustools.gui.provider.swing;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
@@ -21,7 +22,8 @@ public class SwingContainer extends ContainerImpl<JPanel> implements net.nexusto
 
     public class NativeContainer extends JPanel implements ContainerWrap {
 
-        public NativeContainer() {
+        public NativeContainer() { // For consistency, buttons can expand infinitely by default
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
             setName("Container");
             setLayout(null);
         }

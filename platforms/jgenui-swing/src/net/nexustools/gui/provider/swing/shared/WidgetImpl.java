@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -320,7 +321,7 @@ public abstract class WidgetImpl<J extends Component> {
             @Override
             public Rect read() {
                 Rectangle r = component.getBounds();
-                return new Rect(r.x, r.y, r.width, r.height);
+                return (new Rect(r.x, r.y, r.width, r.height)).minus(parentOffset());
             }
         });
     }
@@ -455,37 +456,31 @@ public abstract class WidgetImpl<J extends Component> {
         return null;
     }
 
-    public void move(Point pos) {
-        final java.awt.Point location = new java.awt.Point((int)pos.x, (int)pos.y);
-        
+    public void move(final Point pos) {
         act(new Runnable() {
             @Override
             public void run() {
-                component.setLocation(location);
+                pos.plus(parentOffset());
+                component.setLocation(new java.awt.Point((int)pos.x, (int)pos.y));
             }
         });
     }
 
-    public void resize(Size size) {
-        final Dimension dimension = new Dimension((int)size.w, (int)size.h);
-        
+    public void resize(final Size size) {
         act(new Runnable() {
             @Override
             public void run() {
-                component.setSize(dimension);
+                component.setSize(new Dimension((int)size.w, (int)size.h));
             }
         });
     }
 
-    public void setBounds(Rect geom) {
-        Size size = geom.size();
-        Point topLeft = geom.topLeft();
-        final Rectangle rectangle = new Rectangle((int)topLeft.x, (int)topLeft.y, (int)size.w, (int)size.h);
-        
+    public void setBounds(final Rect geom) {
         act(new Runnable() {
             @Override
             public void run() {
-                component.setBounds(rectangle);
+                geom.plus(parentOffset());
+                component.setBounds(new Rectangle((int)geom.topLeft.x, (int)geom.topLeft.y, (int)geom.size.w, (int)geom.size.h));
             }
         });
     }
@@ -552,6 +547,16 @@ public abstract class WidgetImpl<J extends Component> {
                 // TODO: Paint component into painter
             }
         };
+    }
+    
+    protected Point parentOffset() {
+        java.awt.Container par = component.getParent();
+        if(par == null)
+            return new Point(0, 0);
+        Insets insets = par.getInsets();
+        if(insets == null)
+            return new Point(0, 0);
+        return new Point(insets.left, insets.top);
     }
     
 }

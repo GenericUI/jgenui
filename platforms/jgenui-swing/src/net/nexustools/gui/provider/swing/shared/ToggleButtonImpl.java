@@ -39,4 +39,15 @@ public abstract class ToggleButtonImpl<B extends JToggleButton> extends ButtonIm
         });
     }
     
+    @Override
+    public void setSelected(final boolean selected) {
+        act(new Runnable() {
+
+            @Override
+            public void run() {
+                component.setSelected(selected);
+            }
+        });
+    }
+    
 }

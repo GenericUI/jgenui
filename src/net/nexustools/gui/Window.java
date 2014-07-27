@@ -15,6 +15,8 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.gui.geom.Rect;
+
 /**
  *
  * @author katelyn

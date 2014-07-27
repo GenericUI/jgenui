@@ -6,6 +6,7 @@
 
 package net.nexustools.gui.provider.swing;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JTextField;
@@ -23,6 +24,10 @@ public class SwingStringInput extends WidgetImpl<JTextField> implements StringIn
     }
     
     private class Native extends JTextField {
+        public Native() {
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            setName("Input[Type=String]");
+        }
         @Override
         public void paint(Graphics g) {
             if(!customRender((Graphics2D)g))

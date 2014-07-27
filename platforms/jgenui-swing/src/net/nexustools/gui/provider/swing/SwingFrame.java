@@ -9,6 +9,7 @@ package net.nexustools.gui.provider.swing;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import net.nexustools.gui.Frame;
+import net.nexustools.gui.layout.Layout;
 
 /**
  *
@@ -20,6 +21,10 @@ public class SwingFrame extends SwingContainer implements Frame {
     public SwingFrame(String title) {
         super();
         setTitle(title);
+    }
+    public SwingFrame(String title, Layout layout) {
+        this(title);
+        setLayout(layout);
     }
 
     @Override

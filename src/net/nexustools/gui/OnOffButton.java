@@ -15,24 +15,14 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.ActionListener;
-
 /**
  *
  * @author katelyn
  */
-public interface Activateable {
+public interface OnOffButton extends StateToggle<Boolean> {
 	
-	public Shortcut shortcut();
-	public void setShortcut(Shortcut shortcut);
-	
-	public void addActionListener(ActionListener actionListener);
-	public void removeActionListener(ActionListener actionListener);
-	
-	public boolean selectable();
-	public void setSelected(boolean selected);
-	public boolean isSelected();
-	
-	public void activate();
+	public void setText(String on, String off);
+	public String offText();
+	public String onText();
 	
 }

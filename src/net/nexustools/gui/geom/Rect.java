@@ -22,17 +22,21 @@ package net.nexustools.gui.geom;
  */
 public class Rect extends SimpleShape {
 	
-	private final Point[] points;
+	public final Size size;
+	public final Point topLeft;
 	public Rect(float x, float y, float w, float h) {
-		points = new Point[]{new Point(x, y), new Point(x+w,y+h)};
+		topLeft = new Point(x, y);
+		size = new Size(w, h);
 	}
 	
 	public Rect(Point pos, Size size) {
-		points = new Point[]{pos.clone(), new Point(pos.x + size.w, pos.y + size.h)};
+		topLeft = pos.clone();
+		this.size = size.clone();
 	}
 	
 	public Rect(Point topLeft, Point bottomRight) {
-		points = new Point[]{topLeft.clone(), bottomRight.clone()};
+		this.topLeft = topLeft.clone();
+		size = new Size(bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
 	}
 	
 	public Rect() {
@@ -40,33 +44,43 @@ public class Rect extends SimpleShape {
 	}
 	
 	public Rect(Rect other) {
-		points = new Point[]{new Point(other.topLeft()),
-			new Point(other.bottomRight())};
+		topLeft = other.topLeft.clone();
+		size = other.size.clone();
+	}
+	
+	public Rect plus(Point p) {
+		topLeft.plus(p);
+		return this;
+	}
+	
+	public Rect minus(Point p) {
+		topLeft.minus(p);
+		return this;
 	}
 
 	@Override
 	public Point point(Direction dir) {
 		switch(dir) {
 			case TopLeft:
-				return new Point(points[0].x, points[0].y);
+				return topLeft.clone();
 			case TopCenter:
-				return new Point(points[1].x-points[0].x, points[0].y);
+				return new Point(topLeft.x + size.w/2, topLeft.y);
 			case TopRight:
-				return new Point(points[1].x, points[0].y);
+				return new Point(topLeft.x + size.w, topLeft.y);
 				
 			case MiddleLeft:
-				return new Point(points[0].x, points[1].y-points[0].y);
+				return new Point(topLeft.x, topLeft.y + size.h/2);
 			case MiddleCenter:
-				return new Point(points[1].x-points[0].x, points[1].y-points[0].y);
+				return new Point(topLeft.x + size.w/2, topLeft.y + size.h/2);
 			case MiddleRight:
-				return new Point(points[1].x, points[1].y-points[0].y);
+				return new Point(topLeft.x + size.w, topLeft.y + size.h/2);
 				
 			case BottomLeft:
-				return new Point(points[0].x, points[1].y);
+				return new Point(topLeft.x, topLeft.y + size.h);
 			case BottomCenter:
-				return new Point(points[1].x-points[0].x, points[1].y);
+				return new Point(topLeft.x + size.w/2, topLeft.y + size.h);
 			case BottomRight:
-				return new Point(points[1].x, points[1].y);
+				return new Point(topLeft.x + size.w, topLeft.y + size.h);
 		}
 		return null;
 	}
@@ -78,12 +92,11 @@ public class Rect extends SimpleShape {
 
 	@Override
 	public Size size() {
-		return new Size(Math.abs(points[1].x - points[0].x),
-				Math.abs(points[1].y - points[0].y));
+		return size.clone();
 	}
 	
 	public Point[] points() {
-		return points; 
+		return new Point[]{topLeft.clone(), new Point(topLeft.x+size.w, topLeft.y+size.h)}; 
 	}
 	
 }

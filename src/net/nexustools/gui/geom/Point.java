@@ -58,5 +58,17 @@ public class Point {
 	public String toString() {
 		return "Point[" + x + ", " + y + "]";
 	}
+
+	public Point plus(Point other) {
+		x += other.x;
+		y += other.y;
+		return this;
+	}
+
+	public Point minus(Point other) {
+		x -= other.x;
+		y -= other.y;
+		return other;
+	}
 	
 }

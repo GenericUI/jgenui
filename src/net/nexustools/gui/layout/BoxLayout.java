@@ -40,25 +40,33 @@ public class BoxLayout implements Layout {
 	}
 
 	public void update(Container container) {
-		System.out.println("Updating Layout");
+		Size prefFill = calculatePreferredSize(container);
+		Size contentSize = container.contentSize();
+		float extra;
 		switch(direction) {
 			case Horizontal:
 			{
-				int x = 0;
+				float containerHeight = contentSize.h;
+				extra = Math.max(0, contentSize.w - prefFill.w) / container.childCount()-1;
+				
+				float x = 0;
 				for(Widget child : container) {
 					Size prefSize = child.preferredSize();
-					child.setBounds(new Rect(x, 0, prefSize.w, prefSize.h));
+					prefSize.w += extra;
+					child.setBounds(new Rect(x, 0, prefSize.w, Math.max(child.minimumSize().h, Math.min(containerHeight, child.maximumSize().h))));
 					x += prefSize.w;
 				}
 			}
 			break;
 			case Vertical:
 			{
-				float containerWidth = container.size().w;
+				float containerWidth = contentSize.w;
+				extra = Math.max(0, contentSize.h - prefFill.h) / container.childCount()-1;
 				
-				int y = 0;
+				float y = 0;
 				for(Widget child : container) {
 					Size prefSize = child.preferredSize();
+					prefSize.h += extra;
 					child.setBounds(new Rect(0, y, Math.max(child.minimumSize().w, Math.min(containerWidth, child.maximumSize().w)), prefSize.h));
 					y += prefSize.h;
 				}
@@ -106,7 +114,6 @@ public class BoxLayout implements Layout {
 			break;
 			case Vertical:
 			{
-				System.out.println("Iterating");
 				for(Widget child : container) {
 					System.out.println(child);
 					Size prefSize = child.preferredSize();
@@ -114,7 +121,6 @@ public class BoxLayout implements Layout {
 					size.w = Math.max(size.w, prefSize.w);
 					size.h += prefSize.h;
 				}
-				System.out.println("Done");
 			}
 			break;
 		}
