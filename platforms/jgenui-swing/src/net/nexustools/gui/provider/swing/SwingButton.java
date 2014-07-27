@@ -41,6 +41,10 @@ public class SwingButton extends ButtonImpl<JButton> implements Button {
         this();
         setText(text);
     }
+    SwingButton(Button other, SwingPlatform platform) {
+        super(platform);
+        inherit(other);
+    }
     SwingButton(SwingPlatform platform) {
         super(platform);
     }

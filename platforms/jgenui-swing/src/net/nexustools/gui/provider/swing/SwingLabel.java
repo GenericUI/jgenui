@@ -25,6 +25,10 @@ public class SwingLabel extends WidgetImpl<JLabel> implements Label {
         this();
         setText(text);
     }
+    SwingLabel(Label other, SwingPlatform platform) {
+        this();
+        inherit(other);
+    }
     SwingLabel(SwingPlatform platform) {
         super(platform);
     }

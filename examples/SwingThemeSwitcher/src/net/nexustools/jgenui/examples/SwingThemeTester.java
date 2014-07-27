@@ -6,6 +6,8 @@
 
 package net.nexustools.jgenui.examples;
 
+import net.nexustools.gui.event.SelectionListener;
+import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.BoxLayout;
 import net.nexustools.gui.provider.swing.SwingBody;
 import net.nexustools.gui.provider.swing.SwingCheckBox;
@@ -17,6 +19,8 @@ import net.nexustools.gui.provider.swing.SwingOnOffButton;
 import net.nexustools.gui.provider.swing.SwingRadioButton;
 import net.nexustools.gui.provider.swing.SwingRangeInput;
 import net.nexustools.gui.provider.swing.SwingStringInput;
+import net.nexustools.gui.provider.swing.SwingTabWidget;
+import net.nexustools.gui.provider.swing.SwingToggleButton;
 
 /**
  *
@@ -33,25 +37,25 @@ public class SwingThemeTester extends SwingBody {
     public SwingThemeTester() {
         super("Swing Theme Tester");
         setLayout(BoxLayout.Vertical);
-        SwingContainer topContainer = new SwingContainer(BoxLayout.Horizontal);
         
+        SwingContainer columns = new SwingContainer(BoxLayout.Horizontal);
         // Start First Column
-        SwingContainer container = new SwingFrame("Spinners and Buttons", BoxLayout.Vertical);
+        SwingContainer column = new SwingFrame("Fields and Toggles", BoxLayout.Vertical);
         SwingComboBox<String> comboBox = new SwingComboBox();
         comboBox.setOptions(stargateNames);
         comboBox.setEditable(true);
-        container.add(comboBox);
+        column.add(comboBox);
         comboBox = new SwingComboBox();
         comboBox.setOptions(stargateNames);
         comboBox.setEditable(true);
         comboBox.setEnabled(false);
-        container.add(comboBox);
+        column.add(comboBox);
         
         SwingStringInput swingLineInput = new SwingStringInput();
-        container.add(swingLineInput);
+        column.add(swingLineInput);
         swingLineInput = new SwingStringInput();
         swingLineInput.setEnabled(false);
-        container.add(swingLineInput);
+        column.add(swingLineInput);
         
         SwingContainer horContainer = new SwingContainer(BoxLayout.Horizontal);
         SwingLabel label = new SwingLabel("Label");
@@ -65,14 +69,14 @@ public class SwingThemeTester extends SwingBody {
         swingRangeInput = new SwingRangeInput();
         swingRangeInput.setEnabled(false);
         horContainer.add(swingRangeInput);
-        container.add(horContainer);
+        column.add(horContainer);
         
         horContainer = new SwingContainer(BoxLayout.Horizontal);
         SwingCheckBox swingCheckBox = new SwingCheckBox("checkbox");
         horContainer.add(swingCheckBox);
         SwingRadioButton swingRadioButton = new SwingRadioButton("radiobutton");
         horContainer.add(swingRadioButton);
-        container.add(horContainer);
+        column.add(horContainer);
         
         horContainer = new SwingContainer(BoxLayout.Horizontal);
         swingCheckBox = new SwingCheckBox("checkbox");
@@ -81,7 +85,7 @@ public class SwingThemeTester extends SwingBody {
         swingRadioButton = new SwingRadioButton("radiobutton");
         swingRadioButton.setSelected(true);
         horContainer.add(swingRadioButton);
-        container.add(horContainer);
+        column.add(horContainer);
         
         horContainer = new SwingContainer(BoxLayout.Horizontal);
         swingCheckBox = new SwingCheckBox("checkbox");
@@ -89,7 +93,7 @@ public class SwingThemeTester extends SwingBody {
         swingRadioButton = new SwingRadioButton("radiobutton");
         horContainer.add(swingRadioButton);
         horContainer.setEnabled(false);
-        container.add(horContainer);
+        column.add(horContainer);
         
         horContainer = new SwingContainer(BoxLayout.Horizontal);
         swingCheckBox = new SwingCheckBox("checkbox");
@@ -99,7 +103,7 @@ public class SwingThemeTester extends SwingBody {
         swingRadioButton.setSelected(true);
         horContainer.add(swingRadioButton);
         horContainer.setEnabled(false);
-        container.add(horContainer);
+        column.add(horContainer);
         
         horContainer = new SwingContainer(BoxLayout.Horizontal);
         SwingOnOffButton onOffButton = new SwingOnOffButton();
@@ -107,11 +111,93 @@ public class SwingThemeTester extends SwingBody {
         onOffButton = new SwingOnOffButton();
         onOffButton.setEnabled(false);
         horContainer.add(onOffButton);
-        container.add(horContainer);
+        column.add(horContainer);
+        columns.add(column);
         // End First Column
         
-        topContainer.add(container);
-        add(topContainer);
+        // Start Second Column
+        column = new SwingFrame("Buttons and Selectors", BoxLayout.Vertical);
+        SwingToggleButton toggleButton = new SwingToggleButton("togglebutton");
+        column.add(toggleButton);
+        toggleButton = new SwingToggleButton("togglebutton");
+        toggleButton.setEnabled(false);
+        column.add(toggleButton);
+        toggleButton = new SwingToggleButton("togglebutton");
+        toggleButton.setSelected(true);
+        column.add(toggleButton);
+        toggleButton = new SwingToggleButton("togglebutton");
+        toggleButton.setSelected(true);
+        toggleButton.setEnabled(false);
+        column.add(toggleButton);
+        comboBox = new SwingComboBox(platform().LAFs());
+        comboBox.setTemplate("LAF: ####");
+        comboBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void selectionChanged(SelectionListener.SelectionEvent event) {
+                platform().setLAF((String)event.selection[0]);
+            }
+        });
+        comboBox.setValue(platform().LAF());
+        column.add(comboBox);
+        comboBox = new SwingComboBox(platform().LAFs());
+        comboBox.setTemplate("LAF: ####");
+        comboBox.addSelectionListener(new SelectionListener() {
+            @Override
+            public void selectionChanged(SelectionListener.SelectionEvent event) {
+                platform().setLAF((String)event.selection[0]);
+            }
+        });
+        comboBox.setValue(platform().LAF());
+        comboBox.setEnabled(false);
+        column.add(comboBox);
+        columns.add(column);
+        // End Second Column
+        
+        // Start Third Column
+        column = new SwingFrame("Frame Borders", BoxLayout.Vertical);
+        column.setMinimumSize(new Size(400, 200));
+        SwingFrame frameBorder = new SwingFrame("Raised");
+        frameBorder.setRaised(true);
+        column.add(frameBorder);
+        frameBorder = new SwingFrame("Lowered");
+        frameBorder.setRaised(false);
+        column.add(frameBorder);
+        columns.add(column);
+        // End Second Column
+        
+        add(columns);
+        
+        // Last Block
+        SwingFrame frame = new SwingFrame("Tabbed Widgets", BoxLayout.Horizontal);
+        SwingTabWidget tabWidget = new SwingTabWidget();
+        tabWidget.add(new SwingLabel("Test"), "Farmers");
+        tabWidget.add(new SwingLabel("Test"), "Seekers");
+        tabWidget.add(new SwingLabel("Test"), "Masters");
+        tabWidget.setOrientation(SwingTabWidget.Orientation.Top);
+        frame.add(tabWidget);
+        
+        tabWidget = new SwingTabWidget();
+        tabWidget.add(new SwingLabel("Test"), "Farmers");
+        tabWidget.add(new SwingLabel("Test"), "Seekers");
+        tabWidget.add(new SwingLabel("Test"), "Masters");
+        tabWidget.setOrientation(SwingTabWidget.Orientation.Left);
+        frame.add(tabWidget);
+        
+        tabWidget = new SwingTabWidget();
+        tabWidget.add(new SwingLabel("Test"), "Farmers");
+        tabWidget.add(new SwingLabel("Test"), "Seekers");
+        tabWidget.add(new SwingLabel("Test"), "Masters");
+        tabWidget.setOrientation(SwingTabWidget.Orientation.Bottom);
+        frame.add(tabWidget);
+        
+        tabWidget = new SwingTabWidget();
+        tabWidget.add(new SwingLabel("Test"), "Farmers");
+        tabWidget.add(new SwingLabel("Test"), "Seekers");
+        tabWidget.add(new SwingLabel("Test"), "Masters");
+        tabWidget.setOrientation(SwingTabWidget.Orientation.Right);
+        frame.add(tabWidget);
+        add(frame);
+        // End Last Block
     }
     
 }

@@ -21,7 +21,7 @@ import net.nexustools.gui.event.SelectionListener;
  *
  * @author katelyn
  */
-public interface Options<I> {
+public interface Options<I, S> {
 	
 	public I[] options();
 	public void setOptions(I... options);
@@ -29,7 +29,7 @@ public interface Options<I> {
 	public I[] selected();
 	
 	// Events
-	public void addSelectionListener(SelectionListener selectionListener);
-	public void removeSelectionListener(SelectionListener selectionListener);
+	public void addSelectionListener(SelectionListener<I, S> selectionListener);
+	public void removeSelectionListener(SelectionListener<I, S> selectionListener);
 	
 }

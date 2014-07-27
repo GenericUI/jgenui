@@ -21,4 +21,9 @@ package net.nexustools.gui.platform;
  */
 public class PlatformException extends Exception {
 	
+	public PlatformException() {}
+	public PlatformException(String msg) {
+		super(msg);
+	}
+	
 }

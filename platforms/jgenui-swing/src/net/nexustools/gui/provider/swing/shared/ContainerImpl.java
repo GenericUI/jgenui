@@ -12,8 +12,6 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.WeakHashMap;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.event.DefaultEventDispatcher;
@@ -51,24 +49,13 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
         }
 
         @Override
-        public void addLayoutComponent(Component comp, Object constraints) {
-            System.out.println("addLayoutComponent");
-            System.out.println(comp);
-            System.out.println(constraints);
-        }
+        public void addLayoutComponent(Component comp, Object constraints) {}
 
         @Override
-        public void addLayoutComponent(String name, Component comp) {
-            System.out.println("addLayoutComponent");
-            System.out.println(comp);
-            System.out.println(name);
-        }
+        public void addLayoutComponent(String name, Component comp) {}
 
         @Override
-        public void removeLayoutComponent(Component comp) {
-            System.out.println("removeLayoutComponent");
-            System.out.println(comp);
-        }
+        public void removeLayoutComponent(Component comp) {}
 
         @Override
         public Dimension preferredLayoutSize(Container parent) {
@@ -100,9 +87,7 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
                 return cache.minSize;
             
             try {
-                System.out.println("preferredLayoutSize");
                 Size size = layout.calculateMinimumSize(((ContainerWrap)parent).getGenUIContainer());
-                System.out.println(size);
                 Insets insets = parent.getInsets();
                 return cache.prefSize = new Dimension((int)size.w+insets.left+insets.right, (int)size.h+insets.top+insets.bottom);
             } catch(RuntimeException ex) {

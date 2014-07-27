@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
 import net.nexustools.gui.StyleRoot;
+import net.nexustools.gui.Widget;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.event.EventListenerRedirect;
 import net.nexustools.gui.event.FocusListener;
@@ -170,6 +171,14 @@ public abstract class WidgetImpl<J extends Component> {
     public WidgetImpl(SwingPlatform platform) {
         this.platform = platform;
         component = create();
+    }
+    
+    protected void inherit(Widget from) {
+        setTag(from.tag());
+        setEnabled(from.enabled());
+        setFocusable(from.isFocusable());
+        setRenderer(from.renderer());
+        setVisible(from.isVisible());
     }
     
     public J internal() {
@@ -505,13 +514,17 @@ public abstract class WidgetImpl<J extends Component> {
     }
 	
     public Size minimumSize() {
-        return read(new Reader<Size>() {
-            @Override
-            public Size read() {
-                Dimension dim = component.getMinimumSize();
-                return new Size(dim.width, dim.height);
-            }
-        });
+        try {
+            return read(new Reader<Size>() {
+                @Override
+                public Size read() {
+                    Dimension dim = component.getMinimumSize();
+                    return new Size(dim.width, dim.height);
+                }
+            });
+        } catch(NullPointerException e) {
+            return new Size(0, 0);
+        }
     }
     public void setMinimumSize(final Size size) {
         act(new Runnable() {

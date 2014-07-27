@@ -7,6 +7,7 @@
 package net.nexustools.gui.provider.swing;
 
 import java.awt.AWTEvent;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Window;
@@ -18,28 +19,34 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JCheckBox;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Button;
+import net.nexustools.gui.CheckBox;
 import net.nexustools.gui.Container;
+import net.nexustools.gui.Frame;
 import net.nexustools.gui.Label;
+import net.nexustools.gui.RadioButton;
+import net.nexustools.gui.ToggleButton;
 import net.nexustools.gui.Widget;
+import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.platform.Platform;
 import net.nexustools.gui.platform.PlatformException;
 import net.nexustools.gui.platform.RenderTargetSupportedException;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
+import net.nexustools.gui.provider.swing.shared.WidgetImpl;
+import net.nexustools.gui.render.Font;
 import nexustools.io.format.StreamTokenizer;
 
 /**
  *
  * @author katelyn
  */
-public class SwingPlatform extends Platform {
+public class SwingPlatform extends Platform<java.awt.Component> {
     
     public static class SwingEventQueue extends EventQueue {
         private final ArrayList<Runnable> idleEvents = new ArrayList();
@@ -89,6 +96,33 @@ public class SwingPlatform extends Platform {
     }
 
     @Override
+    public <T, F> T convert(F from) throws PlatformException {
+        if(from instanceof java.awt.Font)
+            return (T)new Font();
+        if(from instanceof java.awt.Color)
+            return (T)new Font();
+        if(from instanceof java.awt.Dimension)
+            return (T)new Size(((java.awt.Dimension)from).width, ((java.awt.Dimension)from).height);
+        if(from instanceof Widget) {
+            return (T)convertWidget((Widget)from);
+        }
+        
+        throw new PlatformException("Cannot convert " + from.getClass().getName());
+    }
+    
+    public Widget convertWidget(Widget from) throws PlatformException {
+        if(from instanceof WidgetImpl)
+            return from;
+
+        if(from instanceof Label)
+            return new SwingLabel((Label)from, this);
+        if(from instanceof Button)
+            return new SwingButton((Button)from, this);
+
+        throw new PlatformException("Swing has no implementation widget compatible with " + from.getClass().getName());
+    }
+
+    @Override
     public Base create(Class<? extends Base> type) throws RenderTargetSupportedException {
         if(type == Container.class)
             return new SwingContainer(this);
@@ -96,6 +130,14 @@ public class SwingPlatform extends Platform {
             return new SwingLabel(this);
         else if(type == Button.class)
             return new SwingButton(this);
+        else if(type == ToggleButton.class)
+            return new SwingToggleButton(this);
+        else if(type == CheckBox.class)
+            return new SwingCheckBox(this);
+        else if(type == RadioButton.class)
+            return new SwingRadioButton(this);
+        else if(type == Frame.class)
+            return new SwingFrame(this);
         else if(type == Body.class)
             return new SwingBody(this);
         
@@ -211,6 +253,11 @@ public class SwingPlatform extends Platform {
             }
         } else
             throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Component nativeFor(Widget widget) throws PlatformException {
+        return ((WidgetImpl)convertWidget(widget)).internal();
     }
     
 }

@@ -20,5 +20,10 @@ package net.nexustools.gui.platform;
  * @author katelyn
  */
 public class RenderTargetSupportedException extends PlatformException {
+
+	public RenderTargetSupportedException() {}
+	public RenderTargetSupportedException(String msg) {
+		super(msg);
+	}
 	
 }

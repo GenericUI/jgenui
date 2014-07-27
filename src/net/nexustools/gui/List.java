@@ -19,4 +19,4 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface List<I> extends Input<I>, Options<I> {}
+public interface List<I> extends Input<I>, Options<I, List> {}

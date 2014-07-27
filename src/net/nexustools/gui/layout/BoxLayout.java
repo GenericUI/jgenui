@@ -115,9 +115,7 @@ public class BoxLayout implements Layout {
 			case Vertical:
 			{
 				for(Widget child : container) {
-					System.out.println(child);
 					Size prefSize = child.preferredSize();
-					System.out.println(prefSize);
 					size.w = Math.max(size.w, prefSize.w);
 					size.h += prefSize.h;
 				}

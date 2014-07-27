@@ -73,7 +73,6 @@ public abstract class EventDispatcher<R extends RunQueue, L extends EventListene
 	public void add(final L listener) {
 		lock.act(new ReadWriteLock.IfUpgradeWriter() {
 			public void perform(ReadWriteLock lock) {
-				System.out.println("Added Listener: " + listeners.size());
 				if(listeners.isEmpty())
 					setCleanup(new Runnable() {
 						public void run() {

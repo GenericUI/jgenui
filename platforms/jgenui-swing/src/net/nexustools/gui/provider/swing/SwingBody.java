@@ -182,8 +182,6 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
         act(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Invalidating Window");
-
                 Insets inserts = component.getInsets();
                 java.awt.Container container = component.getContentPane();
 

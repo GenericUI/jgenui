@@ -28,8 +28,10 @@ import nexustools.runtime.DefaultRunQueue;
 /**
  *
  * @author katelyn
+ * 
+ * @param <W> Base type of native widgets
  */
-public abstract class Platform extends DefaultRunQueue {
+public abstract class Platform<W> extends DefaultRunQueue {
 	
 	private static final HashMap<Class<? extends Platform>, Platform> platformsByClass = new HashMap();
 	private static final HashMap<String, Platform> platformsByName = new HashMap();
@@ -151,6 +153,8 @@ public abstract class Platform extends DefaultRunQueue {
 	
 	public abstract void onIdle(Runnable run);
 	public abstract void act(Runnable run) throws InvocationTargetException;
+	public abstract W nativeFor(Widget widget) throws PlatformException;
+	public abstract <T, F> T convert(F from) throws PlatformException;
 	
 	public abstract void open(String url);
     

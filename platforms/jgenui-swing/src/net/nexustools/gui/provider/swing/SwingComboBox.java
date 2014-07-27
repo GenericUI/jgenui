@@ -14,6 +14,7 @@ import javax.swing.JComboBox;
 import net.nexustools.gui.ComboBox;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.event.SelectionListener;
+import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.provider.swing.shared.ListenerProp;
 import net.nexustools.gui.provider.swing.shared.PropDispatcher;
 import net.nexustools.gui.provider.swing.shared.WidgetImpl;
@@ -28,6 +29,10 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     private I[] options;
     public SwingComboBox() {
         super(SwingPlatform.instance());
+    }
+    public SwingComboBox(I[] options) {
+        this();
+        setOptions(options);
     }
 
     @Override
@@ -181,8 +186,8 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
     }
 
     @Override
-    public void setTemplate(String template) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void setTemplate(String template) {}
+    
+    
 
 }

@@ -8,7 +8,10 @@ package net.nexustools.gui.provider.swing;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import net.nexustools.gui.Container;
 import net.nexustools.gui.Frame;
+import net.nexustools.gui.Widget;
 import net.nexustools.gui.layout.Layout;
 
 /**
@@ -18,6 +21,10 @@ import net.nexustools.gui.layout.Layout;
 public class SwingFrame extends SwingContainer implements Frame {
 
     private String title;
+    private boolean raised;
+    SwingFrame(SwingPlatform platform) {
+        super(platform);
+    }
     public SwingFrame(String title) {
         super();
         setTitle(title);
@@ -33,9 +40,28 @@ public class SwingFrame extends SwingContainer implements Frame {
     }
 
     @Override
-    public void setTitle(String title) {
-        this.title = title;
-        Border borderStyle = BorderFactory.createEtchedBorder();
+    public void setTitle(final String title) {
+        act(new Runnable() {
+            @Override
+            public void run() {
+                SwingFrame.this.title = title;
+                updateBorder();
+            }
+        });
+    }
+
+    public void setRaised(final boolean on) {
+        act(new Runnable() {
+            @Override
+            public void run() {
+                raised = on;
+                updateBorder();
+            }
+        });
+    }
+    
+    protected void updateBorder() {
+        Border borderStyle = BorderFactory.createEtchedBorder(raised ? EtchedBorder.RAISED : EtchedBorder.LOWERED);
         component.setBorder(BorderFactory.createTitledBorder(borderStyle, title));
     }
     
