@@ -8,3 +8,8 @@
 /examples/SwingThemeSwitcher/dist/
 /platforms/jgenui-lwjgl/nbproject/private/
 /nbproject/private/
+/platforms/AndroidApplication1/gen/
+/platforms/AndroidApplication1/bin/
+/platforms/jgenui-android/gen/
+/platforms/jgenui-android/bin/
+/platforms/jgenui-android/nbandroid/
