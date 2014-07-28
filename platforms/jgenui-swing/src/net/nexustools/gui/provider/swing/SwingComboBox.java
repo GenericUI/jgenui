@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import net.nexustools.concurrent.PropAccessor;
 import net.nexustools.gui.ComboBox;
 import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.event.EventDispatcher;
@@ -113,7 +114,7 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
 
     private final ListenerProp<ItemListener> itemListener = new ListenerProp<ItemListener>() {
         @Override
-        public void connect() {
+        public void connect(final PropAccessor<ItemListener> itemListener) {
             SwingComboBox.this.act(new Runnable() {
                 @Override
                 public void run() {
@@ -142,18 +143,18 @@ public class SwingComboBox<I> extends WidgetImpl<JComboBox> implements ComboBox<
                     };
 
                     component.addItemListener(eventListener);
-                    set(eventListener);
+                    itemListener.set(eventListener);
                 }
             });
 
         }
 
         @Override
-        public void disconnect() {
+        public void disconnect(final PropAccessor<ItemListener> itemListener) {
             SwingComboBox.this.act(new Runnable() {
                 @Override
                 public void run() {
-                    component.removeItemListener(clear());
+                    component.removeItemListener(itemListener.take());
                 }
             });
         }

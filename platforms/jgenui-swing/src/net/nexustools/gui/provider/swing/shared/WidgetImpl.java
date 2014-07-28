@@ -18,14 +18,16 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.ListIterator;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import net.nexustools.concurrent.IfWriteReader;
+import net.nexustools.concurrent.Prop;
+import net.nexustools.concurrent.PropAccessor;
+import net.nexustools.concurrent.PropList;
+import net.nexustools.concurrent.Writer;
 import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.AbstractMenu;
-import net.nexustools.gui.Action;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Editable;
 import net.nexustools.gui.Menu;
@@ -47,7 +49,6 @@ import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.provider.swing.SwingPlatform;
-import net.nexustools.gui.provider.swing.render.SwingInstruction;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
 import net.nexustools.gui.render.Painter;
 import net.nexustools.gui.render.Renderable;
@@ -63,27 +64,24 @@ import net.nexustools.gui.render.StyleSheet;
 public abstract class WidgetImpl<J extends Component> {
 
     protected static abstract class Reader<R> implements Runnable {
-
         R value;
-
         @Override
         public void run() {
             value = read();
         }
-
         public abstract R read();
     }
 
-    protected Style style;
     protected final J component;
     protected final SwingPlatform platform;
-    protected Painter.Instruction[] renderInstructions;
-    protected final ArrayList<String> classes = new ArrayList();
-    protected Renderer renderer;
+    protected Prop<Painter.Instruction[]> renderInstructions = new Prop();
+    protected final PropList<String> classes = new PropList();
+    protected Prop<Renderer> renderer = new Prop();
+    protected Prop<Style> style = new Prop();
 
-    private final ListenerProp<ComponentListener> componentListener = new ListenerProp() {
+    private final ListenerProp<ComponentListener> componentListener = new ListenerProp<ComponentListener>() {
         @Override
-        public void connect() {
+        public void connect(PropAccessor<ComponentListener> componentListener) {
             ComponentListener eventListener = new ComponentListener() {
                 @Override
                 public void componentResized(ComponentEvent e) {
@@ -151,17 +149,17 @@ public abstract class WidgetImpl<J extends Component> {
             };
 
             component.addComponentListener(eventListener);
-            set(eventListener);
+            componentListener.set(eventListener);
         }
 
         @Override
-        public void disconnect() {
-            clear();
+        public void disconnect(PropAccessor<ComponentListener> componentListener) {
+            component.removeComponentListener(componentListener.take());
         }
     };
-    private final ListenerProp<java.awt.event.FocusListener> focusListener = new ListenerProp() {
+    private final ListenerProp<java.awt.event.FocusListener> focusListener = new ListenerProp<java.awt.event.FocusListener>() {
         @Override
-        public void connect() {
+        public void connect(PropAccessor<java.awt.event.FocusListener> focusListener) {
             java.awt.event.FocusListener eventListener = new java.awt.event.FocusListener() {
                 @Override
                 public void focusGained(java.awt.event.FocusEvent e) {
@@ -175,12 +173,12 @@ public abstract class WidgetImpl<J extends Component> {
             };
 
             component.addFocusListener(eventListener);
-            set(eventListener);
+            focusListener.set(eventListener);
         }
 
         @Override
-        public void disconnect() {
-            clear();
+        public void disconnect(PropAccessor<java.awt.event.FocusListener> focusListener) {
+            component.removeFocusListener(focusListener.take());
         }
     };
     public final PropDispatcher<MoveListener, MoveEvent> moveDispatcher = new PropDispatcher(componentListener, platform());
@@ -343,7 +341,12 @@ public abstract class WidgetImpl<J extends Component> {
     }
 
     public boolean isFocusable() {
-        return component.isFocusable();
+        return read(new Reader<Boolean>() {
+            @Override
+            public Boolean read() {
+                return component.isFocusable();
+            }
+        });
     }
 
     public void setFocusable(final boolean focusable) {
@@ -355,31 +358,53 @@ public abstract class WidgetImpl<J extends Component> {
         });
     }
 
-    public void optimize(ListIterator<Painter.Instruction> instructions) {
-    }
+    public void pushRedraw(final Renderer renderer, final Painter.Instruction[] instructions) {
+        if(this.renderer.read(new IfWriteReader<Boolean, PropAccessor<Renderer>>() {
 
-    public void pushRedraw(final Painter.Instruction[] instructions) {
+            @Override
+            public Boolean def() {
+                return false;
+            }
+
+            @Override
+            public boolean test(PropAccessor<Renderer> against) {
+                return against.isTrue() && against.get().equals(renderer);
+            }
+
+            @Override
+            public Boolean read(PropAccessor<Renderer> data) {
+                WidgetImpl.this.renderInstructions.set(instructions.length > 0 ? instructions : null);
+                return true;
+            }
+        }))
+            repaint();
+    }
+    
+    public void repaint() {
         act(new Runnable() {
             public void run() {
-                WidgetImpl.this.renderInstructions = instructions.length > 0 ? instructions : null;
                 component.repaint();
             }
         });
     }
 
     public boolean customRender(final Graphics2D g) {
-        return read(new Reader<Boolean>() {
-            @Override
-            public Boolean read() {
-                if (WidgetImpl.this.renderInstructions != null) {
-                    for(Painter.Instruction instruction : WidgetImpl.this.renderInstructions) {
-                        SwingInstruction.compile(instruction).run(g);
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
+        
+        
+//        return read(new Reader<Boolean>() {
+//            @Override
+//            public Boolean read() {
+//                if (WidgetImpl.this.renderInstructions != null) {
+//                    for(Painter.Instruction instruction : WidgetImpl.this.renderInstructions) {
+//                        SwingInstruction.compile(instruction).run(g);
+//                    }
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+        
+        return false;
     }
 
     public Point pos() {
@@ -391,7 +416,7 @@ public abstract class WidgetImpl<J extends Component> {
     }
 
     public Shape shape() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return bounds();
     }
 
     public Rect bounds() {
@@ -430,16 +455,18 @@ public abstract class WidgetImpl<J extends Component> {
     }
 
     public Renderer renderer() {
-        // TODO: Implement a renderer that will render the native component by default
-        return renderer;
+        return renderer.get();
     }
 
-    public void setRenderer(Renderer renderer) {
-        this.renderer = renderer;
-    }
-
-    public void render(Painter p) {
-        renderer.render((Renderable)this, p);
+    public void setRenderer(final Renderer renderer) {
+        renderInstructions.write(new Writer<PropAccessor<Painter.Instruction[]>>() {
+            @Override
+            public void write(PropAccessor<Painter.Instruction[]> data) {
+                WidgetImpl.this.renderer.set(renderer);
+                data.clear();
+            }
+        });
+        repaint();
     }
 
     public void show() {
@@ -588,22 +615,12 @@ public abstract class WidgetImpl<J extends Component> {
 
     }
 
-    public void setStyle(final Style style) {
-        act(new Runnable() {
-            @Override
-            public void run() {
-                WidgetImpl.this.style = style;
-            }
-        });
+    public void setStyle(Style style) {
+        this.style.set(style);
     }
 
     public Style style() {
-        return read(new Reader<Style>() {
-            @Override
-            public Style read() {
-                return style;
-            }
-        });
+        return style.get();
     }
 
     public StyleSheet activeStyleSheet() {

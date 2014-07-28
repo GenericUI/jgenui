@@ -6,11 +6,18 @@
 
 package net.nexustools.gui.provider.swing.shared;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.EventListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
+import net.nexustools.concurrent.BaseAccessor;
+import net.nexustools.concurrent.ListAccessor;
+import net.nexustools.concurrent.PropAccessor;
+import net.nexustools.concurrent.Writer;
 import net.nexustools.gui.event.Event;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.platform.Platform;
-import net.nexustools.concurrent.Accessor;
 
 /**
  *
@@ -18,7 +25,7 @@ import net.nexustools.concurrent.Accessor;
  */
 public class PropDispatcher<L extends EventListener, E extends Event> extends EventDispatcher<Platform, L, E> {
 
-    private final ListenerProp prop;
+    private final ListenerProp<L> prop;
     public PropDispatcher(ListenerProp prop, Platform queue) {
         super(queue);
         this.prop = prop;
@@ -27,14 +34,19 @@ public class PropDispatcher<L extends EventListener, E extends Event> extends Ev
     @Override
     public void connect() {
         System.out.println("Connected Dispatcher");
-        prop.act(new Accessor.IfActor<Accessor<L>>() {
+        prop.write(new Writer() {
             @Override
-            public boolean test(Accessor<L> accessor) {
-                return accessor.isnull();
-            }
-            @Override
-            public void perform(Accessor<L> accessor) {
-                prop.connect();
+            public void write(final BaseAccessor data) {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        public void run() {
+                            prop.connect((PropAccessor<L>)data);
+                        }
+                    });
+                } catch (InterruptedException ex) {
+                } catch (InvocationTargetException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
     }
@@ -42,10 +54,19 @@ public class PropDispatcher<L extends EventListener, E extends Event> extends Ev
     @Override
     public void disconnect() {
         System.out.println("Disconnected Dispatcher");
-        prop.act(new Accessor.IfActor<Accessor<L>>() {
+        prop.write(new Writer() {
             @Override
-            public void perform(Accessor<L> accessor) {
-                prop.disconnect();
+            public void write(final BaseAccessor data) {
+                try {
+                    SwingUtilities.invokeAndWait(new Runnable() {
+                        public void run() {
+                            prop.disconnect((PropAccessor<L>)data);
+                        }
+                    });
+                } catch (InterruptedException ex) {
+                } catch (InvocationTargetException ex) {
+                    ex.getCause().printStackTrace();
+                }
             }
         });
     }

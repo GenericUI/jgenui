@@ -22,6 +22,10 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import net.nexustools.concurrent.BaseAccessor;
+import net.nexustools.concurrent.BaseReader;
+import net.nexustools.concurrent.BaseWriter;
+import net.nexustools.concurrent.FakeLock;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Button;
@@ -48,6 +52,9 @@ import net.nexustools.io.format.StreamTokenizer;
  */
 public class SwingPlatform extends Platform<java.awt.Component> {
     
+    static abstract class SwingReader<R> implements Runnable {
+        public R value;
+    }
     public static class SwingEventQueue extends EventQueue {
         private final ArrayList<Runnable> idleEvents = new ArrayList();
         private Thread thisThread;
@@ -272,6 +279,34 @@ public class SwingPlatform extends Platform<java.awt.Component> {
     @Override
     public SwingClipboard clipboard() {
         return SwingClipboard.instance();
+    }
+
+    public void write(final BaseAccessor data, final BaseWriter actor) {
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                public void run() {
+                    actor.write(data, FakeLock.instance);
+                }
+            });
+        } catch (InterruptedException ex) {
+        } catch (InvocationTargetException ex) {
+            ex.getCause().printStackTrace();
+        }
+    }
+
+    public Object read(final BaseAccessor data, final BaseReader reader) {
+        SwingReader swingReader = new SwingReader() {
+            public void run() {
+                value = reader.read(data, FakeLock.instance);
+            }
+        };
+        try {
+            SwingUtilities.invokeAndWait(swingReader);
+        } catch (InterruptedException ex) {
+        } catch (InvocationTargetException ex) {
+            ex.getCause().printStackTrace();
+        }
+        return swingReader.value;
     }
     
 }

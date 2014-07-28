@@ -16,7 +16,6 @@
 package net.nexustools.gui.render;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ListIterator;
 import net.nexustools.concurrent.Prop;
@@ -72,15 +71,19 @@ public class Pixmap implements Renderable {
 		return new Rect(new Point(0,0),size.get());
 	}
 
-	public void render(Painter p) {
-		
-	}
-
-	public void optimize(ListIterator<Painter.Instruction> instructions) {
+	public void optimize(Renderer renderer, ListIterator<Painter.Instruction> instructions) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
-	public void pushRedraw(Painter.Instruction[] instructions) {
+	public void pushRedraw(Renderer renderer, Painter.Instruction[] instructions) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	public void setRenderer(Renderer renderer) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	public Renderer renderer() {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	

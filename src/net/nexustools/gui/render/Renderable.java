@@ -27,8 +27,9 @@ public interface Renderable {
 	
 	public Shape shape();
 	public Rect bounds();
-	public void render(Painter p);
-	public void optimize(ListIterator<Painter.Instruction> instructions);
-	public void pushRedraw(Painter.Instruction[] instructions);
+	public void pushRedraw(Renderer renderer, Painter.Instruction[] instructions);
+	
+	public void setRenderer(Renderer renderer);
+	public Renderer renderer();
 	
 }

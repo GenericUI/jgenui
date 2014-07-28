@@ -19,35 +19,12 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Image extends Widget, Playback {
+public interface Playback {
 	
-	public static enum Mode {
-		/**
-		 * Render the image exactly as it exists,
-		 * ignore the viewport entirely.
-		 */
-		Original,
-		/**
-		 * Scale the image to fit the viewport,
-		 * ensuring all of it is on screen.
-		 */
-		ScaleToFit,
-		/**
-		 * Crop the image to fill the viewport,
-		 * ensuring the entire viewport has pixels.
-		 */
-		CropToFit,
-		/**
-		 * Stretch the image to fill the viewport,
-		 * ensuring the entire viewport has pixels.
-		 */
-		Stretch
-	}
+	public boolean isPlaying();
 	
-	public Mode mode();
-	public void setMode(Mode mode);
+	public void play();
+	public void pause();
+	public void stop();
 	
-	public int currentFrame();
-	public int countFrames();
-
 }

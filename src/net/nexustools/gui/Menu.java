@@ -16,8 +16,10 @@
 package net.nexustools.gui;
 
 import java.util.Iterator;
-import net.nexustools.concurrent.IterationActor;
+import net.nexustools.concurrent.ListAccessor;
 import net.nexustools.concurrent.Prop;
+import net.nexustools.concurrent.PropList;
+import net.nexustools.concurrent.Writer;
 
 /**
  *
@@ -27,7 +29,7 @@ public class Menu extends AbstractMenu {
 	
 	public static class Separator implements MenuItem {}
 	
-	private final net.nexustools.concurrent.ConcurrentList<MenuItem> menuItems = new net.nexustools.concurrent.ConcurrentList();
+	private final PropList<MenuItem> menuItems = new PropList();
 	
 	public Prop<String> text = new Prop();
 	public Menu() {
@@ -41,9 +43,10 @@ public class Menu extends AbstractMenu {
 	}
 	
 	public void trimSeparators() {
-		menuItems.iterate(new IterationActor<MenuItem>() {
+		menuItems.write(new Writer<ListAccessor<MenuItem>>() {
 			@Override
-			public void iterate(Iterator<MenuItem> it) {
+			public void write(ListAccessor<MenuItem> data) {
+				Iterator<MenuItem> it = data.iterator();
 				boolean lastValid = false;
 				while(it.hasNext()) {
 					MenuItem item = it.next();
@@ -67,23 +70,23 @@ public class Menu extends AbstractMenu {
 	}
 	
 	public void insert(AbstractAction menuItem, int at) {
-		menuItems.add(at, menuItem);
+		menuItems.insert(menuItem, at);
 	}
 	public void insert(AbstractMenu menu, int at) {
-		menuItems.add(at, menu);
+		menuItems.insert(menu, at);
 	}
 	public void insertSeparator(int at) {
-		menuItems.add(at, new Separator());
+		menuItems.insert(new Separator(), at);
 	}
 	
 	public void add(AbstractAction action) {
-		menuItems.add(action);
+		menuItems.push(action);
 	}
 	public void add(AbstractMenu menu) {
-		menuItems.add(menu);
+		menuItems.push(menu);
 	}
 	public void addSeparator() {
-		menuItems.add(new Separator());
+		menuItems.push(new Separator());
 	}
 	
 	public void setText(final String text) {

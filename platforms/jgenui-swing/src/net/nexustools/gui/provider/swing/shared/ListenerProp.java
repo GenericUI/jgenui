@@ -8,6 +8,7 @@ package net.nexustools.gui.provider.swing.shared;
 
 import java.util.EventListener;
 import net.nexustools.concurrent.Prop;
+import net.nexustools.concurrent.PropAccessor;
 
 /**
  *
@@ -15,7 +16,7 @@ import net.nexustools.concurrent.Prop;
  */
 public abstract class ListenerProp<T extends EventListener> extends Prop<T> {
     
-    public abstract void connect();
-    public abstract void disconnect();
+    public abstract void connect(PropAccessor<T> myself);
+    public abstract void disconnect(PropAccessor<T> myself);
     
 }

@@ -17,17 +17,12 @@ package net.nexustools.gui.render;
 
 import java.util.ArrayList;
 import net.nexustools.gui.geom.Shape;
-import net.nexustools.gui.platform.Platform;
 
 /**
  *
  * @author katelyn
  */
 public class Painter {
-
-	public void drawPixmap() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
 
 	public static interface Instruction {}
 	
@@ -53,14 +48,16 @@ public class Painter {
 		}
 	}
 	
+	private final Renderer renderer;
 	private final Renderable target;
 	private final ArrayList<Shape> clipStack = new ArrayList();
 	private final ArrayList<Transform> transformStack = new ArrayList();
 	private final ArrayList<Instruction> instructions = new ArrayList();
 	private final ArrayList<PushFrame> pushStack = new ArrayList();
 	private PushFrame current;
-	public Painter(Renderable renderable) {
+	public Painter(Renderer renderer, Renderable renderable) {
 		current = new PushFrame(renderable.shape());
+		this.renderer = renderer;
 		target = renderable;
 	}
 	
@@ -93,26 +90,20 @@ public class Painter {
 			instructions.clear();
 		}
 	}
+
+	public void drawPixmap() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 	
-	public void optimize() {
-		target.optimize(instructions.listIterator());
-	}
-
-	public void send(boolean optimize) {
-		if(optimize)
-			optimize();
-		
-		target.pushRedraw(takeInstructions());
-	}
-
 	public void send() {
-		send(true);
+		target.pushRedraw(renderer, takeInstructions());
 	}
 
 	@Override
-	protected void finalize() throws Throwable {
+	public void finalize() throws Throwable {
 		if(!instructions.isEmpty())
 			send();
+		
+		super.finalize();
 	}
-	
 }

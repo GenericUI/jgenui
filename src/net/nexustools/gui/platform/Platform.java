@@ -23,7 +23,7 @@ import java.util.Iterator;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.Widget;
 import net.nexustools.io.format.StreamTokenizer;
-import net.nexustools.runtime.DefaultRunQueue;
+import net.nexustools.runtime.ThreadedRunQueue;
 
 /**
  *
@@ -31,7 +31,7 @@ import net.nexustools.runtime.DefaultRunQueue;
  * 
  * @param <W> Base type of native widgets
  */
-public abstract class Platform<W> extends DefaultRunQueue {
+public abstract class Platform<W> extends ThreadedRunQueue {
 	
 	private static final ThreadLocal<Platform> current = new ThreadLocal();
 	private static final HashMap<Class<? extends Platform>, Platform> platformsByClass = new HashMap();
