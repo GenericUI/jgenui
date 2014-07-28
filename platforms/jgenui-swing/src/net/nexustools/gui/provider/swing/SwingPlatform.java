@@ -241,14 +241,14 @@ public class SwingPlatform extends Platform<java.awt.Component> {
 
     @Override
     public void act(Runnable run) throws InvocationTargetException {
-        try {
-            if(EventQueue.isDispatchThread())
-                run.run();
-            else
-                eventQueue.invokeAndWait(run);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SwingPlatform.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        if(EventQueue.isDispatchThread())
+            run.run();
+        else
+            while(true)
+                try {
+                    eventQueue.invokeAndWait(run);
+                    break;
+                } catch (InterruptedException ex) {}
     }
 
     @Override
