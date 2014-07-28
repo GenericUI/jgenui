@@ -148,6 +148,10 @@ public abstract class Platform<W> extends ThreadedRunQueue {
 		MultipleBodies
 	}
 	
+	public Platform(String name) {
+		super(name);
+	}
+	
 	public abstract Base create(Class<? extends Base> type) throws RenderTargetSupportedException;
 	public abstract Widget parse(StreamTokenizer processor) throws PlatformException;
 	public abstract boolean supports(Feature feature);

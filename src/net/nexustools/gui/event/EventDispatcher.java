@@ -15,13 +15,11 @@
 
 package net.nexustools.gui.event;
 
-import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 import net.nexustools.concurrent.IfWriter;
 import net.nexustools.concurrent.ListAccessor;
 import net.nexustools.concurrent.PropList;
-import net.nexustools.concurrent.ReadWriteLock;
 import net.nexustools.runtime.RunQueue;
 
 /**
@@ -42,14 +40,21 @@ public abstract class EventDispatcher<R extends RunQueue, L extends EventListene
 	}
 	
 	public void dispatch(final Processor<L, E> processor) {
-		List<L> cListeners = listeners.copy();
-		if(cListeners.size() < 1)
-			return;
-		
-		E event = processor.create();
-		for(L listener : cListeners) {
-			processor.dispatch(listener, event);
-		}
+		queue.push(new Runnable() {
+			public void run() {
+				List<L> cListeners = listeners.copy();
+				if(cListeners.size() < 1)
+					return;
+
+				final E event = processor.create();
+				for(final L listener : cListeners)
+					queue.push(new Runnable() {
+						public void run() {
+							processor.dispatch(listener, event);
+						}
+					});
+			}
+		});
 	}
 	
 	public void add(final L listener) {

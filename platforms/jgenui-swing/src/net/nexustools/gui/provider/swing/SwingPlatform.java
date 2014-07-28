@@ -97,6 +97,7 @@ public class SwingPlatform extends Platform<java.awt.Component> {
     }
     
     public SwingPlatform() {
+        super("jgenui-swing");
         System.out.println("Creating swing platform");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
