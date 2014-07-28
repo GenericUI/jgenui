@@ -90,9 +90,17 @@ public class SwingPlatform extends Platform<java.awt.Component> {
     }
     
     public SwingPlatform() {
+        System.out.println("Creating swing platform");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {} catch (InstantiationException ex) {} catch (IllegalAccessException ex) {} catch (UnsupportedLookAndFeelException ex) {}
+        try {
+            act(new Runnable() {
+                public void run() {
+                    makeCurrent();
+                }
+            });
+        } catch (InvocationTargetException ex) {}
         makeCurrent();
     }
 
@@ -259,6 +267,11 @@ public class SwingPlatform extends Platform<java.awt.Component> {
     @Override
     public Component nativeFor(Widget widget) throws PlatformException {
         return ((WidgetImpl)convertWidget(widget)).internal();
+    }
+
+    @Override
+    public SwingClipboard clipboard() {
+        return SwingClipboard.instance();
     }
     
 }

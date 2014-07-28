@@ -13,27 +13,20 @@
  * 
  */
 
-package net.nexustools.gui.render;
-
-import net.nexustools.concurrent.Prop;
-import net.nexustools.gui.Widget;
-import net.nexustools.utils.Pair;
+package net.nexustools.gui.platform;
 
 /**
  *
  * @author katelyn
  */
-public class StyleSheet {
+public interface MimeStorage {
 	
-	public static interface Matcher {
-		public boolean matches(String id);
-	}
+	public String string();
+	public void setString(String string);
 	
-	private final Prop<Pair<String, Style>[]> rules = new Prop();
 	
-	public Style createFor(Widget widget) {
-		Style style = new Style();
-		return null;
-	}
+	
+	public Object get(String mime);
+	public void put(String mime, Object data);
 	
 }

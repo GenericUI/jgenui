@@ -19,15 +19,15 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface RangeInput extends Input<Double>, Editable {
+public interface RangeInput extends Input<Float>, Editable {
 	
-	public double step();
-	public void setStep(double step);
+	public float step();
+	public void setStep(float step);
 	
-	public double min();
-	public void setMin(double min);
+	public float min();
+	public void setMin(float min);
 	
-	public double max();
-	public void setMax(double max);
+	public float max();
+	public void setMax(float max);
 	
 }

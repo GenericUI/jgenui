@@ -17,6 +17,7 @@ package net.nexustools.gui.render;
 
 import java.util.ArrayList;
 import net.nexustools.gui.geom.Shape;
+import net.nexustools.gui.platform.Platform;
 
 /**
  *
@@ -24,10 +25,11 @@ import net.nexustools.gui.geom.Shape;
  */
 public class Painter {
 
-	public static class Instruction {
-		public Instruction() {
-		}
+	public void drawPixmap() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
+
+	public static interface Instruction {}
 	
 	protected static class PushFrame {
 		public final Shape baseClip;

@@ -47,8 +47,10 @@ import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.provider.swing.SwingPlatform;
+import net.nexustools.gui.provider.swing.render.SwingInstruction;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
 import net.nexustools.gui.render.Painter;
+import net.nexustools.gui.render.Renderable;
 import net.nexustools.gui.render.Renderer;
 import net.nexustools.gui.render.Style;
 import net.nexustools.gui.render.StyleSheet;
@@ -356,16 +358,28 @@ public abstract class WidgetImpl<J extends Component> {
     public void optimize(ListIterator<Painter.Instruction> instructions) {
     }
 
-    public void pushRedraw(Painter.Instruction[] instructions) {
-        this.renderInstructions = instructions.length > 0 ? instructions : null;
-        component.repaint();
+    public void pushRedraw(final Painter.Instruction[] instructions) {
+        act(new Runnable() {
+            public void run() {
+                WidgetImpl.this.renderInstructions = instructions.length > 0 ? instructions : null;
+                component.repaint();
+            }
+        });
     }
 
-    public boolean customRender(Graphics2D g) {
-        if (this.renderInstructions != null) {
-            // TODO: Render
-        }
-        return false;
+    public boolean customRender(final Graphics2D g) {
+        return read(new Reader<Boolean>() {
+            @Override
+            public Boolean read() {
+                if (WidgetImpl.this.renderInstructions != null) {
+                    for(Painter.Instruction instruction : WidgetImpl.this.renderInstructions) {
+                        SwingInstruction.compile(instruction).run(g);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public Point pos() {
@@ -425,7 +439,7 @@ public abstract class WidgetImpl<J extends Component> {
     }
 
     public void render(Painter p) {
-        renderer.render(p);
+        renderer.render((Renderable)this, p);
     }
 
     public void show() {
@@ -698,7 +712,7 @@ public abstract class WidgetImpl<J extends Component> {
     public Renderer defaultRenderer() {
         return new Renderer() {
             @Override
-            public void render(Painter painter) {
+            public void render(Renderable target, Painter painter) {
                 // TODO: Paint component into painter
             }
         };
@@ -720,13 +734,10 @@ public abstract class WidgetImpl<J extends Component> {
         menu.show((Widget)this, at);
     }
     
-    public Menu buildEditMenu(Editable editable) {
+    protected Menu buildEditMenu(Editable editable) {
         Menu fileCopyMenu = new Menu();
-        Action action = new Action("Cut");
         fileCopyMenu.add(editable.cutAction());
-        action = new Action("Copy");
         fileCopyMenu.add(editable.copyAction());
-        action = new Action("Paste");
         fileCopyMenu.add(editable.pasteAction());
         return fileCopyMenu;
     }

@@ -33,10 +33,15 @@ import net.nexustools.runtime.DefaultRunQueue;
  */
 public abstract class Platform<W> extends DefaultRunQueue {
 	
+	private static final ThreadLocal<Platform> current = new ThreadLocal();
 	private static final HashMap<Class<? extends Platform>, Platform> platformsByClass = new HashMap();
 	private static final HashMap<String, Platform> platformsByName = new HashMap();
 	private static final ArrayList<Platform> allPlatforms = new ArrayList();
 	private static boolean needScanPlatforms = true;
+	
+	public static Platform current() {
+		return current.get();
+	}
 	
 	public static void scanPlatforms() {
 		needScanPlatforms = false;
@@ -147,6 +152,8 @@ public abstract class Platform<W> extends DefaultRunQueue {
 	public abstract Widget parse(StreamTokenizer processor) throws PlatformException;
 	public abstract boolean supports(Feature feature);
 	
+	public abstract Clipboard clipboard();
+	
 	public abstract String[] LAFs();
 	public abstract void setLAF(String laf);
 	public abstract String LAF();
@@ -157,5 +164,10 @@ public abstract class Platform<W> extends DefaultRunQueue {
 	public abstract <T, F> T convert(F from) throws PlatformException;
 	
 	public abstract void open(String url);
+	
+	@Override
+	public final void makeCurrent() {
+		current.set(this);
+	}
     
 }

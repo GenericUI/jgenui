@@ -13,27 +13,21 @@
  * 
  */
 
-package net.nexustools.gui.render;
-
-import net.nexustools.gui.Widget;
+package net.nexustools.gui;
 
 /**
  *
  * @author katelyn
  */
-public class WidgetRenderer extends Renderer {
+public interface ProgressBar extends Widget {
 	
-	private final Widget widget;
-	public WidgetRenderer(Widget widget) {
-		this.widget = widget;
-	}
+	public int value();
+	public void setValue(int value);
 	
-	public final Widget widget() {
-		return widget;
-	}
-
-	public void render(Painter p) {
-		
-	}
+	public int max();
+	public void setMax(int max);
+	
+	public int min();
+	public void setMin(int min);
 	
 }

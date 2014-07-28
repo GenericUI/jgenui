@@ -53,7 +53,7 @@ public class SwingRangeInput extends WidgetImpl<JSpinner> implements RangeInput 
     }
 
     @Override
-    public void setValue(final Double value) {
+    public void setValue(final Float value) {
         act(new Runnable() {
             @Override
             public void run() {
@@ -63,42 +63,42 @@ public class SwingRangeInput extends WidgetImpl<JSpinner> implements RangeInput 
     }
 
     @Override
-    public Double value() {
-        return read(new Reader<Double>() {
+    public Float value() {
+        return read(new Reader<Float>() {
             @Override
-            public Double read() {
-                return (Double)component.getValue();
+            public Float read() {
+                return (Float)component.getValue();
             }
         });
     }
 
     @Override
-    public double step() {
+    public float step() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void setStep(double step) {
+    public void setStep(float step) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public double min() {
+    public float min() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void setMin(double min) {
+    public void setMin(float min) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public double max() {
+    public float max() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void setMax(double max) {
+    public void setMax(float max) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -18,6 +18,7 @@ import net.nexustools.gui.provider.swing.SwingFrame;
 import net.nexustools.gui.provider.swing.SwingLabel;
 import net.nexustools.gui.provider.swing.SwingMultiList;
 import net.nexustools.gui.provider.swing.SwingOnOffButton;
+import net.nexustools.gui.provider.swing.SwingProgressBar;
 import net.nexustools.gui.provider.swing.SwingRadioButton;
 import net.nexustools.gui.provider.swing.SwingRangeInput;
 import net.nexustools.gui.provider.swing.SwingTabWidget;
@@ -197,6 +198,15 @@ public class SwingThemeTester extends SwingBody {
         column.add(textArea);
         columns.add(column);
         // End Fourth Column
+        
+        // Start Fifth Column
+        column = new SwingFrame("ProgressBars and Indicators", BoxLayout.Vertical);
+        SwingProgressBar swingProgressBar = new SwingProgressBar();
+        swingProgressBar.setValue(50);
+        swingProgressBar.setMax(100);
+        column.add(swingProgressBar);
+        columns.add(column);
+        // End Fifth Column
         add(columns);
         
         // Last Block

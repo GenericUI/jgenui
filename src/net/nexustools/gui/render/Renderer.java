@@ -20,15 +20,11 @@ package net.nexustools.gui.render;
  * @author katelyn
  */
 public abstract class Renderer {
-
-	private Renderable target;
 	
-	public abstract void render(Painter painter);
-	
-	public void run() {
+	public abstract void render(Renderable target, Painter painter);
+	public final void render(Renderable target) {
 		Painter painter = new Painter(target);
-		render(painter);
-		
+		render(target, painter);
 		painter.send();
 	}
 	

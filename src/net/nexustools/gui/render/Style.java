@@ -15,12 +15,23 @@
 
 package net.nexustools.gui.render;
 
+import net.nexustools.concurrent.Prop;
+
 /**
  *
  * @author katelyn
  */
 public class Style {
 	
+	public static abstract class BorderRenderer extends Renderer {
+		public abstract int top();
+		public abstract int left();
+		public abstract int right();
+		public abstract int bottom();
+	}
 	
+	public final Prop<Renderer> background = new Prop();
+	public final Prop<Renderer> foreground = new Prop();
+	public final Prop<BorderRenderer> border = new Prop();
 	
 }

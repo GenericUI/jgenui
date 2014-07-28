@@ -36,7 +36,12 @@ public class SwingFrame extends SwingContainer implements Frame {
 
     @Override
     public String title() {
-        return title;
+        return read(new Reader<String>() {
+            @Override
+            public String read() {
+                return title;
+            }
+        });
     }
 
     @Override
