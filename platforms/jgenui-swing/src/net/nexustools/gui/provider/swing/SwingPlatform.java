@@ -40,7 +40,7 @@ import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
 import net.nexustools.gui.provider.swing.shared.WidgetImpl;
 import net.nexustools.gui.render.Font;
-import nexustools.io.format.StreamTokenizer;
+import net.nexustools.io.format.StreamTokenizer;
 
 /**
  *
@@ -93,6 +93,7 @@ public class SwingPlatform extends Platform<java.awt.Component> {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException ex) {} catch (InstantiationException ex) {} catch (IllegalAccessException ex) {} catch (UnsupportedLookAndFeelException ex) {}
+        makeCurrent();
     }
 
     @Override

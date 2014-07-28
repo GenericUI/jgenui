@@ -19,6 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface StringInput extends Input<String> {
+public interface TextArea extends SingleInput<String>, SelectionRange, Editable {
 	
 }

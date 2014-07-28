@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JButton;
+import net.nexustools.gui.AbstractAction;
+import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.Button;
 import net.nexustools.gui.provider.swing.shared.ButtonImpl;
 
@@ -52,6 +54,15 @@ public class SwingButton extends ButtonImpl<JButton> implements Button {
     @Override
     protected JButton create() {
         return new NativeButton();
+    }
+
+    public AbstractAction action() {
+        return new ActivateableAction(this) {
+            @Override
+            public String text() {
+                return SwingButton.this.text();
+            }
+        };
     }
     
 }

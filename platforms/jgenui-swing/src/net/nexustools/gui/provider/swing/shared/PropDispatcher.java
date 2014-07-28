@@ -10,7 +10,7 @@ import java.util.EventListener;
 import net.nexustools.gui.event.Event;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.platform.Platform;
-import nexustools.concurrent.Accessor;
+import net.nexustools.concurrent.Accessor;
 
 /**
  *

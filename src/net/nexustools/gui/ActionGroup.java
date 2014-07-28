@@ -19,11 +19,11 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface ActionGroup extends Iterable<Button> {
+public interface ActionGroup extends Iterable<Activateable> {
 	
-	public void add(Action action);
-	public void remove(Action action);
+	public void add(Activateable action);
+	public void remove(Activateable action);
 	
-	public Action active();
+	public Activateable active();
     
 }

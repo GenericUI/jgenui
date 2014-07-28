@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JCheckBox;
+import net.nexustools.gui.AbstractAction;
+import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.CheckBox;
 import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
 
@@ -48,6 +50,14 @@ public class SwingCheckBox extends ToggleButtonImpl<JCheckBox> implements CheckB
     @Override
     protected JCheckBox create() {
         return new NativeButton();
+    }
+    public AbstractAction action() {
+        return new ActivateableAction(this) {
+            @Override
+            public String text() {
+                return SwingCheckBox.this.text();
+            }
+        };
     }
     
 }

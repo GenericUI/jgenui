@@ -47,7 +47,7 @@ public class BoxLayout implements Layout {
 			case Horizontal:
 			{
 				float containerHeight = contentSize.h;
-				extra = Math.max(0, contentSize.w - prefFill.w) / container.childCount()-1;
+				extra = (contentSize.w - prefFill.w) / container.childCount()-1;
 				
 				float x = 0;
 				for(Widget child : container) {
@@ -61,7 +61,7 @@ public class BoxLayout implements Layout {
 			case Vertical:
 			{
 				float containerWidth = contentSize.w;
-				extra = Math.max(0, contentSize.h - prefFill.h) / container.childCount()-1;
+				extra = (contentSize.h - prefFill.h) / container.childCount()-1;
 				
 				float y = 0;
 				for(Widget child : container) {

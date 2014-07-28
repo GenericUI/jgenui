@@ -14,7 +14,6 @@ import javax.swing.JComboBox;
 import net.nexustools.gui.ComboBox;
 import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.event.EventDispatcher;
-import net.nexustools.gui.event.SelectionListener;
 import net.nexustools.gui.event.ValueListener;
 import net.nexustools.gui.provider.swing.shared.ListenerProp;
 import net.nexustools.gui.provider.swing.shared.PropDispatcher;

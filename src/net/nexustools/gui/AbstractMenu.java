@@ -16,18 +16,31 @@
 package net.nexustools.gui;
 
 import net.nexustools.gui.geom.Point;
+import net.nexustools.gui.geom.Size;
+import net.nexustools.concurrent.ReadWriteLock;
 
 /**
  *
  * @author katelyn
  */
-public interface AbstractMenu extends Iterable<MenuItem>, Base {
+public abstract class AbstractMenu implements Iterable<MenuItem>, MenuItem, Base {
 	
-	public void show();
-	public void show(Point at);
-	public void show(Widget from);
+	private Shortcut shortcut;
+	public void show(Widget from, Point at) {
+		from.showMenu(this, at);
+	}
+	public void show(Widget from) {
+		Size size = from.size();
+		show(from, new Point(size.w, size.h));
+	}
 	
-	public Shortcut getShortcut();
-	public void setShortcut(Shortcut shortcut);
+	public Shortcut getShortcut() {
+		return null;
+	}
+	public void setShortcut(Shortcut shortcut) {
+		
+	}
+	
+	public abstract String text();
 	
 }

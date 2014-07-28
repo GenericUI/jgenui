@@ -7,7 +7,7 @@
 package net.nexustools.gui.provider.swing.shared;
 
 import java.util.EventListener;
-import nexustools.concurrent.Prop;
+import net.nexustools.concurrent.Prop;
 
 /**
  *

@@ -7,7 +7,6 @@
 package net.nexustools.jgenui.examples;
 
 import net.nexustools.gui.SingleInput;
-import net.nexustools.gui.event.SelectionListener;
 import net.nexustools.gui.event.ValueListener;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.BoxLayout;
@@ -21,8 +20,9 @@ import net.nexustools.gui.provider.swing.SwingMultiList;
 import net.nexustools.gui.provider.swing.SwingOnOffButton;
 import net.nexustools.gui.provider.swing.SwingRadioButton;
 import net.nexustools.gui.provider.swing.SwingRangeInput;
-import net.nexustools.gui.provider.swing.SwingStringInput;
 import net.nexustools.gui.provider.swing.SwingTabWidget;
+import net.nexustools.gui.provider.swing.SwingTextArea;
+import net.nexustools.gui.provider.swing.SwingTextInput;
 import net.nexustools.gui.provider.swing.SwingToggleButton;
 
 /**
@@ -54,9 +54,9 @@ public class SwingThemeTester extends SwingBody {
         comboBox.setEnabled(false);
         column.add(comboBox);
         
-        SwingStringInput swingLineInput = new SwingStringInput();
+        SwingTextInput swingLineInput = new SwingTextInput();
         column.add(swingLineInput);
-        swingLineInput = new SwingStringInput();
+        swingLineInput = new SwingTextInput();
         swingLineInput.setEnabled(false);
         column.add(swingLineInput);
         
@@ -163,13 +163,40 @@ public class SwingThemeTester extends SwingBody {
         // End Second Column
         
         // Start Third Column
-        column = new SwingFrame("Frame Borders", BoxLayout.Vertical);
+        column = new SwingFrame("MultiLists", BoxLayout.Vertical);
         SwingMultiList<String> swingList = new SwingMultiList();
         swingList.setOptions(new String[]{"Option 1", "Option 2", "Option 3", "Option 4"});
         column.add(swingList);
+        swingList = new SwingMultiList();
+        swingList.setOptions(new String[]{"Option 1", "Option 2", "Option 3", "Option 4"});
+        swingList.setSelectionRange(0, 1);
+        swingList.allowMultiple(true);
+        column.add(swingList);
+        swingList = new SwingMultiList();
+        swingList.setOptions(new String[]{"Option 1", "Option 2", "Option 3", "Option 4"});
+        swingList.setEnabled(false);
+        column.add(swingList);
         columns.add(column);
-        // End Second Column
+        // End Third Column
         
+        // Start Fourth Column
+        column = new SwingFrame("Tables and TextAreas", BoxLayout.Vertical);
+        SwingTextArea textArea = new SwingTextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +
+"Nullam fringilla, est ut feugiat ultrices, elit lacus ultricies nibh, id commodo tortor nisi id elit.\n" +
+"Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.\n" +
+"Morbi vel elit erat. Maecenas dignissim, dui et pharetra rutrum, tellus lectus rutrum mi, a convallis libero nisi quis tellus.\n" +
+"Nulla facilisi. Nullam eleifend lobortis nisl, in porttitor tellus malesuada vitae.\n" +
+"Aenean lacus tellus, pellentesque quis molestie quis, fringilla in arcu.\n" +
+"Duis elementum, tellus sed tristique semper, metus metus accumsan augue, et porttitor augue orci a libero.\n" +
+"Ut sed justo ac felis placerat laoreet sed id sem. Proin mattis tincidunt odio vitae tristique.\n" +
+"Morbi massa libero, congue vitae scelerisque vel, ultricies vel nisl.\n" +
+"Vestibulum in tortor diam, quis aliquet quam. Praesent ut justo neque, tempus rutrum est.\n" +
+"Duis eu lectus quam. Vivamus eget metus a mauris molestie venenatis pulvinar eleifend nisi.\n" +
+"Nulla facilisi. Pellentesque at dolor sit amet purus dapibus pulvinar molestie quis neque.\n" +
+"Suspendisse feugiat quam quis dolor accumsan cursus. ");
+        column.add(textArea);
+        columns.add(column);
+        // End Fourth Column
         add(columns);
         
         // Last Block

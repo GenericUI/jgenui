@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JRadioButton;
+import net.nexustools.gui.AbstractAction;
+import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.RadioButton;
 import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
 
@@ -48,6 +50,15 @@ public class SwingRadioButton extends ToggleButtonImpl<JRadioButton> implements 
     @Override
     protected JRadioButton create() {
         return new NativeButton();
+    }
+    
+    public AbstractAction action() {
+        return new ActivateableAction(this) {
+            @Override
+            public String text() {
+                return SwingRadioButton.this.text();
+            }
+        };
     }
     
 }

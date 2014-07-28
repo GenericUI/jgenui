@@ -16,7 +16,7 @@
 package net.nexustools.gui.event;
 
 import java.util.EventListener;
-import nexustools.runtime.RunQueue;
+import net.nexustools.runtime.RunQueue;
 
 /**
  *

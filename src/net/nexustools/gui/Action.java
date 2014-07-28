@@ -15,13 +15,38 @@
 
 package net.nexustools.gui;
 
+import net.nexustools.concurrent.Prop;
+
 /**
  *
  * @author katelyn
  */
-public interface Action extends Activateable, Base {
+public final class Action extends AbstractAction {
 	
-	public String text();
-	public void setText(String text);
+	Prop<String> text = new Prop();
+	public Action() {}
+	public Action(String text) {
+		setText(text);
+	}
+
+	public void setText(String text) {
+		this.text.set(text);
+	}
+	
+	public String text() {
+		return text.get();
+	}
+
+	public boolean selectable() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	public void setSelected(boolean selected) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	public boolean isSelected() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
 	
 }

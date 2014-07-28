@@ -19,15 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface RangeInput extends Input<Double>, Editable {
-	
-	public double step();
-	public void setStep(double step);
-	
-	public double min();
-	public void setMin(double min);
-	
-	public double max();
-	public void setMax(double max);
+public interface EditList<I> extends List<I>, Editable {
 	
 }

@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JToggleButton;
+import net.nexustools.gui.AbstractAction;
+import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.Button;
 import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
 
@@ -47,6 +49,15 @@ public class SwingToggleButton extends ToggleButtonImpl<JToggleButton> implement
     @Override
     protected JToggleButton create() {
         return new NativeButton();
+    }
+    
+    public AbstractAction action() {
+        return new ActivateableAction(this) {
+            @Override
+            public String text() {
+                return SwingToggleButton.this.text(); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
     }
     
 }

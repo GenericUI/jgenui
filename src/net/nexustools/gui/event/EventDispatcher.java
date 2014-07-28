@@ -17,9 +17,9 @@ package net.nexustools.gui.event;
 
 import java.util.ArrayList;
 import java.util.EventListener;
-import nexustools.concurrent.ReadWriteLock;
-import nexustools.concurrent.ReadWriteLock.ProcessingActor;
-import nexustools.runtime.RunQueue;
+import net.nexustools.concurrent.ReadWriteLock;
+import net.nexustools.concurrent.ReadWriteLock.ProcessingActor;
+import net.nexustools.runtime.RunQueue;
 
 /**
  *

@@ -19,15 +19,24 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface RangeInput extends Input<Double>, Editable {
+public class ActivateableAction extends AbstractAction {
 	
-	public double step();
-	public void setStep(double step);
-	
-	public double min();
-	public void setMin(double min);
-	
-	public double max();
-	public void setMax(double max);
+	private final Activateable deligate;
+	public ActivateableAction(Activateable deligate) {
+		this.deligate = deligate;
+	}
+
+	@Override
+	public String text() {
+		return getClass().getName();
+	}
+
+	public boolean selectable() {
+		return deligate.selectable();
+	}
+
+	public boolean isSelected() {
+		return deligate.isSelected();
+	}
 	
 }

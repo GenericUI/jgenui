@@ -21,7 +21,7 @@ import net.nexustools.gui.event.SelectionListener;
  *
  * @author katelyn
  */
-public interface MultiList<I> extends List<I> {
+public interface MultiList<I> extends List<I>, ComplexSelection {
 	
 	public I[] selected();
 	

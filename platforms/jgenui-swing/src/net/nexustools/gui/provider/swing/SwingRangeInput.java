@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JSpinner;
+import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.RangeInput;
 import net.nexustools.gui.provider.swing.shared.WidgetImpl;
 
@@ -18,10 +19,6 @@ import net.nexustools.gui.provider.swing.shared.WidgetImpl;
  * @author katelyn
  */
 public class SwingRangeInput extends WidgetImpl<JSpinner> implements RangeInput {
-
-    public SwingRangeInput() {
-        super(SwingPlatform.instance());
-    }
     
     private class Native extends JSpinner {
         public Native() {
@@ -33,6 +30,11 @@ public class SwingRangeInput extends WidgetImpl<JSpinner> implements RangeInput 
             if(!customRender((Graphics2D)g))
                 super.paint(g);
         }
+    }
+
+    public SwingRangeInput() {
+        super(SwingPlatform.instance());
+        setContextMenu(buildEditMenu(this));
     }
 
     @Override
@@ -98,6 +100,66 @@ public class SwingRangeInput extends WidgetImpl<JSpinner> implements RangeInput 
     @Override
     public void setMax(double max) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public AbstractAction cutAction() {
+        return new AbstractAction() {
+            @Override
+            public String text() {
+                return "Cut";
+            }
+            public boolean selectable() {
+                return false;
+            }
+            public boolean isSelected() {
+                return false;
+            }
+            @Override
+            public void activate() {
+                super.activate();
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
+    }
+
+    public AbstractAction copyAction() {
+        return new AbstractAction() {
+            @Override
+            public String text() {
+                return "Copy";
+            }
+            public boolean selectable() {
+                return false;
+            }
+            public boolean isSelected() {
+                return false;
+            }
+            @Override
+            public void activate() {
+                super.activate();
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
+    }
+
+    public AbstractAction pasteAction() {
+        return new AbstractAction() {
+            @Override
+            public String text() {
+                return "Paste";
+            }
+            public boolean selectable() {
+                return false;
+            }
+            public boolean isSelected() {
+                return false;
+            }
+            @Override
+            public void activate() {
+                super.activate();
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        };
     }
     
 }

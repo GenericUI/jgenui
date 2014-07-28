@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.Widget;
-import nexustools.io.format.StreamTokenizer;
-import nexustools.runtime.DefaultRunQueue;
+import net.nexustools.io.format.StreamTokenizer;
+import net.nexustools.runtime.DefaultRunQueue;
 
 /**
  *

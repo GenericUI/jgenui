@@ -19,4 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface OptionsMenu<I> extends AbstractMenu, Options<I, OptionsMenu> {}
+public abstract class OptionsMenu<I> extends AbstractMenu implements Options<I, OptionsMenu> {
+	
+}

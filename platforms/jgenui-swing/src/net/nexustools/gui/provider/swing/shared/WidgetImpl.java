@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package net.nexustools.gui.provider.swing.shared;
 
 import java.awt.Component;
@@ -12,14 +11,25 @@ import java.awt.EventQueue;
 import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.ListIterator;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import net.nexustools.gui.AbstractAction;
+import net.nexustools.gui.AbstractMenu;
+import net.nexustools.gui.Action;
 import net.nexustools.gui.Container;
+import net.nexustools.gui.Editable;
 import net.nexustools.gui.Menu;
+import net.nexustools.gui.MenuItem;
 import net.nexustools.gui.StyleRoot;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.event.EventDispatcher;
@@ -49,23 +59,26 @@ import net.nexustools.gui.render.StyleSheet;
  * @param <J> The type of swing component this works with
  */
 public abstract class WidgetImpl<J extends Component> {
-    
+
     protected static abstract class Reader<R> implements Runnable {
+
         R value;
+
         @Override
         public void run() {
             value = read();
         }
+
         public abstract R read();
     }
 
     protected Style style;
-    public final J component;
-    public final SwingPlatform platform;
+    protected final J component;
+    protected final SwingPlatform platform;
     protected Painter.Instruction[] renderInstructions;
     protected final ArrayList<String> classes = new ArrayList();
     protected Renderer renderer;
-    
+
     private final ListenerProp<ComponentListener> componentListener = new ListenerProp() {
         @Override
         public void connect() {
@@ -85,6 +98,7 @@ public abstract class WidgetImpl<J extends Component> {
                         }
                     });
                 }
+
                 @Override
                 public void componentMoved(ComponentEvent e) {
                     moveDispatcher.dispatch(new EventDispatcher.Processor<MoveListener, MoveEvent>() {
@@ -100,6 +114,7 @@ public abstract class WidgetImpl<J extends Component> {
                         }
                     });
                 }
+
                 @Override
                 public void componentShown(ComponentEvent e) {
                     visibilityDispatcher.dispatch(new EventDispatcher.Processor<VisibilityListener, VisibilityEvent>() {
@@ -132,10 +147,11 @@ public abstract class WidgetImpl<J extends Component> {
                     });
                 }
             };
-            
+
             component.addComponentListener(eventListener);
             set(eventListener);
         }
+
         @Override
         public void disconnect() {
             clear();
@@ -149,15 +165,17 @@ public abstract class WidgetImpl<J extends Component> {
                 public void focusGained(java.awt.event.FocusEvent e) {
                     focusDispatcher.dispatch(null);
                 }
+
                 @Override
                 public void focusLost(java.awt.event.FocusEvent e) {
                     focusDispatcher.dispatch(null);
                 }
             };
-            
+
             component.addFocusListener(eventListener);
             set(eventListener);
         }
+
         @Override
         public void disconnect() {
             clear();
@@ -167,12 +185,46 @@ public abstract class WidgetImpl<J extends Component> {
     public final PropDispatcher<SizeListener, SizeEvent> sizeDispatcher = new PropDispatcher(componentListener, platform());
     public final PropDispatcher<VisibilityListener, VisibilityEvent> visibilityDispatcher = new PropDispatcher(componentListener, platform());
     public final PropDispatcher<FocusListener, FocusEvent> focusDispatcher = new PropDispatcher(focusListener, platform());
-    
+
+    private Menu contextMenu;
+
     public WidgetImpl(SwingPlatform platform) {
         this.platform = platform;
         component = create();
+        component.addMouseListener(new MouseListener() {
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                }
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                }
+            }
+
+            private void doPop(MouseEvent e) {
+                Menu contextMenu = contextMenu();
+                if (contextMenu != null) {
+
+                }
+            }
+
+            public void mouseClicked(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    doPop(e);
+                }
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
+        });
     }
-    
+
     protected void inherit(Widget from) {
         setTag(from.tag());
         setEnabled(from.enabled());
@@ -180,11 +232,11 @@ public abstract class WidgetImpl<J extends Component> {
         setRenderer(from.renderer());
         setVisible(from.isVisible());
     }
-    
+
     public J internal() {
         return component;
     }
-    
+
     public boolean enabled() {
         return read(new Reader<Boolean>() {
             @Override
@@ -193,7 +245,7 @@ public abstract class WidgetImpl<J extends Component> {
             }
         });
     }
-    
+
     public void setEnabled(final boolean enabled) {
         act(new Runnable() {
             @Override
@@ -202,14 +254,14 @@ public abstract class WidgetImpl<J extends Component> {
             }
         });
     }
-    
+
     protected abstract J create();
-    
+
     protected void act(Runnable run) {
-        if(EventQueue.isDispatchThread())
+        if (EventQueue.isDispatchThread()) {
             run.run();
-        else
-            while(true) {
+        } else {
+            while (true) {
                 try {
                     SwingUtilities.invokeAndWait(run);
                     break;
@@ -219,12 +271,14 @@ public abstract class WidgetImpl<J extends Component> {
                     break;
                 }
             }
+        }
     }
+
     protected <R> R read(Reader<R> run) {
         act(run);
         return run.value;
     }
-    
+
     public SwingPlatform platform() {
         return platform;
     }
@@ -236,7 +290,7 @@ public abstract class WidgetImpl<J extends Component> {
                 return component.getName();
             }
         });
-        
+
     }
 
     public void setTag(final String name) {
@@ -271,7 +325,7 @@ public abstract class WidgetImpl<J extends Component> {
             }
         });
     }
-    
+
     public boolean hasFocus() {
         return component.hasFocus();
     }
@@ -299,24 +353,25 @@ public abstract class WidgetImpl<J extends Component> {
         });
     }
 
-    public void optimize(ListIterator<Painter.Instruction> instructions) {}
-    
+    public void optimize(ListIterator<Painter.Instruction> instructions) {
+    }
+
     public void pushRedraw(Painter.Instruction[] instructions) {
         this.renderInstructions = instructions.length > 0 ? instructions : null;
         component.repaint();
     }
-    
+
     public boolean customRender(Graphics2D g) {
-        if(this.renderInstructions != null) {
+        if (this.renderInstructions != null) {
             // TODO: Render
         }
         return false;
     }
-    
+
     public Point pos() {
         return bounds().topLeft();
     }
-    
+
     public Size size() {
         return bounds().size();
     }
@@ -345,13 +400,14 @@ public abstract class WidgetImpl<J extends Component> {
 
     public Container container() {
         java.awt.Container container = component.getParent();
-        while(container != null) {
-            if(container instanceof ContainerWrap)
-                return ((ContainerWrap)container).getGenUIContainer();
-            
+        while (container != null) {
+            if (container instanceof ContainerWrap) {
+                return ((ContainerWrap) container).getGenUIContainer();
+            }
+
             container = container.getParent();
         }
-        
+
         return null;
     }
 
@@ -367,15 +423,15 @@ public abstract class WidgetImpl<J extends Component> {
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
     }
-    
+
     public void render(Painter p) {
         renderer.render(p);
     }
-    
+
     public void show() {
         setVisible(true);
     }
-    
+
     public void hide() {
         setVisible(false);
     }
@@ -407,11 +463,11 @@ public abstract class WidgetImpl<J extends Component> {
     public void removeVisibilityListener(VisibilityListener visibilityListener) {
         visibilityDispatcher.remove(visibilityListener);
     }
-    
+
     public void removeFocusListener(FocusListener focusListener) {
         focusDispatcher.remove(focusListener);
     }
-    
+
     public void addClass(String clazz) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -424,18 +480,100 @@ public abstract class WidgetImpl<J extends Component> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    private MouseListener mouseListener;
+
+    public void setContextMenu(final Menu menu) {
+        act(new Runnable() {
+            public JMenu build(AbstractMenu menu) {
+                JMenu jmenu = new JMenu(menu.text());
+                for (final MenuItem menuItem : menu) {
+                    if (menuItem instanceof Menu.Separator) {
+                        jmenu.addSeparator();
+                    } else if (menuItem instanceof AbstractAction) {
+                        jmenu.add(((AbstractAction) menuItem).text()).addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                ((AbstractAction) menuItem).activate();
+                            }
+                        });
+                    } else if (menuItem instanceof AbstractMenu) {
+                        jmenu.add(build((AbstractMenu) menuItem));
+                    }
+                }
+                return jmenu;
+            }
+
+            public void run() {
+                contextMenu = menu;
+                if (menu == null) {
+                    if (mouseListener != null) {
+                        menuTarget().removeMouseListener(mouseListener);
+                        mouseListener = null;
+                    }
+                } else if (mouseListener == null) {
+                    mouseListener = new MouseListener() {
+                        public void show(int x, int y) {
+                            JPopupMenu popupMenu = new JPopupMenu();
+                            for (final MenuItem menuItem : contextMenu) {
+                                if (menuItem instanceof Menu.Separator)
+                                    popupMenu.addSeparator();
+                                else if (menuItem instanceof AbstractAction) {
+                                    popupMenu.add(((AbstractAction) menuItem).text()).addActionListener(new ActionListener() {
+                                        public void actionPerformed(ActionEvent e) {
+                                            ((AbstractAction) menuItem).activate();
+                                        }
+                                    });
+                                } else if (menuItem instanceof AbstractMenu)
+                                    popupMenu.add(build((AbstractMenu) menuItem));
+                            }
+                            popupMenu.show(menuTarget(), x, y);
+                        }
+
+                        public void mouseClicked(MouseEvent e) {
+                            if(e.isPopupTrigger())
+                                show(e.getX(), e.getY());
+                        }
+
+                        public void mousePressed(MouseEvent e) {
+                            if(e.isPopupTrigger())
+                                show(e.getX(), e.getY());
+                        }
+
+                        public void mouseReleased(MouseEvent e) {
+                            if(e.isPopupTrigger())
+                                show(e.getX(), e.getY());
+                        }
+
+                        public void mouseEntered(MouseEvent e) {}
+
+                        public void mouseExited(MouseEvent e) {}
+                    };
+                    menuTarget().addMouseListener(mouseListener);
+                }
+            }
+        });
+    }
+    
+    protected java.awt.Component menuTarget() {
+        return component;
+    }
+
     public Menu contextMenu() {
-        return null;
+        return read(new Reader<Menu>() {
+            @Override
+            public Menu read() {
+                return contextMenu;
+            }
+        });
     }
 
     public void uninstallRedirect(EventListenerRedirect redirect) {
-        
+
     }
 
     public void installRedirect(EventListenerRedirect redirect) {
-        
+
     }
-    
+
     public void setStyle(final Style style) {
         act(new Runnable() {
             @Override
@@ -444,7 +582,7 @@ public abstract class WidgetImpl<J extends Component> {
             }
         });
     }
-    
+
     public Style style() {
         return read(new Reader<Style>() {
             @Override
@@ -456,12 +594,14 @@ public abstract class WidgetImpl<J extends Component> {
 
     public StyleSheet activeStyleSheet() {
         Container container = container();
-        while(container != null && !(container instanceof StyleRoot))
+        while (container != null && !(container instanceof StyleRoot)) {
             container = container.container();
-        
-        if(container instanceof StyleRoot)
+        }
+
+        if (container instanceof StyleRoot) {
             return container.activeStyleSheet();
-        
+        }
+
         return null;
     }
 
@@ -470,7 +610,7 @@ public abstract class WidgetImpl<J extends Component> {
             @Override
             public void run() {
                 pos.plus(parentOffset());
-                component.setLocation(new java.awt.Point((int)pos.x, (int)pos.y));
+                component.setLocation(new java.awt.Point((int) pos.x, (int) pos.y));
             }
         });
     }
@@ -479,7 +619,7 @@ public abstract class WidgetImpl<J extends Component> {
         act(new Runnable() {
             @Override
             public void run() {
-                component.setSize(new Dimension((int)size.w, (int)size.h));
+                component.setSize(new Dimension((int) size.w, (int) size.h));
             }
         });
     }
@@ -489,16 +629,16 @@ public abstract class WidgetImpl<J extends Component> {
             @Override
             public void run() {
                 geom.plus(parentOffset());
-                component.setBounds(new Rectangle((int)geom.topLeft.x, (int)geom.topLeft.y, (int)geom.size.w, (int)geom.size.h));
+                component.setBounds(new Rectangle((int) geom.topLeft.x, (int) geom.topLeft.y, (int) geom.size.w, (int) geom.size.h));
             }
         });
     }
-    
+
     public void setPreferredSize(final Size prefSize) {
         act(new Runnable() {
             @Override
             public void run() {
-                component.setMinimumSize(new Dimension((int)prefSize.w, (int)prefSize.h));
+                component.setMinimumSize(new Dimension((int) prefSize.w, (int) prefSize.h));
             }
         });
     }
@@ -512,7 +652,7 @@ public abstract class WidgetImpl<J extends Component> {
             }
         });
     }
-	
+
     public Size minimumSize() {
         try {
             return read(new Reader<Size>() {
@@ -522,19 +662,20 @@ public abstract class WidgetImpl<J extends Component> {
                     return new Size(dim.width, dim.height);
                 }
             });
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             return new Size(0, 0);
         }
     }
+
     public void setMinimumSize(final Size size) {
         act(new Runnable() {
             @Override
             public void run() {
-                component.setMinimumSize(new Dimension((int)size.w, (int)size.h));
+                component.setMinimumSize(new Dimension((int) size.w, (int) size.h));
             }
         });
     }
-	
+
     public Size maximumSize() {
         return read(new Reader<Size>() {
             @Override
@@ -544,15 +685,16 @@ public abstract class WidgetImpl<J extends Component> {
             }
         });
     }
+
     public void setMaximumSize(final Size size) {
         act(new Runnable() {
             @Override
             public void run() {
-                component.setMaximumSize(new Dimension((int)size.w, (int)size.h));
+                component.setMaximumSize(new Dimension((int) size.w, (int) size.h));
             }
         });
     }
-    
+
     public Renderer defaultRenderer() {
         return new Renderer() {
             @Override
@@ -561,15 +703,32 @@ public abstract class WidgetImpl<J extends Component> {
             }
         };
     }
-    
+
     protected Point parentOffset() {
         java.awt.Container par = component.getParent();
-        if(par == null)
+        if (par == null) {
             return new Point(0, 0);
+        }
         Insets insets = par.getInsets();
-        if(insets == null)
+        if (insets == null) {
             return new Point(0, 0);
+        }
         return new Point(insets.left, insets.top);
     }
+
+    public void showMenu(AbstractMenu menu, Point at) {
+        menu.show((Widget)this, at);
+    }
     
+    public Menu buildEditMenu(Editable editable) {
+        Menu fileCopyMenu = new Menu();
+        Action action = new Action("Cut");
+        fileCopyMenu.add(editable.cutAction());
+        action = new Action("Copy");
+        fileCopyMenu.add(editable.copyAction());
+        action = new Action("Paste");
+        fileCopyMenu.add(editable.pasteAction());
+        return fileCopyMenu;
+    }
+
 }

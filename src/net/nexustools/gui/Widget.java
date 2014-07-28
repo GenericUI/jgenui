@@ -44,6 +44,7 @@ public interface Widget extends Renderable, Base {
 	public void setVisible(boolean visible);
 	
 	public Menu contextMenu();
+	public void setContextMenu(Menu menu);
 	
 	public void show();
 	public void hide();
@@ -121,5 +122,7 @@ public interface Widget extends Renderable, Base {
 	 * @return 
 	 */
 	public Object internal();
+
+	public void showMenu(AbstractMenu menu, Point at);
 	
 }

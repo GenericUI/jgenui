@@ -19,9 +19,9 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface ListEditor<I> extends Widget {
+public interface ComplexSelection extends SelectionRange {
 	
-	public List<I> target();
-	public void setTarget(List<I> list);
+	public int[] selection();
+	public void setSelection(int... indices);
 	
 }

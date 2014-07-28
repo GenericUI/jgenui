@@ -15,11 +15,13 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import net.nexustools.gui.AbstractMenu;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
 import net.nexustools.gui.Toolbar;
 import net.nexustools.gui.Widget;
+import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
@@ -30,16 +32,6 @@ import net.nexustools.gui.render.StyleSheet;
  * @author katelyn
  */
 public class SwingBody extends ContainerImpl<JFrame> implements Body {
-
-    @Override
-    public void addToolbar(Toolbar toolbar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void removeToolbar(Toolbar toolbar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     public static enum CloseMode {
         DontExitOnClose,
@@ -120,6 +112,16 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
     public SwingBody(String title) {
         this(SwingPlatform.instance());
         setTitle(title);
+    }
+
+    @Override
+    public void addToolbar(Toolbar toolbar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeToolbar(Toolbar toolbar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -212,7 +214,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                 
                 SwingBody.this.mainWidget = mainWidget;
                 if(mainWidget instanceof ContainerImpl)
-                    container = (java.awt.Container) ((ContainerImpl)mainWidget).component;
+                    container = (java.awt.Container) ((ContainerImpl)mainWidget).internal();
                 else
                     throw new UnsupportedOperationException("Not supported yet.");
                 
