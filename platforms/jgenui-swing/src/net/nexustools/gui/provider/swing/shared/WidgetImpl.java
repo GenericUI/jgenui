@@ -18,6 +18,8 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
@@ -258,19 +260,10 @@ public abstract class WidgetImpl<J extends Component> {
     protected abstract J create();
 
     protected void act(Runnable run) {
-        if (EventQueue.isDispatchThread()) {
-            run.run();
-        } else {
-            while (true) {
-                try {
-                    SwingUtilities.invokeAndWait(run);
-                    break;
-                } catch (InterruptedException ex) {
-                } catch (InvocationTargetException ex) {
-                    ex.getCause().printStackTrace();
-                    break;
-                }
-            }
+        try {
+            platform().act(run);
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
         }
     }
 

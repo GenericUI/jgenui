@@ -7,7 +7,6 @@
 package net.nexustools.gui.provider.swing.shared;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import net.nexustools.gui.provider.swing.SwingPlatform;
 import net.nexustools.gui.provider.swing.shared.ScrollDeligateImpl.Native;

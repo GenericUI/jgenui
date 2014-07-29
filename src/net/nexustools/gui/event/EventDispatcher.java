@@ -40,16 +40,25 @@ public abstract class EventDispatcher<R extends RunQueue, L extends EventListene
 	}
 	
 	public void dispatch(final Processor<L, E> processor) {
+		final List<L> cListeners = listeners.copy();
+		if(cListeners.size() < 1)
+			return;
+		
 		queue.push(new Runnable() {
 			public void run() {
-				List<L> cListeners = listeners.copy();
-				if(cListeners.size() < 1)
-					return;
-
 				final E event = processor.create();
+				System.out.println(event);
+				if(cListeners.size() == 1) {
+					System.out.println("Dispatching Event");
+					processor.dispatch(cListeners.get(0), event);
+					return;
+				}
+				
+				System.out.println("Dispatching Event to " + cListeners.size() + " listeners");
 				for(final L listener : cListeners)
 					queue.push(new Runnable() {
 						public void run() {
+							System.out.println("Dispatching Event");
 							processor.dispatch(listener, event);
 						}
 					});

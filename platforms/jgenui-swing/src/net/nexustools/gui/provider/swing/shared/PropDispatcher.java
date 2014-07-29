@@ -18,6 +18,7 @@ import net.nexustools.concurrent.Writer;
 import net.nexustools.gui.event.Event;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.platform.Platform;
+import net.nexustools.gui.provider.swing.SwingPlatform;
 
 /**
  *
@@ -38,12 +39,11 @@ public class PropDispatcher<L extends EventListener, E extends Event> extends Ev
             @Override
             public void write(final BaseAccessor data) {
                 try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
+                    SwingPlatform.instance().act(new Runnable() {
                         public void run() {
                             prop.connect((PropAccessor<L>)data);
                         }
                     });
-                } catch (InterruptedException ex) {
                 } catch (InvocationTargetException ex) {
                     ex.printStackTrace();
                 }
@@ -58,12 +58,11 @@ public class PropDispatcher<L extends EventListener, E extends Event> extends Ev
             @Override
             public void write(final BaseAccessor data) {
                 try {
-                    SwingUtilities.invokeAndWait(new Runnable() {
+                    SwingPlatform.instance().act(new Runnable() {
                         public void run() {
                             prop.disconnect((PropAccessor<L>)data);
                         }
                     });
-                } catch (InterruptedException ex) {
                 } catch (InvocationTargetException ex) {
                     ex.getCause().printStackTrace();
                 }

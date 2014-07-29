@@ -8,13 +8,12 @@ package net.nexustools.gui.provider.swing;
 
 import javax.swing.JTextArea;
 import net.nexustools.gui.AbstractAction;
-import net.nexustools.gui.Action;
-import net.nexustools.gui.Menu;
 import net.nexustools.gui.Shortcut;
 import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.TextArea;
 import net.nexustools.gui.event.ActionListener;
 import net.nexustools.gui.event.ValueListener;
+import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.provider.swing.shared.ScrollDeligateImpl;
 
 /**
@@ -26,6 +25,7 @@ public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements Text
     public SwingTextArea() {
         super(SwingPlatform.instance());
         setContextMenu(buildEditMenu(this));
+        setMinimumSize(new Size(20, 20));
     }
     
     public SwingTextArea(String text) {

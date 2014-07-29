@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
+import java.util.Iterator;
 import java.util.WeakHashMap;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.event.DefaultEventDispatcher;
@@ -22,6 +23,7 @@ import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.Layout;
+import net.nexustools.gui.layout.LayoutObject;
 import net.nexustools.gui.provider.swing.SwingPlatform;
 
 /**
@@ -35,30 +37,72 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
     }
     
     public static class NativeLayout implements LayoutManager2 {
+
+        private Iterable<LayoutObject> layoutIterator(final Container parent) {
+            return new Iterable<LayoutObject>() {
+                final ContainerImpl containerImpl = (ContainerImpl)((ContainerWrap)parent).getGenUIContainer();
+                
+                public Iterator<LayoutObject> iterator() {
+                    return new Iterator<LayoutObject>() {
+                        Iterator<Widget> it = containerImpl.iterator();
+                        public boolean hasNext() {
+                            return it.hasNext();
+                        }
+                        public LayoutObject next() {
+                            return it.next();
+                        }
+                        public void remove() {}
+                    };
+                }
+            };
+        }
         
         public static class Cache {
-            Dimension prefSize;
-            Dimension minSize;
+            Size prefSize;
+            Size minSize;
         }
         
         public final Layout layout;
-        public static final Dimension maxSize = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
         public final WeakHashMap<Component, Cache> cacheMap = new WeakHashMap();
         public NativeLayout(Layout layout) {
             this.layout = layout;
         }
 
         @Override
-        public void addLayoutComponent(Component comp, Object constraints) {}
-
-        @Override
         public void addLayoutComponent(String name, Component comp) {}
+
+        public void addLayoutComponent(Component comp, Object constraints) {}
 
         @Override
         public void removeLayoutComponent(Component comp) {}
 
+        public Dimension maximumLayoutSize(Container target) {
+            return new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        }
+
+        public float getLayoutAlignmentX(Container target) {
+            return 0;
+        }
+
+        public float getLayoutAlignmentY(Container target) {
+            return 0;
+        }
+
         @Override
         public Dimension preferredLayoutSize(Container parent) {
+            Size size = calcPreferredLayoutSize(parent);
+            Insets insets = parent.getInsets();
+            return new Dimension((int)size.w+insets.left+insets.right, (int)size.h+insets.top+insets.bottom);
+        }
+
+        @Override
+        public Dimension minimumLayoutSize(Container parent) {
+            Size size = calcMinimumLayoutSize(parent);
+            Insets insets = parent.getInsets();
+            return new Dimension((int)size.w+insets.left+insets.right, (int)size.h+insets.top+insets.bottom);
+        }
+
+        public Size calcPreferredLayoutSize(Container parent) {
             Cache cache = cacheMap.get(parent);
             if(cache == null) {
                 cache = new Cache();
@@ -67,18 +111,16 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
                 return cache.prefSize;
             
             try {
-                Size size = layout.calculatePreferredSize(((ContainerWrap)parent).getGenUIContainer());
-                System.out.println(size);
+                Size size = layout.calculatePreferredSize(layoutIterator(parent));
                 Insets insets = parent.getInsets();
-                return cache.prefSize = new Dimension((int)size.w+insets.left+insets.right, (int)size.h+insets.top+insets.bottom);
+                return /*cache.prefSize = */size;
             } catch(RuntimeException ex) {
                 ex.printStackTrace();
                 throw ex;
             }
         }
 
-        @Override
-        public Dimension minimumLayoutSize(Container parent) {
+        public Size calcMinimumLayoutSize(Container parent) {
             Cache cache = cacheMap.get(parent);
             if(cache == null) {
                 cache = new Cache();
@@ -87,9 +129,8 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
                 return cache.minSize;
             
             try {
-                Size size = layout.calculateMinimumSize(((ContainerWrap)parent).getGenUIContainer());
-                Insets insets = parent.getInsets();
-                return cache.prefSize = new Dimension((int)size.w+insets.left+insets.right, (int)size.h+insets.top+insets.bottom);
+                Size size = layout.calculateMinimumSize(layoutIterator(parent));
+                return /*cache.prefSize = */size;
             } catch(RuntimeException ex) {
                 ex.printStackTrace();
                 throw ex;
@@ -98,70 +139,33 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
 
         @Override
         public void layoutContainer(Container parent) {
+            final Size minSize = calcMinimumLayoutSize(parent);
+            final Size prefSize = calcPreferredLayoutSize(parent);
             final ContainerImpl containerImpl = (ContainerImpl)((ContainerWrap)parent).getGenUIContainer();
+            layout.performLayout(layoutIterator(parent), prefSize, containerImpl.contentSize(), containerImpl.childCount());
             containerImpl.layoutDispatcher.dispatch(new EventDispatcher.Processor<LayoutListener, LayoutEvent>() {
                 @Override
                 public LayoutEvent create() {
-                    return new LayoutEvent((Widget)containerImpl);
-                }
-                @Override
-                public void dispatch(LayoutListener listener, LayoutEvent event) {
-                    listener.layoutStart(event);
-                }
-            });
-            layout.update(((ContainerWrap)parent).getGenUIContainer());
-            containerImpl.layoutDispatcher.dispatch(new EventDispatcher.Processor<LayoutListener, LayoutEvent>() {
-                @Override
-                public LayoutEvent create() {
-                    return new LayoutEvent((Widget)containerImpl);
+                    return new LayoutEvent(minSize, prefSize, (Widget)containerImpl);
                 }
                 @Override
                 public void dispatch(LayoutListener listener, LayoutEvent event) {
                     listener.layoutFinished(event);
                 }
             });
+            Container par = parent.getParent();
+            if(par.isValid())
+                par.invalidate();
         }
-
-        @Override
-        public Dimension maximumLayoutSize(Container target) {
-            return maxSize;
-        }
-
-        @Override
-        public float getLayoutAlignmentX(Container target) {
-            return 0; // Not sure what these are for
-        }
-
-        @Override
-        public float getLayoutAlignmentY(Container target) {
-            return 0; // Not sure what these are for
-        }
-
-        @Override
+        
         public void invalidateLayout(Container target) {
             cacheMap.remove(target);
-            ContainerImpl container = (ContainerImpl)((ContainerWrap)target).getGenUIContainer();
-            container = (ContainerImpl)container.container();
-            if(container != null)
-                container.invalidate();
         }
         
     }
 
     public ContainerImpl(SwingPlatform platform) {
         super(platform);
-    }
-    
-    public void invalidate() {
-        act(new Runnable() {
-            @Override
-            public void run() {
-                component.invalidate();
-                ContainerImpl parent = (ContainerImpl) container();
-                if(parent != null)
-                    parent.invalidate();
-            }
-        });
     }
     
     public final EventDispatcher<SwingPlatform, LayoutListener, LayoutEvent> layoutDispatcher = new DefaultEventDispatcher(platform());

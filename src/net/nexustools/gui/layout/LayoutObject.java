@@ -15,16 +15,26 @@
 
 package net.nexustools.gui.layout;
 
+import net.nexustools.gui.geom.Point;
+import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Size;
 
 /**
  *
  * @author katelyn
  */
-public interface Layout {
+public interface LayoutObject {
 	
-	public Size calculateMinimumSize(Iterable<LayoutObject> container);
-	public Size calculatePreferredSize(Iterable<LayoutObject> container);
-	public void performLayout(Iterable<LayoutObject> container, Size prefSize, Size size, int count);
+	public Size size();
+	public Point pos();
+	public Rect bounds();
+
+	public Size preferredSize();
+	public Size minimumSize();
+	public Size maximumSize();
+
+	public void setBounds(Rect rect);
+	public void resize(Size size);
+	public void move(Point pos);
 	
 }

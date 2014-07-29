@@ -24,6 +24,7 @@ import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
 import net.nexustools.gui.geom.Size;
+import net.nexustools.gui.layout.LayoutObject;
 import net.nexustools.gui.platform.Platform;
 import net.nexustools.gui.render.Renderable;
 import net.nexustools.gui.render.Renderer;
@@ -34,7 +35,7 @@ import net.nexustools.gui.render.StyleSheet;
  *
  * @author katelyn
  */
-public interface Widget extends Renderable, Base {
+public interface Widget extends Renderable, LayoutObject, Base {
 	
 	public String tag();
 	public void setTag(String name);

@@ -16,6 +16,7 @@
 package net.nexustools.gui.event;
 
 import java.util.EventListener;
+import net.nexustools.gui.geom.Size;
 
 /**
  *
@@ -24,12 +25,15 @@ import java.util.EventListener;
 public interface LayoutListener<S> extends EventListener {
 	
 	public static class LayoutEvent<S> extends Event<S> {
-		public LayoutEvent(S source) {
+		public final Size minimumSize;
+		public final Size preferredSize;
+		public LayoutEvent(Size minimumSize, Size preferredSize, S source) {
 			super(source);
+			this.preferredSize = preferredSize;
+			this.minimumSize = minimumSize;
 		}
 	}
 	
-	public void layoutStart(LayoutEvent<S> event);
 	public void layoutFinished(LayoutEvent<S> event);
 	
 }

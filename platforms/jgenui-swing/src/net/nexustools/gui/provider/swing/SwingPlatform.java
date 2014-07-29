@@ -284,14 +284,13 @@ public class SwingPlatform extends Platform<java.awt.Component> {
 
     public void write(final BaseAccessor data, final BaseWriter actor) {
         try {
-            SwingUtilities.invokeAndWait(new Runnable() {
+            act(new Runnable() {
                 public void run() {
                     actor.write(data, FakeLock.instance);
                 }
             });
-        } catch (InterruptedException ex) {
         } catch (InvocationTargetException ex) {
-            ex.getCause().printStackTrace();
+            ex.printStackTrace();
         }
     }
 
@@ -302,10 +301,9 @@ public class SwingPlatform extends Platform<java.awt.Component> {
             }
         };
         try {
-            SwingUtilities.invokeAndWait(swingReader);
-        } catch (InterruptedException ex) {
+            act(swingReader);
         } catch (InvocationTargetException ex) {
-            ex.getCause().printStackTrace();
+            ex.printStackTrace();
         }
         return swingReader.value;
     }

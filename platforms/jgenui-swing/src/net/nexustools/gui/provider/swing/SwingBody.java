@@ -15,14 +15,13 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
-import net.nexustools.gui.AbstractMenu;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
 import net.nexustools.gui.Toolbar;
 import net.nexustools.gui.Widget;
-import net.nexustools.gui.geom.Point;
-import net.nexustools.gui.geom.Rect;
+import net.nexustools.gui.event.LayoutListener;
+import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.provider.swing.shared.ContainerImpl;
 import net.nexustools.gui.render.StyleSheet;
@@ -102,6 +101,10 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
         public Container getGenUIContainer() {
             return SwingBody.this;
         }
+        
+        public boolean compare(Dimension from, Dimension to) {
+            return from.width == to.width || from.width == to.width;
+        }
 
     }
 
@@ -178,32 +181,6 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
     public void setLayout(Layout layout) {
         mainContainer().setLayout(layout); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public void invalidate() {
-        act(new Runnable() {
-            @Override
-            public void run() {
-                Insets inserts = component.getInsets();
-                java.awt.Container container = component.getContentPane();
-
-                Dimension size = container.getMinimumSize();
-                size.height += inserts.top + inserts.bottom;
-                size.width += inserts.left + inserts.right;
-                component.setMinimumSize(size);
-
-                size = container.getMaximumSize();
-                size.height += inserts.top + inserts.bottom;
-                size.width += inserts.left + inserts.right;
-                component.setMaximumSize(size);
-
-                size = container.getPreferredSize();
-                size.height += inserts.top + inserts.bottom;
-                size.width += inserts.left + inserts.right;
-                component.setPreferredSize(size);
-            }
-        });
-    }
     
     @Override
     public void setMainWidget(final Widget mainWidget) {
@@ -213,9 +190,45 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                 java.awt.Container container = component.getContentPane();
                 
                 SwingBody.this.mainWidget = mainWidget;
-                if(mainWidget instanceof ContainerImpl)
+                if(mainWidget instanceof ContainerImpl) {
+                    ((ContainerImpl)mainWidget).addLayoutListener(new LayoutListener() {
+                        public void layoutFinished(final LayoutListener.LayoutEvent event) {
+                            System.out.println("Layout Update Finished");
+                            act(new Runnable() {
+                                public boolean compare(Dimension size, Dimension other) {
+                                    return size.width == other.width && size.height == other.height;
+                                }
+                                public void run() {
+                                    System.out.println("Fixing Sizing");
+                                    System.out.println(event.preferredSize);
+                                    System.out.println(event.minimumSize);
+                                    
+                                    Size size = event.minimumSize;
+                                    Insets insets = component.getInsets();
+                                    size.h += insets.top + insets.bottom;
+                                    size.w += insets.left + insets.right;
+                                    
+                                    Dimension nSize = new Dimension((int)size.w, (int)size.h);
+                                    Dimension cSize = component.getMinimumSize();
+                                    //if(!compare(nSize, cSize))
+                                        component.setMinimumSize(nSize);
+                                    
+                                    size = event.preferredSize;
+                                    size.h += insets.top + insets.bottom;
+                                    size.w += insets.left + insets.right;
+                                    
+                                    nSize = new Dimension((int)size.w, (int)size.h);
+                                    cSize = component.getMinimumSize();
+                                    //if(!compare(nSize, cSize))
+                                        component.setPreferredSize(nSize);
+                                    
+                                    
+                                }
+                            });
+                        }
+                    });
                     container = (java.awt.Container) ((ContainerImpl)mainWidget).internal();
-                else
+                } else
                     throw new UnsupportedOperationException("Not supported yet.");
                 
                 component.setContentPane(container);
