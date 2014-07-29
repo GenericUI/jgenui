@@ -5,12 +5,12 @@ GenericUI is a GUI ToolKit meant to support a unified interface with backends fo
 
 Planned Backends
 ----------------
- - Java AWT (No Support)
+ - Java AWT (Partial Support)
  - Java Swing (Partial Support)
- - Eclipse SWT (Partial Support)
  - Minecraft Forge (Relies on LWJGL)
- - Android via NBAndroid (Testing)
  - iOS via j2objc (Relies on Android)
+ - Android via NBAndroid (Testing)
+ - Eclipse SWT (No Support)
  - Qt via JNA (No Support)
  - LWJGL (Testing)
 
