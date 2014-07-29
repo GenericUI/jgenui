@@ -4,13 +4,11 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.awt.impl;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import javax.swing.JPanel;
-import net.nexustools.gui.provider.swing.SwingPlatform;
-import net.nexustools.gui.provider.swing.shared.FakeContainerImpl.FakeContainer;
+import net.nexustools.gui.provider.awt.AWTPlatform;
+import net.nexustools.gui.provider.awt.impl.FakeContainerImpl.FakeContainer;
 
 /**
  *
@@ -18,15 +16,15 @@ import net.nexustools.gui.provider.swing.shared.FakeContainerImpl.FakeContainer;
  */
 public abstract class FakeContainerImpl extends AbstractContainerImpl<FakeContainer> {
     
-    protected class FakeContainer extends JPanel {
+    protected class FakeContainer extends java.awt.Container {
         @Override
         public void paint(Graphics g) {
-            if(!customRender((Graphics2D)g))
+            if(!customRender(g))
                 super.paint(g);
         }
     }
 
-    public FakeContainerImpl(SwingPlatform platform) {
+    public FakeContainerImpl(AWTPlatform platform) {
         super(platform);
     }
 

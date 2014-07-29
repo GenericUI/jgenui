@@ -9,10 +9,9 @@ package net.nexustools.gui.provider.swing;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
-import net.nexustools.gui.Container;
 import net.nexustools.gui.Frame;
-import net.nexustools.gui.Widget;
 import net.nexustools.gui.layout.Layout;
+import net.nexustools.gui.provider.awt.AWTPlatform;
 
 /**
  *
@@ -22,7 +21,7 @@ public class SwingFrame extends SwingContainer implements Frame {
 
     private String title;
     private boolean raised;
-    SwingFrame(SwingPlatform platform) {
+    SwingFrame(AWTPlatform platform) {
         super(platform);
     }
     public SwingFrame(String title) {

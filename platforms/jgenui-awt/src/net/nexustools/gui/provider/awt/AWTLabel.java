@@ -4,45 +4,42 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing;
+package net.nexustools.gui.provider.awt;
 
-import net.nexustools.gui.provider.awt.AWTPlatform;
 import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import javax.swing.JLabel;
 import net.nexustools.gui.Label;
+import java.awt.Graphics;
 
 /**
  *
  * @author katelyn
  */
-public class SwingLabel extends AWTWidgetImpl<JLabel> implements Label {
+public class AWTLabel extends AWTWidgetImpl<java.awt.Label> implements Label {
 
-    public SwingLabel() {
+    public AWTLabel() {
         this(AWTPlatform.instance());
     }
-    public SwingLabel(String text) {
+    public AWTLabel(String text) {
         this();
         setText(text);
     }
-    SwingLabel(Label other, AWTPlatform platform) {
+    AWTLabel(Label other, AWTPlatform platform) {
         this();
         inherit(other);
     }
-    SwingLabel(AWTPlatform platform) {
+    AWTLabel(AWTPlatform platform) {
         super(platform);
     }
 
     @Override
-    protected JLabel create() {
-        return new JLabel() {
+    protected java.awt.Label create() {
+        return new java.awt.Label() {
             {
                 setName("Label");
             }
             @Override
             public void paint(Graphics g) {
-                if(!customRender((Graphics2D)g))
+                if(!customRender(g))
                     super.paint(g);
             }
         };

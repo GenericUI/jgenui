@@ -13,7 +13,8 @@ import javax.swing.JButton;
 import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.Button;
-import net.nexustools.gui.provider.swing.shared.ButtonImpl;
+import net.nexustools.gui.provider.awt.AWTPlatform;
+import net.nexustools.gui.provider.swing.impl.ButtonImpl;
 
 /**
  *
@@ -33,7 +34,6 @@ public class SwingButton extends ButtonImpl<JButton> implements Button {
             if(!customRender((Graphics2D)g))
                 super.paint(g);
         }
-        
     }
 
     public SwingButton() {

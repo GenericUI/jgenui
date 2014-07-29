@@ -4,14 +4,13 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.swing.impl;
 
 import javax.swing.AbstractButton;
 import net.nexustools.gui.Activateable;
 import net.nexustools.gui.Shortcut;
 import net.nexustools.gui.event.ActionListener;
 import net.nexustools.gui.event.EventDispatcher;
-import net.nexustools.gui.provider.swing.SwingButton;
 import net.nexustools.gui.provider.swing.SwingPlatform;
 
 /**

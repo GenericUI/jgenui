@@ -4,24 +4,22 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing;
+package net.nexustools.gui.provider.awt;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import javax.swing.JPanel;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.platform.WidgetPeer;
-import net.nexustools.gui.provider.awt.AWTPlatform;
 import net.nexustools.gui.provider.awt.impl.ContainerImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingContainer extends ContainerImpl<JPanel> implements net.nexustools.gui.Container {
+public class AWTContainer extends ContainerImpl<java.awt.Container> implements net.nexustools.gui.Container {
 
-    public class NativeContainer extends JPanel implements WidgetPeer<Container> {
+    public class NativeContainer extends java.awt.Container implements WidgetPeer<Container> {
 
         public NativeContainer() { // For consistency, buttons can expand infinitely by default
             setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
@@ -37,24 +35,24 @@ public class SwingContainer extends ContainerImpl<JPanel> implements net.nexusto
         
         @Override
         public Container genUI() {
-            return SwingContainer.this;
+            return AWTContainer.this;
         }
         
     }
     
-    SwingContainer(AWTPlatform platform) {
+    AWTContainer(AWTPlatform platform) {
         super(platform);
     }
-    public SwingContainer() {
+    public AWTContainer() {
         this(AWTPlatform.instance());
     }
-    public SwingContainer(Layout layout) {
+    public AWTContainer(Layout layout) {
         this();
         setLayout(layout);
     }
 
     @Override
-    protected JPanel create() {
+    protected java.awt.Container create() {
         return new NativeContainer();
     }
 

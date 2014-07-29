@@ -24,7 +24,8 @@ public interface MimeStorage {
 	public String string();
 	public void setString(String string);
 	
-	
+	public double number();
+	public void setNumber(double number);
 	
 	public Object get(String mime);
 	public void put(String mime, Object data);

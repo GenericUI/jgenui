@@ -4,25 +4,23 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.awt.impl;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import net.nexustools.gui.Widget;
-import net.nexustools.gui.layout.Layout;
-import net.nexustools.gui.provider.swing.SwingPlatform;
+import net.nexustools.gui.provider.awt.AWTPlatform;
 
 /**
  *
  * @author katelyn
  */
-public abstract class AbstractContainerImpl<J extends Container> extends WidgetImpl<J> {
+public abstract class AbstractContainerImpl<J extends Container> extends AWTWidgetImpl<J> {
 
     protected final ArrayList<Widget> children = new ArrayList();
-    public AbstractContainerImpl(SwingPlatform platform) {
+    public AbstractContainerImpl(AWTPlatform platform) {
         super(platform);
     }
     

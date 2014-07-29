@@ -8,12 +8,11 @@ package net.nexustools.gui.provider.swing;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import javax.swing.JRadioButton;
 import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.RadioButton;
-import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
+import net.nexustools.gui.provider.swing.impl.ToggleButtonImpl;
 
 /**
  *
@@ -30,7 +29,7 @@ public class SwingRadioButton extends ToggleButtonImpl<JRadioButton> implements 
 
         @Override
         public void paint(Graphics g) {
-            if(!customRender((Graphics2D)g))
+            if(!customRender(g))
                 super.paint(g);
         }
         

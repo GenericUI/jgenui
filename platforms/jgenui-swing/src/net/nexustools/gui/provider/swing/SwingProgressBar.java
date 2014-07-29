@@ -6,6 +6,7 @@
 
 package net.nexustools.gui.provider.swing;
 
+import net.nexustools.gui.provider.awt.AWTPlatform;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.net.URISyntaxException;
 import javax.swing.JProgressBar;
 import net.nexustools.concurrent.Prop;
 import net.nexustools.gui.ProgressBar;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 import net.nexustools.gui.render.Pixmap;
 import net.nexustools.io.Stream;
 
@@ -21,7 +22,7 @@ import net.nexustools.io.Stream;
  *
  * @author katelyn
  */
-public class SwingProgressBar extends WidgetImpl<JProgressBar> implements ProgressBar {
+public class SwingProgressBar extends AWTWidgetImpl<JProgressBar> implements ProgressBar {
     
     private class Native extends JProgressBar {
         public Native() {
@@ -36,7 +37,7 @@ public class SwingProgressBar extends WidgetImpl<JProgressBar> implements Progre
 
     protected final Prop<Pixmap> pixmap = new Prop();
     public SwingProgressBar() {
-        super(SwingPlatform.instance());
+        super(AWTPlatform.instance());
     }
     
     public SwingProgressBar(String source) throws IOException, URISyntaxException {

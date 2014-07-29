@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.awt.impl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.EventListener;
@@ -18,7 +18,7 @@ import net.nexustools.concurrent.Writer;
 import net.nexustools.gui.event.Event;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.platform.Platform;
-import net.nexustools.gui.provider.swing.SwingPlatform;
+import net.nexustools.gui.provider.awt.AWTPlatform;
 
 /**
  *
@@ -39,7 +39,7 @@ public class PropDispatcher<L extends EventListener, E extends Event> extends Ev
             @Override
             public void write(final BaseAccessor data) {
                 try {
-                    SwingPlatform.instance().act(new Runnable() {
+                    AWTPlatform.instance().act(new Runnable() {
                         public void run() {
                             prop.connect((PropAccessor<L>)data);
                         }
@@ -58,7 +58,7 @@ public class PropDispatcher<L extends EventListener, E extends Event> extends Ev
             @Override
             public void write(final BaseAccessor data) {
                 try {
-                    SwingPlatform.instance().act(new Runnable() {
+                    AWTPlatform.instance().act(new Runnable() {
                         public void run() {
                             prop.disconnect((PropAccessor<L>)data);
                         }

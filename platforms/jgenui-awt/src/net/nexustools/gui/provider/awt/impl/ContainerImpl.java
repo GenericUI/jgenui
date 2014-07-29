@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.awt.impl;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -24,7 +24,8 @@ import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.Layout;
 import net.nexustools.gui.layout.LayoutObject;
-import net.nexustools.gui.provider.swing.SwingPlatform;
+import net.nexustools.gui.platform.WidgetPeer;
+import net.nexustools.gui.provider.awt.AWTPlatform;
 
 /**
  *
@@ -32,15 +33,11 @@ import net.nexustools.gui.provider.swing.SwingPlatform;
  */
 public abstract class ContainerImpl<J extends Container> extends AbstractContainerImpl<J> {
     
-    public static interface ContainerWrap {
-        public net.nexustools.gui.Container getGenUIContainer();
-    }
-    
     public static class NativeLayout implements LayoutManager2 {
 
         private Iterable<LayoutObject> layoutIterator(final Container parent) {
             return new Iterable<LayoutObject>() {
-                final ContainerImpl containerImpl = (ContainerImpl)((ContainerWrap)parent).getGenUIContainer();
+                final ContainerImpl containerImpl = (ContainerImpl)((WidgetPeer<net.nexustools.gui.Container>)parent).genUI();
                 
                 public Iterator<LayoutObject> iterator() {
                     return new Iterator<LayoutObject>() {
@@ -141,7 +138,7 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
         public void layoutContainer(Container parent) {
             final Size minSize = calcMinimumLayoutSize(parent);
             final Size prefSize = calcPreferredLayoutSize(parent);
-            final ContainerImpl containerImpl = (ContainerImpl)((ContainerWrap)parent).getGenUIContainer();
+            final ContainerImpl containerImpl = (ContainerImpl)((WidgetPeer<net.nexustools.gui.Container>)parent).genUI();
             layout.performLayout(layoutIterator(parent), prefSize, containerImpl.contentSize(), containerImpl.childCount());
             containerImpl.layoutDispatcher.dispatch(new EventDispatcher.Processor<LayoutListener, LayoutEvent>() {
                 @Override
@@ -164,11 +161,11 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
         
     }
 
-    public ContainerImpl(SwingPlatform platform) {
+    public ContainerImpl(AWTPlatform platform) {
         super(platform);
     }
     
-    public final EventDispatcher<SwingPlatform, LayoutListener, LayoutEvent> layoutDispatcher = new DefaultEventDispatcher(platform());
+    public final EventDispatcher<AWTPlatform, LayoutListener, LayoutEvent> layoutDispatcher = new DefaultEventDispatcher(platform());
     public void addLayoutListener(LayoutListener listener) {
         layoutDispatcher.add(listener);
     }

@@ -4,17 +4,15 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing;
+package net.nexustools.gui.provider.awt;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Menu;
@@ -31,7 +29,7 @@ import net.nexustools.gui.render.StyleSheet;
  *
  * @author katelyn
  */
-public class SwingBody extends ContainerImpl<JFrame> implements Body {
+public class AWTBody extends ContainerImpl<Frame> implements Body {
     
     public static enum CloseMode {
         DontExitOnClose,
@@ -41,8 +39,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
     
     private static CloseMode exitOnCloseMode = CloseMode.ExitOnNoWindows;
     
-    private class NativeBody extends JFrame implements WidgetPeer<Body> {
-
+    private class NativeBody extends Frame implements WidgetPeer<Body> {
         public NativeBody() {
             setName("Body");
             addWindowListener(new WindowListener() {
@@ -51,7 +48,6 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     System.out.println(exitOnCloseMode.toString());
-                    
                     boolean canExit = true;
                     switch(exitOnCloseMode) {
                         case ExitOnNoBodies:
@@ -62,7 +58,6 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                                 }
                             }
                         break;
-                        
                         case ExitOnNoWindows:
                             for(Window win : Window.getWindows()) {
                                 if(win instanceof NativeBody && win != component && win.isVisible()) {
@@ -71,7 +66,6 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                                 }
                             }
                         break;
-                            
                         case DontExitOnClose:
                             canExit = false;
                             break;
@@ -94,13 +88,13 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
 
         @Override
         public void paint(Graphics g) {
-            if(!customRender(((Graphics2D)g)))
+            if(!customRender((g)))
                 super.paint(g); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public Body genUI() {
-            return SwingBody.this;
+            return AWTBody.this;
         }
         
         public boolean compare(Dimension from, Dimension to) {
@@ -110,11 +104,11 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
     }
 
     private Widget mainWidget;
-    SwingBody(SwingPlatform platform) {
-        super(SwingPlatform.instance());
+    AWTBody(AWTPlatform platform) {
+        super(AWTPlatform.instance());
     }
-    public SwingBody(String title) {
-        this(SwingPlatform.instance());
+    public AWTBody(String title) {
+        this(AWTPlatform.instance());
         setTitle(title);
     }
 
@@ -129,7 +123,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
     }
 
     @Override
-    protected JFrame create() {
+    protected Frame create() {
         return new NativeBody();
     }
 
@@ -188,9 +182,9 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
         act(new Runnable() {
             @Override
             public void run() {
-                java.awt.Container container = component.getContentPane();
+                java.awt.Container container;
                 
-                SwingBody.this.mainWidget = mainWidget;
+                AWTBody.this.mainWidget = mainWidget;
                 if(mainWidget instanceof ContainerImpl) {
                     ((ContainerImpl)mainWidget).addLayoutListener(new LayoutListener() {
                         public void layoutFinished(final LayoutListener.LayoutEvent event) {
@@ -210,7 +204,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                                     size.w += insets.left + insets.right;
                                     
                                     Dimension nSize = new Dimension((int)size.w, (int)size.h);
-                                    Dimension cSize = component.getMinimumSize();
+                                    //Dimension cSize = component.getMinimumSize();
                                     //if(!compare(nSize, cSize))
                                         component.setMinimumSize(nSize);
                                     
@@ -219,11 +213,9 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                                     size.w += insets.left + insets.right;
                                     
                                     nSize = new Dimension((int)size.w, (int)size.h);
-                                    cSize = component.getMinimumSize();
+                                    //cSize = component.getMinimumSize();
                                     //if(!compare(nSize, cSize))
                                         component.setPreferredSize(nSize);
-                                    
-                                    
                                 }
                             });
                         }
@@ -232,7 +224,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                 } else
                     throw new UnsupportedOperationException("Not supported yet.");
                 
-                component.setContentPane(container);
+                component.add(container);
             }
         });
     }
@@ -249,7 +241,7 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
             @Override
             public Container read() {
                 if(!(mainWidget instanceof Container))
-                    setMainWidget(mainWidget = new SwingContainer());
+                    setMainWidget(mainWidget = new AWTContainer());
                 
                 return (Container) mainWidget;
             }
@@ -266,13 +258,6 @@ public class SwingBody extends ContainerImpl<JFrame> implements Body {
                 return mainWidget;
             }
         });
-    }
-    
-    @Override
-    public void setVisible(boolean visible) {
-        if(visible)
-            SwingUtilities.updateComponentTreeUI(component);
-        super.setVisible(visible);
     }
 
 }

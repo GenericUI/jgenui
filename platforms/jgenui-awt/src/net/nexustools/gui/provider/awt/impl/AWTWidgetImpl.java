@@ -3,37 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.awt.impl;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 import net.nexustools.concurrent.IfWriteReader;
 import net.nexustools.concurrent.Prop;
 import net.nexustools.concurrent.PropAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.Writer;
-import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.AbstractMenu;
 import net.nexustools.gui.Container;
 import net.nexustools.gui.Editable;
 import net.nexustools.gui.Menu;
-import net.nexustools.gui.MenuItem;
 import net.nexustools.gui.StyleRoot;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.event.EventDispatcher;
@@ -50,8 +39,8 @@ import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
 import net.nexustools.gui.geom.Size;
-import net.nexustools.gui.provider.swing.SwingPlatform;
-import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
+import net.nexustools.gui.platform.WidgetPeer;
+import net.nexustools.gui.provider.awt.AWTPlatform;
 import net.nexustools.gui.render.Painter;
 import net.nexustools.gui.render.Renderable;
 import net.nexustools.gui.render.Renderer;
@@ -63,7 +52,7 @@ import net.nexustools.gui.render.StyleSheet;
  * @author katelyn
  * @param <J> The type of swing component this works with
  */
-public abstract class WidgetImpl<J extends Component> {
+public abstract class AWTWidgetImpl<J extends Component> {
 
     protected static abstract class Reader<R> implements Runnable {
         R value;
@@ -75,7 +64,7 @@ public abstract class WidgetImpl<J extends Component> {
     }
 
     protected final J component;
-    protected final SwingPlatform platform;
+    protected final AWTPlatform platform;
     protected Prop<Painter.Instruction[]> renderInstructions = new Prop();
     protected final PropList<String> classes = new PropList();
     protected Prop<Renderer> renderer = new Prop();
@@ -190,41 +179,9 @@ public abstract class WidgetImpl<J extends Component> {
 
     private Menu contextMenu;
 
-    public WidgetImpl(SwingPlatform platform) {
+    public AWTWidgetImpl(AWTPlatform platform) {
         this.platform = platform;
         component = create();
-        component.addMouseListener(new MouseListener() {
-            public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    doPop(e);
-                }
-            }
-
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    doPop(e);
-                }
-            }
-
-            private void doPop(MouseEvent e) {
-                Menu contextMenu = contextMenu();
-                if (contextMenu != null) {
-
-                }
-            }
-
-            public void mouseClicked(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    doPop(e);
-                }
-            }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
     }
 
     protected void inherit(Widget from) {
@@ -272,7 +229,7 @@ public abstract class WidgetImpl<J extends Component> {
         return run.value;
     }
 
-    public SwingPlatform platform() {
+    public AWTPlatform platform() {
         return platform;
     }
 
@@ -366,7 +323,7 @@ public abstract class WidgetImpl<J extends Component> {
 
             @Override
             public Boolean read(PropAccessor<Renderer> data) {
-                WidgetImpl.this.renderInstructions.set(instructions.length > 0 ? instructions : null);
+                AWTWidgetImpl.this.renderInstructions.set(instructions.length > 0 ? instructions : null);
                 return true;
             }
         }))
@@ -381,9 +338,7 @@ public abstract class WidgetImpl<J extends Component> {
         });
     }
 
-    public boolean customRender(final Graphics2D g) {
-        
-        
+    public boolean customRender(final Graphics g) {
 //        return read(new Reader<Boolean>() {
 //            @Override
 //            public Boolean read() {
@@ -433,8 +388,8 @@ public abstract class WidgetImpl<J extends Component> {
     public Container container() {
         java.awt.Container container = component.getParent();
         while (container != null) {
-            if (container instanceof ContainerWrap) {
-                return ((ContainerWrap) container).getGenUIContainer();
+            if (container instanceof WidgetPeer) {
+                return ((WidgetPeer<Container>) container).genUI();
             }
 
             container = container.getParent();
@@ -455,7 +410,7 @@ public abstract class WidgetImpl<J extends Component> {
         renderInstructions.write(new Writer<PropAccessor<Painter.Instruction[]>>() {
             @Override
             public void write(PropAccessor<Painter.Instruction[]> data) {
-                WidgetImpl.this.renderer.set(renderer);
+                AWTWidgetImpl.this.renderer.set(renderer);
                 data.clear();
             }
         });
@@ -515,76 +470,75 @@ public abstract class WidgetImpl<J extends Component> {
     }
 
     private MouseListener mouseListener;
-
     public void setContextMenu(final Menu menu) {
-        act(new Runnable() {
-            public JMenu build(AbstractMenu menu) {
-                JMenu jmenu = new JMenu(menu.text());
-                for (final MenuItem menuItem : menu) {
-                    if (menuItem instanceof Menu.Separator) {
-                        jmenu.addSeparator();
-                    } else if (menuItem instanceof AbstractAction) {
-                        jmenu.add(((AbstractAction) menuItem).text()).addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                ((AbstractAction) menuItem).activate();
-                            }
-                        });
-                    } else if (menuItem instanceof AbstractMenu) {
-                        jmenu.add(build((AbstractMenu) menuItem));
-                    }
-                }
-                return jmenu;
-            }
-
-            public void run() {
-                contextMenu = menu;
-                if (menu == null) {
-                    if (mouseListener != null) {
-                        menuTarget().removeMouseListener(mouseListener);
-                        mouseListener = null;
-                    }
-                } else if (mouseListener == null) {
-                    mouseListener = new MouseListener() {
-                        public void show(int x, int y) {
-                            JPopupMenu popupMenu = new JPopupMenu();
-                            for (final MenuItem menuItem : contextMenu) {
-                                if (menuItem instanceof Menu.Separator)
-                                    popupMenu.addSeparator();
-                                else if (menuItem instanceof AbstractAction) {
-                                    popupMenu.add(((AbstractAction) menuItem).text()).addActionListener(new ActionListener() {
-                                        public void actionPerformed(ActionEvent e) {
-                                            ((AbstractAction) menuItem).activate();
-                                        }
-                                    });
-                                } else if (menuItem instanceof AbstractMenu)
-                                    popupMenu.add(build((AbstractMenu) menuItem));
-                            }
-                            popupMenu.show(menuTarget(), x, y);
-                        }
-
-                        public void mouseClicked(MouseEvent e) {
-                            if(e.isPopupTrigger())
-                                show(e.getX(), e.getY());
-                        }
-
-                        public void mousePressed(MouseEvent e) {
-                            if(e.isPopupTrigger())
-                                show(e.getX(), e.getY());
-                        }
-
-                        public void mouseReleased(MouseEvent e) {
-                            if(e.isPopupTrigger())
-                                show(e.getX(), e.getY());
-                        }
-
-                        public void mouseEntered(MouseEvent e) {}
-
-                        public void mouseExited(MouseEvent e) {}
-                    };
-                    menuTarget().addMouseListener(mouseListener);
-                }
-            }
-        });
+//        act(new Runnable() {
+//            public JMenu build(AbstractMenu menu) {
+//                JMenu jmenu = new JMenu(menu.text());
+//                for (final MenuItem menuItem : menu) {
+//                    if (menuItem instanceof Menu.Separator) {
+//                        jmenu.addSeparator();
+//                    } else if (menuItem instanceof AbstractAction) {
+//                        jmenu.add(((AbstractAction) menuItem).text()).addActionListener(new ActionListener() {
+//                            public void actionPerformed(ActionEvent e) {
+//                                ((AbstractAction) menuItem).activate();
+//                            }
+//                        });
+//                    } else if (menuItem instanceof AbstractMenu) {
+//                        jmenu.add(build((AbstractMenu) menuItem));
+//                    }
+//                }
+//                return jmenu;
+//            }
+//
+//            public void run() {
+//                contextMenu = menu;
+//                if (menu == null) {
+//                    if (mouseListener != null) {
+//                        menuTarget().removeMouseListener(mouseListener);
+//                        mouseListener = null;
+//                    }
+//                } else if (mouseListener == null) {
+//                    mouseListener = new MouseListener() {
+//                        public void show(int x, int y) {
+//                            JPopupMenu popupMenu = new JPopupMenu();
+//                            for (final MenuItem menuItem : contextMenu) {
+//                                if (menuItem instanceof Menu.Separator)
+//                                    popupMenu.addSeparator();
+//                                else if (menuItem instanceof AbstractAction) {
+//                                    popupMenu.add(((AbstractAction) menuItem).text()).addActionListener(new ActionListener() {
+//                                        public void actionPerformed(ActionEvent e) {
+//                                            ((AbstractAction) menuItem).activate();
+//                                        }
+//                                    });
+//                                } else if (menuItem instanceof AbstractMenu)
+//                                    popupMenu.add(build((AbstractMenu) menuItem));
+//                            }
+//                            popupMenu.show(menuTarget(), x, y);
+//                        }
+//
+//                        public void mouseClicked(MouseEvent e) {
+//                            if(e.isPopupTrigger() && component.isEnabled())
+//                                show(e.getX(), e.getY());
+//                        }
+//
+//                        public void mousePressed(MouseEvent e) {
+//                            if(e.isPopupTrigger() && component.isEnabled())
+//                                show(e.getX(), e.getY());
+//                        }
+//
+//                        public void mouseReleased(MouseEvent e) {
+//                            if(e.isPopupTrigger() && component.isEnabled())
+//                                show(e.getX(), e.getY());
+//                        }
+//
+//                        public void mouseEntered(MouseEvent e) {}
+//
+//                        public void mouseExited(MouseEvent e) {}
+//                    };
+//                    menuTarget().addMouseListener(mouseListener);
+//                }
+//            }
+//        });
     }
     
     protected java.awt.Component menuTarget() {

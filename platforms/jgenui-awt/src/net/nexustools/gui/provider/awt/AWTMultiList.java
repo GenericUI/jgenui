@@ -3,29 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.nexustools.gui.provider.swing;
+package net.nexustools.gui.provider.awt;
 
-import net.nexustools.gui.provider.awt.AWTPlatform;
 import java.util.Arrays;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
 import net.nexustools.gui.MultiList;
 import net.nexustools.gui.event.SelectionListener;
-import net.nexustools.gui.provider.swing.impl.ScrollDeligateImpl;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements MultiList<I> {
+public class AWTMultiList<I> extends AWTWidgetImpl<java.awt.List> implements MultiList<I> {
 
     private I[] options;
-    public SwingMultiList() {
+    public AWTMultiList() {
         super(AWTPlatform.instance());
     }
 
-    SwingMultiList(AWTPlatform platform) {
+    AWTMultiList(AWTPlatform platform) {
         super(platform);
     }
 
@@ -43,7 +39,12 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
     public void setValue(final I value) {
         act(new Runnable() {
             public void run() {
-                component.view.setSelectedValue(value, true);
+                int i = 0;
+                for(; i < options.length; i++)
+                    if(options[i] == value)
+                        break;
+                
+                component.select(i);
             }
         });
     }
@@ -53,7 +54,10 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
         return read(new Reader<I>() {
             @Override
             public I read() {
-                return component.view.getSelectedValue();
+                int index = component.getSelectedIndex();
+                if(index >= 0)
+                    return options[component.getSelectedIndex()];
+                return null;
             }
         });
     }
@@ -73,13 +77,9 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
         act(new Runnable() {
 
             public void run() {
-                component.view.setModel(new DefaultListModel<I>() {
-                    {
-                        for (I option : options) {
-                            addElement(option);
-                        }
-                    }
-                });
+                component.removeAll();
+                for(I option : options)
+                    component.add(option.toString());
             }
         });
 
@@ -91,7 +91,7 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
 
             @Override
             public I[] read() {
-                int[] indices = component.view.getSelectedIndices();
+                int[] indices = component.getSelectedIndexes();
                 I[] selected = Arrays.copyOf(options, indices.length);
                 for(int i=0; i<indices.length; i++)
                     selected[i] = options[indices[i]];
@@ -115,7 +115,7 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
 
             @Override
             public Boolean read() {
-                return component.view.getSelectionMode() != ListSelectionModel.SINGLE_SELECTION;
+                return component.isMultipleMode();
             }
         });
     }
@@ -123,14 +123,14 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
     public void allowMultiple(final boolean yes) {
         act(new Runnable() {
             public void run() {
-                component.view.setSelectionMode(yes ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION);
+                component.setMultipleMode(yes);
             }
         });
     }
 
     @Override
-    protected JList<I> createView() {
-        return new JList<I>();
+    protected java.awt.List create() {
+        return new java.awt.List();
     }
 
     public void setSelectionRange(final int s, final int e) {
@@ -144,7 +144,18 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
     public void setSelection(final int... indices) {
         act(new Runnable() {
             public void run() {
-                component.view.setSelectedIndices(indices);
+                for(int i=0; i<options.length; i++) {
+                    boolean select = false;
+                    for(int index : indices)
+                        if(index == i) {
+                            select = true;
+                            break;
+                        }
+                    if(select)
+                        component.select(i);
+                    else
+                        component.deselect(i);
+                }
             }
         });
     }
@@ -189,7 +200,7 @@ public class SwingMultiList<I> extends ScrollDeligateImpl<JList<I>> implements M
         return read(new Reader<int[]>() {
             @Override
             public int[] read() {
-                return component.view.getSelectedIndices();
+                return component.getSelectedIndexes();
             }
         });
     }

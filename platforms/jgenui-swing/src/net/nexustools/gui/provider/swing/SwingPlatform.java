@@ -7,25 +7,14 @@
 package net.nexustools.gui.provider.swing;
 
 import java.awt.AWTEvent;
-import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Window;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.ListIterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import net.nexustools.concurrent.BaseAccessor;
-import net.nexustools.concurrent.BaseReader;
-import net.nexustools.concurrent.BaseWriter;
-import net.nexustools.concurrent.FakeLock;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.Body;
 import net.nexustools.gui.Button;
@@ -35,146 +24,53 @@ import net.nexustools.gui.Frame;
 import net.nexustools.gui.Label;
 import net.nexustools.gui.RadioButton;
 import net.nexustools.gui.ToggleButton;
-import net.nexustools.gui.Widget;
-import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.platform.Platform;
-import net.nexustools.gui.platform.PlatformException;
 import net.nexustools.gui.platform.RenderTargetSupportedException;
-import net.nexustools.gui.provider.swing.shared.ContainerImpl;
-import net.nexustools.gui.provider.swing.shared.ContainerImpl.ContainerWrap;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
-import net.nexustools.gui.render.Font;
-import net.nexustools.io.format.StreamTokenizer;
+import net.nexustools.gui.provider.awt.AWTPlatform;
 
 /**
  *
  * @author katelyn
  */
-public class SwingPlatform extends Platform<java.awt.Component> {
-    
-    static abstract class SwingReader<R> implements Runnable {
-        public R value;
-    }
-    public static class SwingEventQueue extends EventQueue {
-        private final ArrayList<Runnable> idleEvents = new ArrayList();
-        private Thread thisThread;
-        
-        public boolean onThread() {
-            return thisThread == Thread.currentThread();
-        }
-        
-        @Override
-        protected void dispatchEvent(AWTEvent event) {
-            thisThread = Thread.currentThread();
-            super.dispatchEvent(event);
-            testIdle();
-        }
-        
-        public void testIdle() {
-            if (peekEvent() == null) {
-                ListIterator<Runnable> li = idleEvents.listIterator(idleEvents.size());
-
-                while(li.hasPrevious()) {
-                    try {
-                        li.previous().run();
-                    } catch(RuntimeException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                idleEvents.clear();
-            }
-        }
-
-        private void onIdle(final Runnable run) {
-            idleEvents.add(run);
-            testIdle();
-        }
-    }
-    public static final SwingEventQueue eventQueue = new SwingEventQueue();
+public class SwingPlatform extends AWTPlatform {
     
     public static SwingPlatform instance() {
+        Platform currentPlatform = Platform.current();
+        if(currentPlatform instanceof SwingPlatform)
+            return (SwingPlatform)currentPlatform; // Good Enough
         return (SwingPlatform)Platform.byClass(SwingPlatform.class);
     }
     
     public SwingPlatform() {
-        super("jgenui-swing");
-        System.out.println("Creating swing platform");
+        super("swing");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException ex) {} catch (InstantiationException ex) {} catch (IllegalAccessException ex) {} catch (UnsupportedLookAndFeelException ex) {}
-        try {
-            act(new Runnable() {
-                public void run() {
-                    makeCurrent();
-                }
-            });
-        } catch (InvocationTargetException ex) {}
-        makeCurrent();
-    }
-
-    @Override
-    public <T, F> T convert(F from) throws PlatformException {
-        if(from instanceof java.awt.Font)
-            return (T)new Font();
-        if(from instanceof java.awt.Color)
-            return (T)new Font();
-        if(from instanceof java.awt.Dimension)
-            return (T)new Size(((java.awt.Dimension)from).width, ((java.awt.Dimension)from).height);
-        if(from instanceof Widget) {
-            return (T)convertWidget((Widget)from);
-        }
-        
-        throw new PlatformException("Cannot convert " + from.getClass().getName());
-    }
-    
-    public Widget convertWidget(Widget from) throws PlatformException {
-        if(from instanceof WidgetImpl)
-            return from;
-
-        if(from instanceof Label)
-            return new SwingLabel((Label)from, this);
-        if(from instanceof Button)
-            return new SwingButton((Button)from, this);
-
-        throw new PlatformException("Swing has no implementation widget compatible with " + from.getClass().getName());
+        } catch (ClassNotFoundException ex) {
+        } catch (InstantiationException ex) {
+        } catch (IllegalAccessException ex) {
+        } catch (UnsupportedLookAndFeelException ex) {}
     }
 
     @Override
     public Base create(Class<? extends Base> type) throws RenderTargetSupportedException {
-        if(type == Container.class)
+        if(Container.class.isAssignableFrom(type))
             return new SwingContainer(this);
-        else if(type == Label.class)
+        else if(Label.class.isAssignableFrom(type))
             return new SwingLabel(this);
-        else if(type == Button.class)
+        else if(Button.class.isAssignableFrom(type))
             return new SwingButton(this);
-        else if(type == ToggleButton.class)
+        else if(ToggleButton.class.isAssignableFrom(type))
             return new SwingToggleButton(this);
-        else if(type == CheckBox.class)
+        else if(CheckBox.class.isAssignableFrom(type))
             return new SwingCheckBox(this);
-        else if(type == RadioButton.class)
+        else if(RadioButton.class.isAssignableFrom(type))
             return new SwingRadioButton(this);
-        else if(type == Frame.class)
+        else if(Frame.class.isAssignableFrom(type))
             return new SwingFrame(this);
-        else if(type == Body.class)
+        else if(Body.class.isAssignableFrom(type))
             return new SwingBody(this);
         
-        throw new RenderTargetSupportedException();
-    }
-
-    @Override
-    public Widget parse(StreamTokenizer processor) throws PlatformException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean supports(Feature feature) {
-        switch(feature) {
-            case MultipleBodies:
-            case ComplexDrawing:
-            case FullPainter:
-                return true;
-        }
-        return false;
+        return super.create(type);
     }
 
     @Override
@@ -210,8 +106,6 @@ public class SwingPlatform extends Platform<java.awt.Component> {
                     
                     for(Window window : Window.getWindows()) {
                         SwingUtilities.updateComponentTreeUI(window);
-                        if(window instanceof ContainerWrap)
-                            ((ContainerImpl)((ContainerWrap)window).getGenUIContainer()).invalidate();
                     }
                 }
             });
@@ -223,89 +117,6 @@ public class SwingPlatform extends Platform<java.awt.Component> {
     @Override
     public String LAF() {
         return UIManager.getLookAndFeel().getName();
-    }
-
-    @Override
-    public void onIdle(final Runnable run) {
-        try {
-            act(new Runnable() {
-                @Override
-                public void run() {
-                    eventQueue.onIdle(run);
-                }
-            });
-        } catch (InvocationTargetException ex) {
-            ex.getCause().printStackTrace();
-        }
-    }
-
-    @Override
-    public void act(Runnable run) throws InvocationTargetException {
-        if(EventQueue.isDispatchThread())
-            run.run();
-        else
-            while(true)
-                try {
-                    eventQueue.invokeAndWait(run);
-                    break;
-                } catch (InterruptedException ex) {}
-    }
-
-    @Override
-    public void open(String url) {
-        try {
-            open(new URI(url));
-        } catch (URISyntaxException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public void open(URI uri) {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                desktop.browse(uri);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else
-            throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Component nativeFor(Widget widget) throws PlatformException {
-        return ((WidgetImpl)convertWidget(widget)).internal();
-    }
-
-    @Override
-    public SwingClipboard clipboard() {
-        return SwingClipboard.instance();
-    }
-
-    public void write(final BaseAccessor data, final BaseWriter actor) {
-        try {
-            act(new Runnable() {
-                public void run() {
-                    actor.write(data, FakeLock.instance);
-                }
-            });
-        } catch (InvocationTargetException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public Object read(final BaseAccessor data, final BaseReader reader) {
-        SwingReader swingReader = new SwingReader() {
-            public void run() {
-                value = reader.read(data, FakeLock.instance);
-            }
-        };
-        try {
-            act(swingReader);
-        } catch (InvocationTargetException ex) {
-            ex.printStackTrace();
-        }
-        return swingReader.value;
     }
     
 }

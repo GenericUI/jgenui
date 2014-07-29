@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing;
+package net.nexustools.gui.provider.awt;
 
 import java.awt.Component;
 import java.awt.Graphics;
@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 import java.util.WeakHashMap;
 import net.nexustools.concurrent.Prop;
 import net.nexustools.gui.Image;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 import net.nexustools.gui.render.Painter;
 import net.nexustools.gui.render.Pixmap;
 import net.nexustools.gui.render.Renderable;
@@ -24,7 +24,7 @@ import net.nexustools.io.Stream;
  *
  * @author katelyn
  */
-public class SwingImage extends WidgetImpl<Component> implements Image {
+public class AWTImage extends AWTWidgetImpl<Component> implements Image {
     
     private static class Renderer extends net.nexustools.gui.render.Renderer {
         public static class State {
@@ -35,7 +35,7 @@ public class SwingImage extends WidgetImpl<Component> implements Image {
         public static final WeakHashMap<Pixmap, State> statesByPixmap = new WeakHashMap();
         @Override
         public void render(Renderable target, Painter painter) {
-            Pixmap pixmap = ((SwingImage)target).pixmap.get();
+            Pixmap pixmap = ((AWTImage)target).pixmap.get();
             if(pixmap == null)
                 return;
         }
@@ -53,15 +53,15 @@ public class SwingImage extends WidgetImpl<Component> implements Image {
     }
 
     protected final Prop<Pixmap> pixmap = new Prop();
-    public SwingImage() {
-        super(SwingPlatform.instance());
+    public AWTImage() {
+        super(AWTPlatform.instance());
     }
     
-    public SwingImage(String source) throws IOException, URISyntaxException {
+    public AWTImage(String source) throws IOException, URISyntaxException {
         this(Stream.open(source));
     }
     
-    public SwingImage(Stream source) {
+    public AWTImage(Stream source) {
         this();
         setPixmap(new Pixmap(source));
         setRenderer(new Renderer());

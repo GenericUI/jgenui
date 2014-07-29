@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.awt.impl;
 
 import java.util.EventListener;
 import net.nexustools.concurrent.Prop;

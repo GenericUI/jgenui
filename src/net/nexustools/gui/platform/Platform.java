@@ -33,6 +33,7 @@ import net.nexustools.runtime.ThreadedRunQueue;
  */
 public abstract class Platform<W> extends ThreadedRunQueue {
 	
+	// TODO: Make thread safe
 	private static final ThreadLocal<Platform> current = new ThreadLocal();
 	private static final HashMap<Class<? extends Platform>, Platform> platformsByClass = new HashMap();
 	private static final HashMap<String, Platform> platformsByName = new HashMap();

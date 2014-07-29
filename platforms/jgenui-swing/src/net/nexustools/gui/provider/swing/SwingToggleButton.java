@@ -13,7 +13,7 @@ import javax.swing.JToggleButton;
 import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.Button;
-import net.nexustools.gui.provider.swing.shared.ToggleButtonImpl;
+import net.nexustools.gui.provider.swing.impl.ToggleButtonImpl;
 
 /**
  *

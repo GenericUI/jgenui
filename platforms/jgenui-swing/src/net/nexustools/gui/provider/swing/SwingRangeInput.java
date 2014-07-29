@@ -6,19 +6,20 @@
 
 package net.nexustools.gui.provider.swing;
 
+import net.nexustools.gui.provider.awt.AWTPlatform;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JSpinner;
 import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.RangeInput;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingRangeInput extends WidgetImpl<JSpinner> implements RangeInput {
+public class SwingRangeInput extends AWTWidgetImpl<JSpinner> implements RangeInput {
     
     private class Native extends JSpinner {
         public Native() {
@@ -33,7 +34,7 @@ public class SwingRangeInput extends WidgetImpl<JSpinner> implements RangeInput 
     }
 
     public SwingRangeInput() {
-        super(SwingPlatform.instance());
+        super(AWTPlatform.instance());
         setContextMenu(buildEditMenu(this));
     }
 

@@ -6,6 +6,7 @@
 
 package net.nexustools.gui.provider.swing;
 
+import net.nexustools.gui.provider.awt.AWTPlatform;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,13 +18,13 @@ import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.TextInput;
 import net.nexustools.gui.event.ActionListener;
 import net.nexustools.gui.event.ValueListener;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingTextInput extends WidgetImpl<JTextField> implements TextInput {
+public class SwingTextInput extends AWTWidgetImpl<JTextField> implements TextInput {
     
     private class Native extends JTextField {
         public Native() {
@@ -38,7 +39,7 @@ public class SwingTextInput extends WidgetImpl<JTextField> implements TextInput 
     }
 
     public SwingTextInput() {
-        super(SwingPlatform.instance());
+        super(AWTPlatform.instance());
         setContextMenu(buildEditMenu(this));
     }
 

@@ -4,34 +4,42 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing;
+package net.nexustools.gui.provider.awt;
 
-import net.nexustools.gui.provider.awt.AWTPlatform;
-import javax.swing.JTextArea;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JTextField;
 import net.nexustools.gui.AbstractAction;
+import net.nexustools.gui.ActivateableAction;
 import net.nexustools.gui.Shortcut;
 import net.nexustools.gui.SingleInput;
-import net.nexustools.gui.TextArea;
+import net.nexustools.gui.TextInput;
 import net.nexustools.gui.event.ActionListener;
 import net.nexustools.gui.event.ValueListener;
-import net.nexustools.gui.geom.Size;
-import net.nexustools.gui.provider.swing.impl.ScrollDeligateImpl;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements TextArea {
+public class AWTTextInput extends AWTWidgetImpl<JTextField> implements TextInput {
+    
+    private class Native extends JTextField {
+        public Native() {
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+            setName("Input[Type=Text]");
+        }
+        @Override
+        public void paint(Graphics g) {
+            if(!customRender((Graphics2D)g))
+                super.paint(g);
+        }
+    }
 
-    public SwingTextArea() {
+    public AWTTextInput() {
         super(AWTPlatform.instance());
         setContextMenu(buildEditMenu(this));
-        setMinimumSize(new Size(20, 20));
-    }
-    
-    public SwingTextArea(String text) {
-        this();
-        setValue(text);
     }
 
     public void addValueListener(ValueListener<String, SingleInput<String>> valueListener) {
@@ -95,8 +103,8 @@ public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements Text
     }
 
     @Override
-    protected JTextArea createView() {
-        return new JTextArea();
+    protected JTextField create() {
+        return new Native();
     }
 
     @Override
@@ -114,7 +122,7 @@ public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements Text
         act(new Runnable() {
             @Override
             public void run() {
-                component.view.setText(value);
+                component.setText(value);
             }
         });
     }
@@ -124,7 +132,7 @@ public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements Text
         return read(new Reader<String>() {
             @Override
             public String read() {
-                return component.view.getText();
+                return component.getText();
             }
         });
     }
@@ -164,7 +172,7 @@ public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements Text
             @Override
             public void activate() {
                 super.activate();
-                component.view.cut();
+                component.cut();
             }
         };
     }
@@ -184,7 +192,7 @@ public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements Text
             @Override
             public void activate() {
                 super.activate();
-                component.view.copy();
+                component.copy();
             }
         };
     }
@@ -204,9 +212,13 @@ public class SwingTextArea extends ScrollDeligateImpl<JTextArea> implements Text
             @Override
             public void activate() {
                 super.activate();
-                component.view.paste();
+                component.paste();
             }
         };
+    }
+
+    public AbstractAction action() {
+        return new ActivateableAction(this);
     }
     
 }

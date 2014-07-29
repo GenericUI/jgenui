@@ -13,3 +13,9 @@
 /platforms/jgenui-android/gen/
 /platforms/jgenui-android/bin/
 /platforms/jgenui-android/nbandroid/
+/platforms/jgenui-awt/nbproject/private/
+/extern/lwjgl/native/*
+/extern/lwjgl/jar/*
+/extern/lwjgl/doc/*
+*~
+/platforms/jgenui-awt/build/

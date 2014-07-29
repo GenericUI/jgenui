@@ -15,18 +15,15 @@
 
 package net.nexustools.gui.platform;
 
-import net.nexustools.gui.event.ValueListener;
+import net.nexustools.gui.Widget;
 
 /**
  *
  * @author katelyn
+ * @param <W>
  */
-public interface Clipboard extends MimeStorage {
+public interface WidgetPeer<W extends Widget> {
 	
-	public MimeStorage content();
-	public void setContent(MimeStorage data);
-	
-	public void addListener(ValueListener<MimeStorage, Clipboard> valueListener);
-	public void removeListener(ValueListener<MimeStorage, Clipboard> valueListener);
+	public W genUI();
 	
 }

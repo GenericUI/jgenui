@@ -4,18 +4,19 @@
  * and open the template in the editor.
  */
 
-package net.nexustools.gui.provider.swing.shared;
+package net.nexustools.gui.provider.swing.impl;
 
 import java.awt.Component;
 import javax.swing.JScrollPane;
-import net.nexustools.gui.provider.swing.SwingPlatform;
-import net.nexustools.gui.provider.swing.shared.ScrollDeligateImpl.Native;
+import net.nexustools.gui.provider.awt.AWTPlatform;
+import net.nexustools.gui.provider.awt.impl.AbstractContainerImpl;
+import net.nexustools.gui.provider.swing.impl.ScrollDeligateImpl.Native;
 
 /**
  *
  * @author katelyn
  */
-public abstract class ScrollDeligateImpl<V extends java.awt.Component> extends WidgetImpl<Native<V>> {
+public abstract class ScrollDeligateImpl<V extends java.awt.Component> extends AbstractContainerImpl<Native<V>> {
 
     public static class Native<V extends java.awt.Component> extends JScrollPane {
         public final V view;
@@ -38,14 +39,14 @@ public abstract class ScrollDeligateImpl<V extends java.awt.Component> extends W
         } 
     }
     
-    public ScrollDeligateImpl(SwingPlatform platform) {
+    public ScrollDeligateImpl(AWTPlatform platform) {
         super(platform);
     }
 
     protected abstract V createView();
-    
+
     @Override
-    protected final Native<V> create() {
+    protected Native<V> create() {
         return new Native<V>(createView());
     }
 
@@ -53,5 +54,6 @@ public abstract class ScrollDeligateImpl<V extends java.awt.Component> extends W
     protected Component menuTarget() {
         return component.view;
     }
+    
     
 }

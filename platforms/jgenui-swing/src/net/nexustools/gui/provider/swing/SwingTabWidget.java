@@ -6,16 +6,17 @@
 
 package net.nexustools.gui.provider.swing;
 
+import net.nexustools.gui.provider.awt.AWTPlatform;
 import javax.swing.JTabbedPane;
 import net.nexustools.gui.TabWidget;
 import net.nexustools.gui.Widget;
-import net.nexustools.gui.provider.swing.shared.WidgetImpl;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**
  *
  * @author katelyn
  */
-public class SwingTabWidget extends WidgetImpl<javax.swing.JTabbedPane> implements TabWidget {
+public class SwingTabWidget extends AWTWidgetImpl<javax.swing.JTabbedPane> implements TabWidget {
 
     public class Native extends JTabbedPane {
         public Native() {
@@ -31,9 +32,9 @@ public class SwingTabWidget extends WidgetImpl<javax.swing.JTabbedPane> implemen
     }
     
     public SwingTabWidget() {
-        super(SwingPlatform.instance());
+        super(AWTPlatform.instance());
     }
-    SwingTabWidget(SwingPlatform platform) {
+    SwingTabWidget(AWTPlatform platform) {
         super(platform);
     }
 
@@ -47,7 +48,7 @@ public class SwingTabWidget extends WidgetImpl<javax.swing.JTabbedPane> implemen
         act(new Runnable() {
             @Override
             public void run() {
-                component.add(name, ((WidgetImpl)widget).internal());
+                component.add(name, ((AWTWidgetImpl)widget).internal());
             }
         });
     }
@@ -57,7 +58,7 @@ public class SwingTabWidget extends WidgetImpl<javax.swing.JTabbedPane> implemen
         act(new Runnable() {
             @Override
             public void run() {
-                component.remove(((WidgetImpl)widget).internal());
+                component.remove(((AWTWidgetImpl)widget).internal());
             }
         });
     }

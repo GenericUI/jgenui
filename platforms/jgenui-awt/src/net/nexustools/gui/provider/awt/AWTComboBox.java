@@ -3,50 +3,46 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.nexustools.gui.provider.swing;
+package net.nexustools.gui.provider.awt;
 
-import net.nexustools.gui.provider.awt.AWTPlatform;
-import net.nexustools.gui.provider.awt.AWTComboBox;
+import java.awt.Choice;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import net.nexustools.concurrent.PropAccessor;
 import net.nexustools.gui.ComboBox;
 import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.event.EventDispatcher;
 import net.nexustools.gui.event.ValueListener;
+import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 import net.nexustools.gui.provider.awt.impl.ListenerProp;
 import net.nexustools.gui.provider.awt.impl.PropDispatcher;
-import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**
  *
  * @author katelyn
  * @param <I>
  */
-public class SwingComboBox<I> extends AWTWidgetImpl<JComboBox> implements ComboBox<I> {
+public class AWTComboBox<I> extends AWTWidgetImpl<Choice> implements ComboBox<I> {
 
     private I[] options;
-    public SwingComboBox() {
+    public AWTComboBox() {
         super(AWTPlatform.instance());
     }
-    public SwingComboBox(I[] options) {
+    public AWTComboBox(I[] options) {
         this();
         setOptions(options);
     }
 
     @Override
-    protected JComboBox create() {
-        return new JComboBox() {
+    protected Choice create() {
+        return new Choice() {
             {
                 setName("ComboBox");
             }
             @Override
             public void paint(Graphics g) {
-                if (!customRender((Graphics2D) g)) {
+                if (!customRender(g)) {
                     super.paint(g);
                 }
             }
@@ -58,7 +54,7 @@ public class SwingComboBox<I> extends AWTWidgetImpl<JComboBox> implements ComboB
         return read(new Reader<Boolean>() {
             @Override
             public Boolean read() {
-                return component.isEditable();
+                return false;
             }
         });
     }
@@ -68,7 +64,7 @@ public class SwingComboBox<I> extends AWTWidgetImpl<JComboBox> implements ComboB
         act(new Runnable() {
             @Override
             public void run() {
-                component.setEditable(editable);
+                throw new RuntimeException("AWT does not support editable ComboBox's, however retro-fitting is planned.");
             }
         });
     }
@@ -88,8 +84,10 @@ public class SwingComboBox<I> extends AWTWidgetImpl<JComboBox> implements ComboB
         act(new Runnable() {
             @Override
             public void run() {
-                SwingComboBox.this.options = options;
-                component.setModel(new DefaultComboBoxModel<I>(options));
+                AWTComboBox.this.options = options;
+                component.removeAll();
+                for(I option : options)
+                    component.add(option.toString());
             }
         });
     }
@@ -109,7 +107,13 @@ public class SwingComboBox<I> extends AWTWidgetImpl<JComboBox> implements ComboB
         act(new Runnable() {
             @Override
             public void run() {
-                component.setSelectedItem(value);
+                int i=0;
+                for(; i<options.length; i++) {
+                    if(options[i] == value)
+                        break;
+                }
+                
+                component.select(i);
             }
         });
     }
@@ -117,7 +121,7 @@ public class SwingComboBox<I> extends AWTWidgetImpl<JComboBox> implements ComboB
     private final ListenerProp<ItemListener> itemListener = new ListenerProp<ItemListener>() {
         @Override
         public void connect(final PropAccessor<ItemListener> itemListener) {
-            SwingComboBox.this.act(new Runnable() {
+            AWTComboBox.this.act(new Runnable() {
                 @Override
                 public void run() {
                     ItemListener eventListener = new ItemListener() {
@@ -153,7 +157,7 @@ public class SwingComboBox<I> extends AWTWidgetImpl<JComboBox> implements ComboB
 
         @Override
         public void disconnect(final PropAccessor<ItemListener> itemListener) {
-            SwingComboBox.this.act(new Runnable() {
+            AWTComboBox.this.act(new Runnable() {
                 @Override
                 public void run() {
                     component.removeItemListener(itemListener.take());
