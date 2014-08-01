@@ -21,11 +21,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.nexustools.concurrent.MapAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
+import net.nexustools.concurrent.Reader;
 import net.nexustools.gui.Base;
+import net.nexustools.gui.StyleRoot;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.render.StyleSheet;
 import net.nexustools.io.format.StreamReader;
@@ -37,7 +41,7 @@ import net.nexustools.runtime.ThreadedRunQueue;
  * 
  * @param <W> Base type of native widgets
  */
-public abstract class Platform<W> extends ThreadedRunQueue {
+public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot {
 	
 	private static final ThreadLocal<Platform> current = new ThreadLocal();
 	private static final PropMap<Class<? extends Platform>, Platform> platformsByClass = new PropMap();
@@ -51,6 +55,24 @@ public abstract class Platform<W> extends ThreadedRunQueue {
 	}
 	public static void registerLAF(String name, StyleSheet styleSheet) throws IOException, URISyntaxException {
 		cssLAFs.put(name, styleSheet);
+	}
+	
+	public static StyleSheet lafStyleSheet(String laf) {
+		return cssLAFs.get(laf);
+	}
+	
+	public static String[] cssLAFs() {
+		Set<String> keySet = cssLAFs.copy().keySet();
+		return keySet.toArray(new String[keySet.size()]);
+	}
+	
+	static {
+		try {
+			registerLAF("Blank", "resource:/net/nexustools/gui/lafs/Blank.css");
+			registerLAF("HyperSpace", "resource:/net/nexustools/gui/lafs/HyperSpace.css");
+		} catch (IOException ex) {
+		} catch (URISyntaxException ex) {
+		}
 	}
 	
 	public static Platform current() {
@@ -174,7 +196,7 @@ public abstract class Platform<W> extends ThreadedRunQueue {
 		super(name);
 	}
 	
-	public abstract Base create(Class<? extends Base> type) throws RenderTargetSupportedException;
+	public abstract Base create(Class<? extends Base> type) throws RenderTargetNotSupportedException;
 	public abstract Widget parse(StreamReader processor) throws PlatformException;
 	public abstract boolean supports(Feature feature);
 	

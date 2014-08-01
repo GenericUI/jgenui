@@ -13,17 +13,17 @@
  * 
  */
 
-package net.nexustools.gui;
-
-import net.nexustools.gui.render.StyleSheet;
+package net.nexustools.gui.platform;
 
 /**
  *
  * @author katelyn
  */
-public interface StyleRoot {
-	
-	public StyleSheet styleSheet();
-	public void setStyleSheet(StyleSheet styleSheet);
+public class RenderTargetNotSupportedException extends PlatformException {
+
+	public RenderTargetNotSupportedException() {}
+	public RenderTargetNotSupportedException(String msg) {
+		super(msg);
+	}
 	
 }

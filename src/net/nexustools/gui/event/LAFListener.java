@@ -13,17 +13,29 @@
  * 
  */
 
-package net.nexustools.gui.platform;
+package net.nexustools.gui.event;
+
+import java.util.EventListener;
+import net.nexustools.event.Event;
+import net.nexustools.gui.platform.Platform;
 
 /**
  *
  * @author katelyn
  */
-public class RenderTargetSupportedException extends PlatformException {
-
-	public RenderTargetSupportedException() {}
-	public RenderTargetSupportedException(String msg) {
-		super(msg);
+public interface LAFListener<S extends Platform> extends EventListener {
+	
+	public static class LAFEvent<S extends Platform> extends Event<S> {
+		public final String lafName;
+		public LAFEvent(String lafName, S source) {
+			super(source);
+			this.lafName = lafName;
+		}
 	}
+	
+	public void lafChanged(LAFEvent<S> lafEvent);
+	
+	public void lafDiscovered(LAFEvent<S> lafEvent);
+	public void lafVanished(LAFEvent<S> lafEvent);
 	
 }
