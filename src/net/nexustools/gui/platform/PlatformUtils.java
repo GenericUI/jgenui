@@ -18,6 +18,7 @@ package net.nexustools.gui.platform;
 import net.nexustools.event.ValueListener;
 import net.nexustools.gui.ComboBox;
 import net.nexustools.gui.SingleInput;
+import net.nexustools.gui.event.LAFListener;
 
 /**
  *
@@ -26,10 +27,17 @@ import net.nexustools.gui.SingleInput;
 public class PlatformUtils {
 	
 	public static ComboBox createLAFController(final Platform platform) {
-		ComboBox<String> comboBox = (ComboBox) platform.create(ComboBox.class);
+		final ComboBox<String> comboBox = (ComboBox) platform.create(ComboBox.class);
         comboBox.setTemplate("LAF: ####");
 		comboBox.setOptions(platform.LAFs());
 		comboBox.setValue(platform.LAF());
+		platform.addLAFListener(new LAFListener() {
+			public void lafChanged(LAFListener.LAFEvent lafEvent) {
+				comboBox.setValue(lafEvent.lafName);
+			}
+			public void lafDiscovered(LAFListener.LAFEvent lafEvent) {}
+			public void lafVanished(LAFListener.LAFEvent lafEvent) {}
+		});
 		comboBox.addValueListener(new ValueListener<String, SingleInput<String>>() {
 			public void valueChanged(ValueListener.ValueEvent<String, SingleInput<String>> event) {
 				platform.setLAF(event.value);

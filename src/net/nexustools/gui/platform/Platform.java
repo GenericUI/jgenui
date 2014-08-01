@@ -19,18 +19,24 @@ package net.nexustools.gui.platform;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.EventListener;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.UIManager;
+import net.nexustools.concurrent.IfWriter;
 import net.nexustools.concurrent.MapAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
-import net.nexustools.concurrent.Reader;
+import net.nexustools.concurrent.WriteReader;
+import net.nexustools.event.DefaultEventDispatcher;
+import net.nexustools.event.Event;
+import net.nexustools.event.EventDispatcher;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.StyleRoot;
 import net.nexustools.gui.Widget;
+import net.nexustools.gui.event.LAFListener;
+import net.nexustools.gui.event.LAFListener.LAFEvent;
 import net.nexustools.gui.render.StyleSheet;
 import net.nexustools.io.format.StreamReader;
 import net.nexustools.runtime.ThreadedRunQueue;
@@ -53,8 +59,38 @@ public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot 
 	public static void registerLAF(String name, String path) throws IOException, URISyntaxException {
 		registerLAF(name, new StyleSheet(path));
 	}
-	public static void registerLAF(String name, StyleSheet styleSheet) throws IOException, URISyntaxException {
-		cssLAFs.put(name, styleSheet);
+	public static void registerLAF(final String name, final StyleSheet styleSheet) throws IOException, URISyntaxException {
+		if(cssLAFs.read(new WriteReader<Boolean, MapAccessor<String, StyleSheet>>() {
+					@Override
+					public Boolean read(MapAccessor<String, StyleSheet> data) {
+						try {
+							return !data.has(name);
+						} finally {
+							data.put(name, styleSheet);
+						}
+					}
+				}))
+			for(final Platform platform : allPlatforms)
+				platform.eventDispatcher.dispatch(new EventDispatcher.Processor<LAFListener, LAFEvent>() {
+					public LAFEvent create() {
+						return new LAFEvent(name, platform);
+					}
+					public void dispatch(LAFListener listener, LAFEvent event) {
+						listener.lafDiscovered(event);
+					}
+				});
+	}
+	
+	protected void lafChanged(final String name) {
+		for(final Platform platform : allPlatforms)
+			platform.eventDispatcher.dispatch(new EventDispatcher.Processor<LAFListener, LAFEvent>() {
+				public LAFEvent create() {
+					return new LAFEvent(name, platform);
+				}
+				public void dispatch(LAFListener listener, LAFEvent event) {
+					listener.lafChanged(event);
+				}
+			});
 	}
 	
 	public static StyleSheet lafStyleSheet(String laf) {
@@ -202,9 +238,34 @@ public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot 
 	
 	public abstract Clipboard clipboard();
 	
-	public abstract String[] LAFs();
-	public abstract void setLAF(String laf);
+    public String[] LAFs() {
+        String[] LAFs = LAFs0();
+        String[] cssLAFs = cssLAFs();
+        String[] allLAFs = new String[LAFs.length + cssLAFs.length];
+        for(int i=0; i<LAFs.length; i++) {
+            allLAFs[i] = LAFs[i];
+        }
+        for(int i=0; i<cssLAFs.length; i++)
+            allLAFs[LAFs.length+i] = cssLAFs[i];
+        return allLAFs;
+    }
+	
+	public void setLAF(String laf) {
+		setLAF0(laf);
+		lafChanged(laf);
+	}
+	
+	protected abstract String[] LAFs0();
+	protected abstract void setLAF0(String laf);
 	public abstract String LAF();
+	
+	protected final EventDispatcher eventDispatcher = new DefaultEventDispatcher(this);
+	public void addLAFListener(LAFListener lafListener) {
+		eventDispatcher.add(lafListener);
+	}
+	public void removeLAFListener(LAFListener lafListener) {
+		eventDispatcher.remove(lafListener);
+	}
 	
 	public abstract void onIdle(Runnable run);
 	public abstract void act(Runnable run) throws InvocationTargetException;
