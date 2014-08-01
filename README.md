@@ -6,7 +6,7 @@ Backends
 ---------------
  - [LWJGL](http://github.com/GenericUI/jgenui-lwjgl)
  - [Java AWT+Swing](http://github.com/GenericUI/jgenui-swing)
- - [Minecraft Forge](http://github.com/GenericUI/jgenui-swing)
+ - [Minecraft Forge](http://github.com/GenericUI/jgenui-minecraft)
    - Check Out [ModEngine](http://github.com/ModEngine/jmodengine-minecraft)
  - [Android](http://github.com/GenericUI/jgenui-android)
  - [iOS](http://github.com/GenericUI/jgenui-ios)
