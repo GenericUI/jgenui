@@ -26,8 +26,8 @@ import net.nexustools.gui.layout.LayoutObject;
  */
 public interface LayoutContainer<O extends LayoutObject> extends Iterable<O> {
 	
-	public void addLayoutListener(LayoutListener<O> listener);
-	public void removeLayoutListener(LayoutListener<O> listener);
+	public void addLayoutListener(LayoutListener listener);
+	public void removeLayoutListener(LayoutListener listener);
 	
 	public void setLayout(Layout<O> layout);
 	public Layout<O> layout();
