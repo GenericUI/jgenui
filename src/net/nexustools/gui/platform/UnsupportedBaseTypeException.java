@@ -19,10 +19,10 @@ package net.nexustools.gui.platform;
  *
  * @author katelyn
  */
-public class RenderTargetNotSupportedException extends PlatformException {
+public class UnsupportedBaseTypeException extends PlatformException {
 
-	public RenderTargetNotSupportedException() {}
-	public RenderTargetNotSupportedException(String msg) {
+	public UnsupportedBaseTypeException() {}
+	public UnsupportedBaseTypeException(String msg) {
 		super(msg);
 	}
 	

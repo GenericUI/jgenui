@@ -17,20 +17,18 @@
 package net.nexustools.gui.platform;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.util.EventListener;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import javax.swing.UIManager;
-import net.nexustools.concurrent.IfWriter;
 import net.nexustools.concurrent.MapAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
 import net.nexustools.concurrent.WriteReader;
 import net.nexustools.event.DefaultEventDispatcher;
-import net.nexustools.event.Event;
 import net.nexustools.event.EventDispatcher;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.StyleRoot;
@@ -40,6 +38,7 @@ import net.nexustools.gui.event.LAFListener.LAFEvent;
 import net.nexustools.gui.render.StyleSheet;
 import net.nexustools.io.format.StreamReader;
 import net.nexustools.runtime.ThreadedRunQueue;
+import net.nexustools.utils.Creator;
 
 /**
  *
@@ -228,12 +227,53 @@ public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot 
 		} catch (URISyntaxException ex) {}
 	}
 	
-	public Platform(String name) {
-		super(name);
+	public static interface Population {
+		public <B extends Base> void add(Class<B> type, Creator<B> creator);
+		public <B extends Base> void add(Class<B> type, Class<? extends B> implClass);
 	}
 	
-	public abstract Base create(Class<? extends Base> type) throws RenderTargetNotSupportedException;
-	public abstract Widget parse(StreamReader processor) throws PlatformException;
+	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
+	public Platform(String name) {
+		super(name);
+		populate(new Population() {
+			public <B extends Base> void add(Class<B> type, Creator<B> creator) {
+				typeMap.put(type, creator);
+			}
+			public <B extends Base> void add(Class<B> type, final Class<? extends B> implClass) {
+				final Constructor<? extends B> constructor;
+				try {
+					constructor = implClass.getConstructor(Platform.class);
+				} catch (Exception ex) {
+					throw new RuntimeException(ex);
+				}
+				add(type, new Creator<B>() {
+					public B create() {
+						try {
+							return constructor.newInstance(Platform.this);
+						} catch (Exception ex) {
+							throw new RuntimeException(ex);
+						}
+					}
+				});
+			}
+		});
+	}
+	
+	protected abstract void populate(Population population);
+	
+	public final <B extends Base> B create(Class<B> type) throws UnsupportedBaseTypeException{
+		Creator<B> creator = typeMap.get(type);
+		if(creator == null)
+			throw new UnsupportedBaseTypeException();
+		return creator.create();
+	}
+	public final Widget parse(String path) throws PlatformException{
+		throw new UnsupportedOperationException("Not yet supported.");
+	}
+	public final Widget parse(StreamReader processor) throws PlatformException{
+		throw new UnsupportedOperationException("Not yet supported.");
+	}
+	
 	public abstract boolean supports(Feature feature);
 	
 	public abstract Clipboard clipboard();

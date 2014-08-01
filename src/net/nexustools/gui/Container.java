@@ -15,8 +15,6 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.LayoutListener;
-
 /**
  *
  * @author katelyn

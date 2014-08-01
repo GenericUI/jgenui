@@ -43,28 +43,50 @@ public class BoxLayout implements Layout<LayoutObject> {
 			case Horizontal:
 			{
 				float containerHeight = contentSize.h;
-				extra = (contentSize.w - prefFill.w) / count-1;
+				boolean expand = contentSize.w >= prefFill.w;
+				if(expand)
+					extra = (contentSize.w - prefFill.w) / count-1;
+				else
+					extra = contentSize.w / prefFill.w;
 				
 				float x = 0;
 				for(LayoutObject child : container) {
-					Size prefSize = child.preferredSize();
-					prefSize.w += extra;
-					child.setBounds(new Rect(x, 0, prefSize.w, Math.max(child.minimumSize().h, Math.min(containerHeight, child.maximumSize().h))));
-					x += prefSize.w;
+					Size newSize;
+					if(extra > 0) {
+						newSize = child.preferredSize();
+						newSize.w += extra;
+					} else {
+						newSize = child.minimumSize();
+						//newSize.w += (child.preferredSize().w - newSize.w)*extra;
+					}
+					child.setBounds(new Rect(x, 0, newSize.w, containerHeight));
+					x += newSize.w;
 				}
 			}
 			break;
 			case Vertical:
 			{
 				float containerWidth = contentSize.w;
-				extra = (contentSize.h - prefFill.h) / count-1;
+				boolean expand = contentSize.h >= prefFill.h;
+				if(expand)
+					extra = (contentSize.h - prefFill.h) / count-1;
+				else {
+					extra = contentSize.h / prefFill.h;
+					System.out.println("Shrink: " + extra);
+				}
 				
 				float y = 0;
 				for(LayoutObject child : container) {
-					Size prefSize = child.preferredSize();
-					prefSize.h += extra;
-					child.setBounds(new Rect(0, y, Math.max(child.minimumSize().w, Math.min(containerWidth, child.maximumSize().w)), prefSize.h));
-					y += prefSize.h;
+					Size newSize;
+					if(expand) {
+						newSize = child.preferredSize();
+						newSize.h += extra;
+					} else {
+						newSize = child.minimumSize();
+						newSize.h += (child.preferredSize().h - newSize.h)*extra;
+					}
+					child.setBounds(new Rect(0, y, containerWidth, newSize.h));
+					y += newSize.h;
 				}
 			}
 			break;
