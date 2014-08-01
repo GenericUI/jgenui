@@ -44,7 +44,7 @@ public abstract class AbstractContainerImpl<J extends Container> extends AWTWidg
                     return;
                 
                 children.add(widget);
-                component.add((Component)widget.internal());
+                component.add((Component)widget._n());
                 invalidate();
             }
         });
@@ -58,7 +58,7 @@ public abstract class AbstractContainerImpl<J extends Container> extends AWTWidg
                     return;
                 
                 children.remove(widget);
-                component.remove((Component)widget.internal());
+                component.remove((Component)widget._n());
                 invalidate();
             }
         });

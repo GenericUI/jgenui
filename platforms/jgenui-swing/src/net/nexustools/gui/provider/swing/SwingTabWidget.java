@@ -6,11 +6,19 @@
 
 package net.nexustools.gui.provider.swing;
 
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.nexustools.gui.provider.awt.AWTPlatform;
 import javax.swing.JTabbedPane;
 import net.nexustools.gui.TabWidget;
 import net.nexustools.gui.Widget;
+import net.nexustools.gui.geom.Point;
+import net.nexustools.gui.geom.Rect;
+import net.nexustools.gui.geom.Size;
+import net.nexustools.gui.platform.PlatformException;
 import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
+import net.nexustools.utils.Pair;
 
 /**
  *
@@ -48,7 +56,7 @@ public class SwingTabWidget extends AWTWidgetImpl<javax.swing.JTabbedPane> imple
         act(new Runnable() {
             @Override
             public void run() {
-                component.add(name, ((AWTWidgetImpl)widget).internal());
+                component.add(name, _n(widget));
             }
         });
     }
@@ -58,7 +66,7 @@ public class SwingTabWidget extends AWTWidgetImpl<javax.swing.JTabbedPane> imple
         act(new Runnable() {
             @Override
             public void run() {
-                component.remove(((AWTWidgetImpl)widget).internal());
+                component.remove(_n(widget));
             }
         });
     }
@@ -83,6 +91,43 @@ public class SwingTabWidget extends AWTWidgetImpl<javax.swing.JTabbedPane> imple
                 component.setTabPlacement(JTabbedPane.BOTTOM);
                 break;
         }
+    }
+
+    public void addUnique(final Widget content, final String title) {
+        final java.awt.Component cContent = platform().nativeFor(content);
+        act(new Runnable() {
+            public void run() {
+                
+            }
+        });
+    }
+
+    public boolean addUnique(Widget content, String title, boolean replace) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void updateTitle(Widget content, String title) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void iterate(ContentIterator<Pair<Widget, String>> it) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Rect contentBounds() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Point contentOffset() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Size contentSize() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Iterator<Pair<Widget, String>> iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

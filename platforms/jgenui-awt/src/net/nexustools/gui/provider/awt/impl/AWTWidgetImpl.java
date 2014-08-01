@@ -53,6 +53,14 @@ import net.nexustools.gui.render.StyleSheet;
  * @param <J> The type of swing component this works with
  */
 public abstract class AWTWidgetImpl<J extends Component> {
+    
+    protected <N extends Component> N _n(Widget widget) {
+        return (N)widget._n();
+    }
+    
+    public J _n() {
+        return component;
+    }
 
     protected static abstract class Reader<R> implements Runnable {
         R value;
@@ -80,7 +88,7 @@ public abstract class AWTWidgetImpl<J extends Component> {
 
                         @Override
                         public SizeEvent create() {
-                            return new SizeEvent(internal(), size());
+                            return new SizeEvent(_n(), size());
                         }
 
                         @Override
@@ -96,7 +104,7 @@ public abstract class AWTWidgetImpl<J extends Component> {
 
                         @Override
                         public MoveEvent create() {
-                            return new MoveEvent(internal(), pos());
+                            return new MoveEvent(_n(), pos());
                         }
 
                         @Override
@@ -112,7 +120,7 @@ public abstract class AWTWidgetImpl<J extends Component> {
 
                         @Override
                         public VisibilityEvent create() {
-                            return new VisibilityEvent(internal(), true);
+                            return new VisibilityEvent(_n(), true);
                         }
 
                         @Override
@@ -128,7 +136,7 @@ public abstract class AWTWidgetImpl<J extends Component> {
 
                         @Override
                         public VisibilityEvent create() {
-                            return new VisibilityEvent(internal(), false);
+                            return new VisibilityEvent(_n(), false);
                         }
 
                         @Override
@@ -190,10 +198,6 @@ public abstract class AWTWidgetImpl<J extends Component> {
         setFocusable(from.isFocusable());
         setRenderer(from.renderer());
         setVisible(from.isVisible());
-    }
-
-    public J internal() {
-        return component;
     }
 
     public boolean enabled() {

@@ -33,7 +33,7 @@ import net.nexustools.gui.platform.PlatformException;
 import net.nexustools.gui.platform.RenderTargetSupportedException;
 import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 import net.nexustools.gui.render.Font;
-import net.nexustools.io.format.StreamTokenizer;
+import net.nexustools.io.format.StreamReader;
 
 /**
  *
@@ -142,7 +142,7 @@ public class AWTPlatform extends Platform<java.awt.Component> {
     }
 
     @Override
-    public Widget parse(StreamTokenizer processor) throws PlatformException {
+    public Widget parse(StreamReader processor) throws PlatformException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -221,7 +221,7 @@ public class AWTPlatform extends Platform<java.awt.Component> {
 
     @Override
     public Component nativeFor(Widget widget) throws PlatformException {
-        return ((AWTWidgetImpl)convertWidget(widget)).internal();
+        return ((AWTWidgetImpl)convertWidget(widget))._n();
     }
 
     @Override

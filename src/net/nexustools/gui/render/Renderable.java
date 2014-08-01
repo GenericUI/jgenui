@@ -15,7 +15,6 @@
 
 package net.nexustools.gui.render;
 
-import java.util.ListIterator;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
 

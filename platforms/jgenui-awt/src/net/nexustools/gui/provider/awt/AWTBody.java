@@ -220,7 +220,7 @@ public class AWTBody extends ContainerImpl<Frame> implements Body {
                             });
                         }
                     });
-                    container = (java.awt.Container) ((ContainerImpl)mainWidget).internal();
+                    container = _n(mainWidget);
                 } else
                     throw new UnsupportedOperationException("Not supported yet.");
                 

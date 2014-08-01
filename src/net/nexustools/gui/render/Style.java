@@ -15,23 +15,48 @@
 
 package net.nexustools.gui.render;
 
+import net.nexustools.concurrent.CacheProp;
 import net.nexustools.concurrent.Prop;
+import net.nexustools.gui.Widget;
 
 /**
  *
  * @author katelyn
  */
-public class Style {
+public class Style implements Renderer {
 	
-	public static abstract class BorderRenderer extends Renderer {
-		public abstract int top();
-		public abstract int left();
-		public abstract int right();
-		public abstract int bottom();
+	public static class Pen {
+		final Prop<Color> color = new Prop();
 	}
 	
-	public final Prop<Renderer> background = new Prop();
-	public final Prop<Renderer> foreground = new Prop();
-	public final Prop<BorderRenderer> border = new Prop();
+	public static class Brush {
+	}
+	
+	public static class Border {
+		final Prop<Integer> gaps = new Prop();
+	}
+	
+	private final Pen pen = new Pen();
+	private final Brush brush = new Brush();
+	private final Border border = new Border();
+	
+	private final CacheProp<Renderer> compiledRenderer = new CacheProp<Renderer>() {
+		@Override
+		protected Renderer create() {
+			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		}
+	};
+	
+	public static Style createFor(Widget widget) {
+		return null;
+	}
+	
+	public void render(Renderable widget, Painter painter) {
+		compiledRenderer.get().render(widget, painter);
+	}
+
+	public void inherit(Style v) {
+	
+	}
 	
 }

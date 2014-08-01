@@ -15,19 +15,32 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.LayoutListener;
-import net.nexustools.gui.layout.Layout;
+import java.util.ListIterator;
+import net.nexustools.gui.geom.Point;
+import net.nexustools.gui.geom.Rect;
+import net.nexustools.gui.geom.Size;
 
 /**
  *
  * @author katelyn
+ * @param <T> The type of content this ContentHolder holds.
  */
-public interface Container extends AbstractContainer {
+public interface ContentHolder<T> extends Widget, Iterable<T> {
 	
-	public void addLayoutListener(LayoutListener listener);
-	public void removeLayoutListener(LayoutListener listener);
+	public static interface ContentIterator<T> {
+		public void iterate(ListIterator<T> it);
+	}
 	
-	public void setLayout(Layout layout);
-	public Layout layout();
+	/**
+	 * Creates a write lock and than runs the content iterator.
+	 * Allows advanced modification of the widget within a locked environment.
+	 * 
+	 * @param it The ContentIterator to use
+	 */
+	public void iterate(ContentIterator<T> it);
+	
+	public Rect contentBounds();
+	public Point contentOffset();
+	public Size contentSize();
 	
 }

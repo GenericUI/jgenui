@@ -13,17 +13,12 @@
  * 
  */
 
-package net.nexustools.gui.platform;
+package net.nexustools.gui;
 
 /**
  *
  * @author katelyn
  */
-public class PlatformException extends RuntimeException {
-	
-	public PlatformException() {}
-	public PlatformException(String msg) {
-		super(msg);
-	}
+public interface Stack {
 	
 }

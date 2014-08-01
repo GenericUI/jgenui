@@ -33,7 +33,7 @@ public class BoxLayout implements Layout {
 	}
 	
 	private final Direction direction;
-	private BoxLayout(Direction direction) {
+	protected BoxLayout(Direction direction) {
 		this.direction = direction;
 	}
 

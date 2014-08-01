@@ -13,17 +13,16 @@
  * 
  */
 
-package net.nexustools.gui.platform;
+package net.nexustools.gui;
 
 /**
  *
  * @author katelyn
  */
-public class PlatformException extends RuntimeException {
+public interface AbstractContainer extends ContentHolder<Widget> {
 	
-	public PlatformException() {}
-	public PlatformException(String msg) {
-		super(msg);
-	}
+	public void add(Widget widget);
+	public void remove(Widget widget);
+	public int childCount();
 	
 }

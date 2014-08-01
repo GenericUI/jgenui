@@ -14,6 +14,7 @@ import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
 import java.util.Iterator;
 import java.util.WeakHashMap;
+import net.nexustools.gui.ContentHolder;
 import net.nexustools.gui.Widget;
 import net.nexustools.gui.event.DefaultEventDispatcher;
 import net.nexustools.gui.event.EventDispatcher;
@@ -249,6 +250,10 @@ public abstract class ContainerImpl<J extends Container> extends AbstractContain
                 return null;
             }
         });
+    }
+
+    public void iterate(ContentHolder.ContentIterator<Widget> it) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

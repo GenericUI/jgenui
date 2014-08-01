@@ -104,7 +104,6 @@ public interface Widget extends Renderable, LayoutObject, Base {
 	public void setPreferredSize(final Size prefSize);
 	public Size preferredSize();
 	
-	public void setStyle(Style style);
 	public Style style();
 	
 	// Implementation
@@ -116,14 +115,9 @@ public interface Widget extends Renderable, LayoutObject, Base {
 	
 	public boolean isFocusable();
 	public void setFocusable(boolean focusable);
-	
-	/**
-	 * Returns the native internal object, if one exists
-	 * 
-	 * @return 
-	 */
-	public Object internal();
 
 	public void showMenu(AbstractMenu menu, Point at);
+	
+	public Object _n();
 	
 }

@@ -26,7 +26,7 @@ import net.nexustools.io.Stream;
  */
 public class AWTImage extends AWTWidgetImpl<Component> implements Image {
     
-    private static class Renderer extends net.nexustools.gui.render.Renderer {
+    private static class Renderer implements net.nexustools.gui.render.Renderer {
         public static class State {
             java.awt.Image image;
             Prop<Double> progress = new Prop();

@@ -19,3 +19,4 @@
 /extern/lwjgl/doc/*
 *~
 /platforms/jgenui-awt/build/
+/platforms/web/target/

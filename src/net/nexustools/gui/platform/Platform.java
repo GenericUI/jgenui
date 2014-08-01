@@ -16,13 +16,19 @@
 
 package net.nexustools.gui.platform;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.nexustools.concurrent.PropList;
+import net.nexustools.concurrent.PropMap;
 import net.nexustools.gui.Base;
 import net.nexustools.gui.Widget;
-import net.nexustools.io.format.StreamTokenizer;
+import net.nexustools.gui.render.StyleSheet;
+import net.nexustools.io.format.StreamReader;
 import net.nexustools.runtime.ThreadedRunQueue;
 
 /**
@@ -33,12 +39,19 @@ import net.nexustools.runtime.ThreadedRunQueue;
  */
 public abstract class Platform<W> extends ThreadedRunQueue {
 	
-	// TODO: Make thread safe
 	private static final ThreadLocal<Platform> current = new ThreadLocal();
-	private static final HashMap<Class<? extends Platform>, Platform> platformsByClass = new HashMap();
-	private static final HashMap<String, Platform> platformsByName = new HashMap();
-	private static final ArrayList<Platform> allPlatforms = new ArrayList();
+	private static final PropMap<Class<? extends Platform>, Platform> platformsByClass = new PropMap();
+	private static final PropMap<String, Platform> platformsByName = new PropMap();
+	private static final PropMap<String, StyleSheet> cssLAFs = new PropMap();
+	private static final PropList<Platform> allPlatforms = new PropList();
 	private static boolean needScanPlatforms = true;
+	
+	public static void registerLAF(String name, String path) throws IOException, URISyntaxException {
+		registerLAF(name, new StyleSheet(path));
+	}
+	public static void registerLAF(String name, StyleSheet styleSheet) throws IOException, URISyntaxException {
+		cssLAFs.put(name, styleSheet);
+	}
 	
 	public static Platform current() {
 		return current.get();
@@ -48,9 +61,10 @@ public abstract class Platform<W> extends ThreadedRunQueue {
 		needScanPlatforms = false;
 	}
 	public static void register(Platform platform) {
-		allPlatforms.add(platform);
-		platformsByName.put(platform.name(), platform);
-		platformsByClass.put(platform.getClass(), platform);
+		if(allPlatforms.unique(platform)) {
+			platformsByName.put(platform.name(), platform);
+			platformsByClass.put(platform.getClass(), platform);
+		}
 	}
 	
 	public static Platform byName(String name) {
@@ -79,7 +93,7 @@ public abstract class Platform<W> extends ThreadedRunQueue {
 		if(needScanPlatforms)
 			scanPlatforms();
 		
-		ArrayList<Platform> compatible = new ArrayList<Platform>(allPlatforms);
+		List<Platform> compatible = allPlatforms.copy();
 		Iterator<Platform> it = compatible.iterator();
 		while(it.hasNext()) {
 			Platform platform = it.next();
@@ -149,12 +163,19 @@ public abstract class Platform<W> extends ThreadedRunQueue {
 		MultipleBodies
 	}
 	
+	static {
+		try {
+			registerLAF("Blank", "resource:/net/nexustools/gui/blank.css");
+		} catch (IOException ex) {
+		} catch (URISyntaxException ex) {}
+	}
+	
 	public Platform(String name) {
 		super(name);
 	}
 	
 	public abstract Base create(Class<? extends Base> type) throws RenderTargetSupportedException;
-	public abstract Widget parse(StreamTokenizer processor) throws PlatformException;
+	public abstract Widget parse(StreamReader processor) throws PlatformException;
 	public abstract boolean supports(Feature feature);
 	
 	public abstract Clipboard clipboard();

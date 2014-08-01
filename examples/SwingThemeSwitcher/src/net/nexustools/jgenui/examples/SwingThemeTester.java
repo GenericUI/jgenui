@@ -16,11 +16,13 @@ import net.nexustools.gui.provider.swing.SwingComboBox;
 import net.nexustools.gui.provider.swing.SwingContainer;
 import net.nexustools.gui.provider.swing.SwingFrame;
 import net.nexustools.gui.provider.swing.SwingLabel;
+import net.nexustools.gui.provider.swing.SwingMultiList;
 import net.nexustools.gui.provider.swing.SwingOnOffButton;
 import net.nexustools.gui.provider.swing.SwingProgressBar;
 import net.nexustools.gui.provider.swing.SwingRadioButton;
 import net.nexustools.gui.provider.swing.SwingRangeInput;
 import net.nexustools.gui.provider.swing.SwingTabWidget;
+import net.nexustools.gui.provider.swing.SwingTextArea;
 import net.nexustools.gui.provider.swing.SwingTextInput;
 import net.nexustools.gui.provider.swing.SwingToggleButton;
 
@@ -177,7 +179,7 @@ public class SwingThemeTester extends SwingBody {
 //        column.add(swingList);
 //        columns.add(column);
 //        // End Third Column
-        
+//        
 //        // Start Fourth Column
 //        column = new SwingFrame("Tables and TextAreas", BoxLayout.Vertical);
 //        SwingTextArea textArea = new SwingTextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n" +

@@ -29,8 +29,8 @@ public class SwingOnOffButton extends FakeContainerImpl implements OnOffButton {
 
         on.setTag("On");
         off.setTag("Off");
-        buttonGroup.add(on.internal());
-        buttonGroup.add(off.internal());
+        buttonGroup.add(on._n());
+        buttonGroup.add(off._n());
         off.setSelected(true);
         
         add(on);
