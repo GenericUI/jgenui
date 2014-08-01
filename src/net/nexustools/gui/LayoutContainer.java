@@ -13,21 +13,23 @@
  * 
  */
 
-package net.nexustools.gui.event;
+package net.nexustools.gui;
 
-import net.nexustools.gui.Widget;
+import net.nexustools.gui.event.LayoutListener;
+import net.nexustools.gui.layout.Layout;
+import net.nexustools.gui.layout.LayoutObject;
 
 /**
  *
  * @author katelyn
+ * @param <O>
  */
-public class Event<S> {
+public interface LayoutContainer<O extends LayoutObject> extends Iterable<O> {
 	
-	public final S source;
-	public final long timestamp = System.currentTimeMillis();
+	public void addLayoutListener(LayoutListener<O> listener);
+	public void removeLayoutListener(LayoutListener<O> listener);
 	
-	protected Event(S source) {
-		this.source = source;
-	}
+	public void setLayout(Layout<O> layout);
+	public Layout<O> layout();
 	
 }

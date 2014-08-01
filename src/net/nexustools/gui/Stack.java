@@ -19,6 +19,11 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface Stack {
+public interface Stack extends AbstractContainer {
+	
+	public int visibleChild();
+	public Widget visibleWidget();
+	public void setVisibleWidget(Widget widget);
+	public void setVisibleChild(int index);
 	
 }

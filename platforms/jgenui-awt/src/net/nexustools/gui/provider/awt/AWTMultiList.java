@@ -7,7 +7,7 @@ package net.nexustools.gui.provider.awt;
 
 import java.util.Arrays;
 import net.nexustools.gui.MultiList;
-import net.nexustools.gui.event.SelectionListener;
+import net.nexustools.event.SelectionListener;
 import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**

@@ -16,7 +16,7 @@ import net.nexustools.gui.Shortcut;
 import net.nexustools.gui.SingleInput;
 import net.nexustools.gui.TextInput;
 import net.nexustools.gui.event.ActionListener;
-import net.nexustools.gui.event.ValueListener;
+import net.nexustools.event.ValueListener;
 import net.nexustools.gui.provider.awt.impl.AWTWidgetImpl;
 
 /**

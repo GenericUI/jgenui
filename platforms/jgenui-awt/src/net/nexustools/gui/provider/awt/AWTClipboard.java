@@ -6,7 +6,7 @@
 
 package net.nexustools.gui.provider.awt;
 
-import net.nexustools.gui.event.ValueListener;
+import net.nexustools.event.ValueListener;
 import net.nexustools.gui.platform.Clipboard;
 import net.nexustools.gui.platform.MimeStorage;
 

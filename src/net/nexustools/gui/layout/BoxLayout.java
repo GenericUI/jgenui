@@ -22,7 +22,7 @@ import net.nexustools.gui.geom.Size;
  *
  * @author katelyn
  */
-public class BoxLayout implements Layout {
+public class BoxLayout implements Layout<LayoutObject> {
 	
 	public static final BoxLayout Vertical = new BoxLayout(Direction.Vertical);
 	public static final BoxLayout Horizontal = new BoxLayout(Direction.Horizontal);

@@ -15,8 +15,8 @@ import net.nexustools.concurrent.BaseAccessor;
 import net.nexustools.concurrent.ListAccessor;
 import net.nexustools.concurrent.PropAccessor;
 import net.nexustools.concurrent.Writer;
-import net.nexustools.gui.event.Event;
-import net.nexustools.gui.event.EventDispatcher;
+import net.nexustools.event.Event;
+import net.nexustools.event.EventDispatcher;
 import net.nexustools.gui.platform.Platform;
 import net.nexustools.gui.provider.awt.AWTPlatform;
 

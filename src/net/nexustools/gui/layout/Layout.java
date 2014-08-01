@@ -20,11 +20,12 @@ import net.nexustools.gui.geom.Size;
 /**
  *
  * @author katelyn
+ * @param <O> The type of LayoutObject this layout is for
  */
-public interface Layout {
+public interface Layout<O extends LayoutObject> {
 	
-	public Size calculateMinimumSize(Iterable<LayoutObject> container);
-	public Size calculatePreferredSize(Iterable<LayoutObject> container);
-	public void performLayout(Iterable<LayoutObject> container, Size prefSize, Size size, int count);
+	public Size calculateMinimumSize(Iterable<O> container);
+	public Size calculatePreferredSize(Iterable<O> container);
+	public void performLayout(Iterable<O> container, Size prefSize, Size size, int count);
 	
 }

@@ -16,18 +16,9 @@
 package net.nexustools.gui;
 
 import net.nexustools.gui.event.LayoutListener;
-import net.nexustools.gui.layout.Layout;
 
 /**
  *
  * @author katelyn
  */
-public interface Container extends AbstractContainer {
-	
-	public void addLayoutListener(LayoutListener listener);
-	public void removeLayoutListener(LayoutListener listener);
-	
-	public void setLayout(Layout layout);
-	public Layout layout();
-	
-}
+public interface Container extends AbstractContainer, LayoutContainer<Widget> {}

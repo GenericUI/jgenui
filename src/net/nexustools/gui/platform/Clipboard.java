@@ -15,7 +15,7 @@
 
 package net.nexustools.gui.platform;
 
-import net.nexustools.gui.event.ValueListener;
+import net.nexustools.event.ValueListener;
 
 /**
  *

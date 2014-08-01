@@ -15,7 +15,7 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.SelectionListener;
+import net.nexustools.event.SelectionListener;
 
 /**
  *

@@ -10,7 +10,7 @@ import javax.swing.AbstractButton;
 import net.nexustools.gui.Activateable;
 import net.nexustools.gui.Shortcut;
 import net.nexustools.gui.event.ActionListener;
-import net.nexustools.gui.event.EventDispatcher;
+import net.nexustools.event.EventDispatcher;
 import net.nexustools.gui.provider.swing.SwingPlatform;
 
 /**

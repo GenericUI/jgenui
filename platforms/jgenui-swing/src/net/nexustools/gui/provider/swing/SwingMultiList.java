@@ -11,7 +11,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import net.nexustools.gui.MultiList;
-import net.nexustools.gui.event.SelectionListener;
+import net.nexustools.event.SelectionListener;
 import net.nexustools.gui.provider.swing.impl.ScrollDeligateImpl;
 
 /**

@@ -15,11 +15,11 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.event.EventListenerRedirect;
-import net.nexustools.gui.event.FocusListener;
+import net.nexustools.event.EventListenerRedirect;
+import net.nexustools.event.FocusListener;
 import net.nexustools.gui.event.MoveListener;
 import net.nexustools.gui.event.SizeListener;
-import net.nexustools.gui.event.VisibilityListener;
+import net.nexustools.event.VisibilityListener;
 import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;

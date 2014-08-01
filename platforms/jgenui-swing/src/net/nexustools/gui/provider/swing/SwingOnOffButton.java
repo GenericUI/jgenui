@@ -10,7 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import net.nexustools.gui.OnOffButton;
 import net.nexustools.gui.SingleInput;
-import net.nexustools.gui.event.ValueListener;
+import net.nexustools.event.ValueListener;
 import net.nexustools.gui.provider.awt.impl.FakeContainerImpl;
 
 /**

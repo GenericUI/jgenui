@@ -17,8 +17,8 @@ package net.nexustools.gui;
 
 import net.nexustools.gui.event.ActionListener;
 import net.nexustools.gui.event.ActionListener.ActionEvent;
-import net.nexustools.gui.event.DefaultEventDispatcher;
-import net.nexustools.gui.event.EventDispatcher;
+import net.nexustools.event.DefaultEventDispatcher;
+import net.nexustools.event.EventDispatcher;
 import net.nexustools.runtime.RunQueue;
 
 /**

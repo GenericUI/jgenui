@@ -16,8 +16,8 @@
 package net.nexustools.gui.event;
 
 import java.util.EventListener;
-import net.nexustools.gui.AbstractAction;
 import net.nexustools.gui.Activateable;
+import net.nexustools.event.Event;
 
 /**
  *
