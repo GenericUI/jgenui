@@ -16,7 +16,8 @@
 package net.nexustools.gui;
 
 /**
- *
+ * Acts as another widget, by proxying the underlying widget.
+ * 
  * @author katelyn
  */
 public interface WidgetProxy extends Widget {

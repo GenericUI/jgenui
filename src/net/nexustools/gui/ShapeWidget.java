@@ -15,11 +15,16 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.render.Color;
+import net.nexustools.gui.geom.Shape;
 
 /**
- *
+ * A widget thats only purpose is to render a shape.
+ * 
  * @author katelyn
  */
-public interface ColorSelector extends SingleInput<Color> {
+public interface ShapeWidget extends Widget {
+	
+	public Shape shape();
+	public void setShape(Shape shape);
+	
 }

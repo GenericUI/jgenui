@@ -15,11 +15,17 @@
 
 package net.nexustools.gui;
 
-import net.nexustools.gui.render.Color;
+import net.nexustools.io.Stream;
 
 /**
  *
  * @author katelyn
  */
-public interface ColorSelector extends SingleInput<Color> {
+public interface StreamSelector extends SingleInput<String> {
+	
+	public String[] filters();
+	public void setFilters(String[] filters);
+	
+	public Stream open();
+	
 }

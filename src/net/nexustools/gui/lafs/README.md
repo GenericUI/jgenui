@@ -1,0 +1,2 @@
+This folder is meant to contain "built-in" Look and Feels.
+These are not meant to be true LAFs, but rather CSS definitions which change drastically the look and reactions of the widgets on any platform.
