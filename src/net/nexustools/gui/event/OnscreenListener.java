@@ -13,18 +13,26 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.event;
+
+import java.util.EventListener;
+import net.nexustools.event.Event;
+import net.nexustools.gui.LayoutContainer;
+import net.nexustools.gui.geom.Size;
 
 /**
  *
  * @author katelyn
  */
-public interface Frame extends Container {
+public interface OnscreenListener<S> extends EventListener {
 	
-	public String title();
-	public void setTitle(String title);
+	public static class OnscreenEvent<S> extends Event<S> {
+		public OnscreenEvent(S source) {
+			super(source);
+		}
+	}
 	
-	public boolean raisedBorder();
-	public void setRaisedBorder(boolean raised);
+	public void becameOnscreen(OnscreenEvent<S> onscreenEvent);
+	public void leftTheScreen(OnscreenEvent<S> onscreenEvent);
 	
 }

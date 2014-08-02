@@ -40,19 +40,12 @@ public class Style implements Renderer {
 	private final Brush brush = new Brush();
 	private final Border border = new Border();
 	
-	private final CacheProp<Renderer> compiledRenderer = new CacheProp<Renderer>() {
-		@Override
-		protected Renderer create() {
-			throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-		}
-	};
-	
 	public static Style createFor(Widget widget) {
 		return null;
 	}
 	
 	public void render(Renderable widget, Painter painter) {
-		compiledRenderer.get().render(widget, painter);
+		//compiledRenderer.get().render(widget, painter);
 	}
 
 	public void inherit(Style v) {

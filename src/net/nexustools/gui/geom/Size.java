@@ -62,5 +62,10 @@ public class Size {
 		return new Size(Math.max(w, other.w),
 						Math.max(h, other.h));
 	}
+
+	public boolean isCollapsed() {
+		// TODO: Scale this a bit based off the DPI
+		return w <= 0 || h <= 0;
+	}
 	
 }

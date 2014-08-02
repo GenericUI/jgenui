@@ -24,8 +24,7 @@ import net.nexustools.gui.geom.Size;
  */
 public interface Layout<O extends LayoutObject> {
 	
-	public Size calculateMinimumSize(Iterable<O> container);
-	public Size calculatePreferredSize(Iterable<O> container);
-	public void performLayout(Iterable<O> container, Size prefSize, Size size, int count);
+	public SizeConstraints calculateConstraints(Iterable<O> container);
+	public void performLayout(Iterable<O> container, SizeConstraints constraints, Size size, int count);
 	
 }

@@ -17,9 +17,10 @@ package net.nexustools.gui;
 
 import net.nexustools.event.EventListenerRedirect;
 import net.nexustools.event.FocusListener;
-import net.nexustools.gui.event.MoveListener;
-import net.nexustools.gui.event.SizeListener;
 import net.nexustools.event.VisibilityListener;
+import net.nexustools.gui.event.MoveListener;
+import net.nexustools.gui.event.OnscreenListener;
+import net.nexustools.gui.event.SizeListener;
 import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Shape;
@@ -59,37 +60,31 @@ public interface Widget extends Renderable, LayoutObject, Base {
 	public void addMoveListener(MoveListener<Widget> moveListener);
 	public void addSizeListener(SizeListener<Widget> sizeListener);
 	public void addVisibilityListener(VisibilityListener<Widget> visibilityListener);
+	public void addOnscreenListener(OnscreenListener<Widget> onscreenListener);
 	public void addFocusListener(FocusListener<Widget> focusListener);
 	
 	public void removeMoveListener(MoveListener<Widget> moveListener);
 	public void removeSizeListener(SizeListener<Widget> sizeListener);
 	public void removeVisibilityListener(VisibilityListener<Widget> visibilityListener);
+	public void removeOnscreenListener(OnscreenListener<Widget> onscreenListener);
 	public void removeFocusListener(FocusListener<Widget> focusListener);
 	
 	public void uninstallRedirect(EventListenerRedirect<Widget> redirect);
 	public void installRedirect(EventListenerRedirect<Widget> redirect);
 	
 	// Boundaries and Shape
-	public Point pos();
-	public Size size();
 	public Shape shape();
-	public Rect bounds();
 	public Rect visibleBounds();
 	public Rect topBounds();
 	
-	public void move(Point pos);
-	public void resize(Size size);
-	public void setBounds(Rect geom);
-	
-	public Size minimumSize();
 	public void setMinimumSize(Size size);
-	
-	public Size maximumSize();
 	public void setMaximumSize(Size size);
+	public void setPreferredSize(Size prefSize);
 	
 	// Heirarchy
-	public Container container();
-	public Container topLevel();
+	public ContentHolder container();
+	public Window topLevel();
+	public Body body();
 	
 	// Rendering
 	public Renderer renderer();
@@ -101,8 +96,6 @@ public interface Widget extends Renderable, LayoutObject, Base {
 	public boolean enabled();
 	public void setEnabled(boolean enabled);
 	
-	public void setPreferredSize(final Size prefSize);
-	public Size preferredSize();
 	
 	public Style style();
 	
@@ -117,7 +110,5 @@ public interface Widget extends Renderable, LayoutObject, Base {
 	public void setFocusable(boolean focusable);
 
 	public void showMenu(AbstractMenu menu, Point at);
-	
-	public Object _n();
 	
 }

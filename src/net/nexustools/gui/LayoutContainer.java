@@ -29,7 +29,7 @@ public interface LayoutContainer<O extends LayoutObject> extends Iterable<O> {
 	public void addLayoutListener(LayoutListener listener);
 	public void removeLayoutListener(LayoutListener listener);
 	
-	public void setLayout(Layout<O> layout);
-	public Layout<O> layout();
+	public void setLayout(Layout layout);
+	public Layout layout();
 	
 }

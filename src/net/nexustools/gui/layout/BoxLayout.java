@@ -37,28 +37,57 @@ public class BoxLayout implements Layout<LayoutObject> {
 		this.direction = direction;
 	}
 
-	public void performLayout(Iterable<LayoutObject> container, Size prefFill, Size contentSize, int count) {
-		float extra;
+	public SizeConstraints calculateConstraints(Iterable<LayoutObject> container) {
+		SizeConstraints sizeConstraints = new SizeConstraints(new Size(), new Size(), new Size());
+		
+		switch(direction) {
+			case Horizontal:
+			{
+				for(LayoutObject child : container) {
+					Size size = child.minimumSize();
+					sizeConstraints.min.h = Math.max(sizeConstraints.min.h, size.h);
+					sizeConstraints.min.w += size.w;
+					
+					size = child.maximumSize();
+					sizeConstraints.max.h = Math.max(sizeConstraints.max.h, size.h);
+					sizeConstraints.max.w += size.w;
+					
+					size = child.preferredSize();
+					sizeConstraints.pref.h = Math.max(sizeConstraints.pref.h, size.h);
+					sizeConstraints.pref.w += size.w;
+				}
+			}
+			break;
+			case Vertical:
+			{
+				for(LayoutObject child : container) {
+					Size size = child.minimumSize();
+					sizeConstraints.min.w = Math.max(sizeConstraints.min.w, size.w);
+					sizeConstraints.min.h += size.h;
+					
+					size = child.maximumSize();
+					sizeConstraints.max.w = Math.max(sizeConstraints.max.w, size.w);
+					sizeConstraints.max.h += size.h;
+					
+					size = child.preferredSize();
+					sizeConstraints.pref.w = Math.max(sizeConstraints.pref.w, size.w);
+					sizeConstraints.pref.h += size.h;
+				}
+			}
+			break;
+		}
+		return sizeConstraints;
+	}
+
+	public void performLayout(Iterable<LayoutObject> container, SizeConstraints constraints, Size contentSize, int count) {
 		switch(direction) {
 			case Horizontal:
 			{
 				float containerHeight = contentSize.h;
-				boolean expand = contentSize.w >= prefFill.w;
-				if(expand)
-					extra = (contentSize.w - prefFill.w) / count-1;
-				else
-					extra = contentSize.w / prefFill.w;
 				
 				float x = 0;
 				for(LayoutObject child : container) {
-					Size newSize;
-					if(extra > 0) {
-						newSize = child.preferredSize();
-						newSize.w += extra;
-					} else {
-						newSize = child.minimumSize();
-						//newSize.w += (child.preferredSize().w - newSize.w)*extra;
-					}
+					Size newSize = child.minimumSize();
 					child.setBounds(new Rect(x, 0, newSize.w, containerHeight));
 					x += newSize.w;
 				}
@@ -67,80 +96,16 @@ public class BoxLayout implements Layout<LayoutObject> {
 			case Vertical:
 			{
 				float containerWidth = contentSize.w;
-				boolean expand = contentSize.h >= prefFill.h;
-				if(expand)
-					extra = (contentSize.h - prefFill.h) / count-1;
-				else {
-					extra = contentSize.h / prefFill.h;
-					System.out.println("Shrink: " + extra);
-				}
 				
 				float y = 0;
 				for(LayoutObject child : container) {
-					Size newSize;
-					if(expand) {
-						newSize = child.preferredSize();
-						newSize.h += extra;
-					} else {
-						newSize = child.minimumSize();
-						newSize.h += (child.preferredSize().h - newSize.h)*extra;
-					}
+					Size newSize = child.minimumSize();
 					child.setBounds(new Rect(0, y, containerWidth, newSize.h));
 					y += newSize.h;
 				}
 			}
 			break;
 		}
-	}
-
-	public Size calculateMinimumSize(Iterable<LayoutObject> container) {
-		Size size = new Size();
-		switch(direction) {
-			case Horizontal:
-			{
-				for(LayoutObject child : container) {
-					Size prefSize = child.minimumSize();
-					size.h = Math.max(size.h, prefSize.h);
-					size.w += prefSize.w;
-				}
-			}
-			break;
-			case Vertical:
-			{
-				for(LayoutObject child : container) {
-					Size prefSize = child.minimumSize();
-					size.w = Math.max(size.w, prefSize.w);
-					size.h += prefSize.h;
-				}
-			}
-			break;
-		}
-		return size;
-	}
-
-	public Size calculatePreferredSize(Iterable<LayoutObject> container) {
-		Size size = new Size();
-		switch(direction) {
-			case Horizontal:
-			{
-				for(LayoutObject child : container) {
-					Size prefSize = child.preferredSize();
-					size.h = Math.max(size.h, prefSize.h);
-					size.w += prefSize.w;
-				}
-			}
-			break;
-			case Vertical:
-			{
-				for(LayoutObject child : container) {
-					Size prefSize = child.preferredSize();
-					size.w = Math.max(size.w, prefSize.w);
-					size.h += prefSize.h;
-				}
-			}
-			break;
-		}
-		return size;
 	}
 	
 }

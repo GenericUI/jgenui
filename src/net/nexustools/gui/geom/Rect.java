@@ -98,5 +98,9 @@ public class Rect extends SimpleShape {
 	public Point[] points() {
 		return new Point[]{topLeft.clone(), new Point(topLeft.x+size.w, topLeft.y+size.h)}; 
 	}
+
+	public boolean isCollapsed() {
+		return size.isCollapsed();
+	}
 	
 }

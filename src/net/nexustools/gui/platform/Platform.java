@@ -17,14 +17,16 @@
 package net.nexustools.gui.platform;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import net.nexustools.concurrent.IfWriter;
 import net.nexustools.concurrent.MapAccessor;
+import net.nexustools.concurrent.Prop;
+import net.nexustools.concurrent.PropAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
 import net.nexustools.concurrent.WriteReader;
@@ -44,9 +46,8 @@ import net.nexustools.utils.Creator;
  *
  * @author katelyn
  * 
- * @param <W> Base type of native widgets
  */
-public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot {
+public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 	
 	private static final ThreadLocal<Platform> current = new ThreadLocal();
 	private static final PropMap<Class<? extends Platform>, Platform> platformsByClass = new PropMap();
@@ -227,45 +228,28 @@ public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot 
 		} catch (URISyntaxException ex) {}
 	}
 	
-	public static interface Population {
-		public <B extends Base> void add(Class<B> type, Creator<B> creator);
-		public <B extends Base> void add(Class<B> type, Class<? extends B> implClass);
+	public static interface BaseRegistry {
+		public <B extends Base, P extends Platform> void add(Class<B> type, Creator<B, P> creator);
 	}
 	
+	private final Prop<String> laf = new Prop();
 	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
 	public Platform(String name) {
 		super(name);
-		populate(new Population() {
-			public <B extends Base> void add(Class<B> type, Creator<B> creator) {
+		populate(new BaseRegistry() {
+			public <B extends Base, P extends Platform> void add(Class<B> type, Creator<B, P> creator) {
 				typeMap.put(type, creator);
-			}
-			public <B extends Base> void add(Class<B> type, final Class<? extends B> implClass) {
-				final Constructor<? extends B> constructor;
-				try {
-					constructor = implClass.getConstructor(Platform.class);
-				} catch (Exception ex) {
-					throw new RuntimeException(ex);
-				}
-				add(type, new Creator<B>() {
-					public B create() {
-						try {
-							return constructor.newInstance(Platform.this);
-						} catch (Exception ex) {
-							throw new RuntimeException(ex);
-						}
-					}
-				});
 			}
 		});
 	}
 	
-	protected abstract void populate(Population population);
+	protected abstract void populate(BaseRegistry baseRegistry);
 	
 	public final <B extends Base> B create(Class<B> type) throws UnsupportedBaseTypeException{
-		Creator<B> creator = typeMap.get(type);
+		Creator<B, Platform> creator = typeMap.get(type);
 		if(creator == null)
 			throw new UnsupportedBaseTypeException();
-		return creator.create();
+		return creator.create(this);
 	}
 	public final Widget parse(String path) throws PlatformException{
 		throw new UnsupportedOperationException("Not yet supported.");
@@ -279,25 +263,26 @@ public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot 
 	public abstract Clipboard clipboard();
 	
     public String[] LAFs() {
-        String[] LAFs = LAFs0();
-        String[] cssLAFs = cssLAFs();
-        String[] allLAFs = new String[LAFs.length + cssLAFs.length];
-        for(int i=0; i<LAFs.length; i++) {
-            allLAFs[i] = LAFs[i];
-        }
-        for(int i=0; i<cssLAFs.length; i++)
-            allLAFs[LAFs.length+i] = cssLAFs[i];
-        return allLAFs;
+        return cssLAFs();
     }
 	
-	public void setLAF(String laf) {
-		setLAF0(laf);
-		lafChanged(laf);
+	public void setLAF(final String laf) {
+		this.laf.write(new IfWriter<PropAccessor<String>>() {
+			@Override
+			public boolean test(PropAccessor<String> against) {
+				return !laf.equals(against.get());
+			}
+			@Override
+			public void write(PropAccessor<String> data) {
+				setStyleSheet(lafStyleSheet(laf));
+				data.set(laf);
+			}
+		});
 	}
 	
-	protected abstract String[] LAFs0();
-	protected abstract void setLAF0(String laf);
-	public abstract String LAF();
+	public String LAF() {
+		return laf.get();
+	}
 	
 	protected final EventDispatcher eventDispatcher = new DefaultEventDispatcher(this);
 	public void addLAFListener(LAFListener lafListener) {
@@ -306,11 +291,6 @@ public abstract class Platform<W> extends ThreadedRunQueue implements StyleRoot 
 	public void removeLAFListener(LAFListener lafListener) {
 		eventDispatcher.remove(lafListener);
 	}
-	
-	public abstract void onIdle(Runnable run);
-	public abstract void act(Runnable run) throws InvocationTargetException;
-	public abstract W nativeFor(Widget widget) throws PlatformException;
-	public abstract <T, F> T convert(F from) throws PlatformException;
 	
 	public abstract void open(String url);
 	
