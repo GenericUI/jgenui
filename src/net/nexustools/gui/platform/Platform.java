@@ -235,7 +235,8 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 	private final Prop<String> laf = new Prop();
 	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
 	public Platform(String name) {
-		super(name);
+        super(name + "-RunQueue");
+        System.out.println("Spawning Platform `" + name + '`');
 		populate(new BaseRegistry() {
 			public <B extends Base, P extends Platform> void add(Class<B> type, Creator<B, P> creator) {
 				typeMap.put(type, creator);

@@ -21,4 +21,6 @@ package net.nexustools.gui;
  */
 public interface Button extends TextWidget, Activateable {
 	
+	public AbstractAction action();
+	
 }

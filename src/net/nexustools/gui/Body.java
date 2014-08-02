@@ -21,9 +21,4 @@ package net.nexustools.gui;
  */
 public interface Body extends Window {
 	
-	public void setMainWidget(Widget mainWidget);
-	public void setMainWidget(Widget mainWidget, String title);
-	public Container mainContainer();
-	public Widget mainWidget();
-	
 }

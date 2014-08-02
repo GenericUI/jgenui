@@ -27,4 +27,11 @@ public interface Frame extends Container {
 	public boolean raisedBorder();
 	public void setRaisedBorder(boolean raised);
 	
+	/**
+	 * Clears this window and sets a widget that will always fill the content area.
+	 * 
+	 * @param mainWidget The widget to act as a mainWidget
+	 */
+	public void setMainWidget(Widget mainWidget);
+	
 }

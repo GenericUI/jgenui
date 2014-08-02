@@ -13,7 +13,10 @@
  * 
  */
 
-package net.nexustools.gui;
+package net.nexustools.gui.utils;
+
+import net.nexustools.gui.AbstractAction;
+import net.nexustools.gui.Activateable;
 
 /**
  *

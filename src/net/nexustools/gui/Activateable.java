@@ -33,7 +33,6 @@ public interface Activateable {
 	public void setSelected(boolean selected);
 	public boolean isSelected();
 
-	public AbstractAction action();
 	public void activate();
 	
 }

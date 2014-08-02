@@ -19,6 +19,6 @@ package net.nexustools.gui;
  *
  * @author katelyn
  */
-public interface CheckBox extends ToggleButton {
+public interface CheckBox extends Button, StateToggle<Boolean> {
 	
 }
