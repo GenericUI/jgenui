@@ -48,6 +48,14 @@ public class Rect extends SimpleShape {
 		size = other.size.clone();
 	}
 	
+	public void setTopLeft(Point topLeft) {
+		this.topLeft.set(topLeft);
+	}
+	
+	public void setSize(Size size) {
+		this.size.set(size);
+	}
+	
 	public Rect plus(Point p) {
 		topLeft.plus(p);
 		return this;
@@ -102,5 +110,37 @@ public class Rect extends SimpleShape {
 	public boolean isCollapsed() {
 		return size.isCollapsed();
 	}
+	
+	public Rect clone() {
+		return new Rect(this);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Rect other = (Rect) obj;
+		if (this.size != other.size && (this.size == null || !this.size.equals(other.size))) {
+			return false;
+		}
+		if (this.topLeft != other.topLeft && (this.topLeft == null || !this.topLeft.equals(other.topLeft))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 79 * hash + (this.size != null ? this.size.hashCode() : 0);
+		hash = 79 * hash + (this.topLeft != null ? this.topLeft.hashCode() : 0);
+		return hash;
+	}
+	
+	
 	
 }

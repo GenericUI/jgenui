@@ -31,4 +31,9 @@ public class Poly extends BasicShape {
 		return points.listIterator();
 	}
 
+	@Override
+	public BasicShape clone() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+	
 }

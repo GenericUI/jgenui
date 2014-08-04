@@ -14,14 +14,15 @@ import net.nexustools.gui.geom.Size;
  */
 public class SizeConstraints {
     
-    public final Size min;
-    public final Size max;
-    public final Size pref;
+    public Size min;
+    public Size max;
+    public Size pref;
     
     public SizeConstraints(Size min, Size max, Size pref) {
-        this.min = min;
-        this.max = max;
-        this.pref = pref;
+        this.min = min.clone();
+        this.max = max.clone();
+        this.pref = pref.clone();
     }
+    public SizeConstraints() {}
     
 }

@@ -49,6 +49,7 @@ public class Size {
 		return Math.abs(other.w - w) + Math.abs(other.h - h);
 	}
 	
+	@Override
 	public Size clone() {
 		return new Size(this);
 	}
@@ -59,13 +60,58 @@ public class Size {
 	}
 
 	public Size max(Size other) {
-		return new Size(Math.max(w, other.w),
-						Math.max(h, other.h));
+		return clone().maxd(other);
+	}
+
+	public Size min(Size other) {
+		return clone().mind(other);
+	}
+
+	public Size maxd(Size other) {
+		w = Math.max(w, other.w);
+		h = Math.max(h, other.h);
+		
+		return this;
+	}
+
+	public Size mind(Size other) {
+		w = Math.min(w, other.w);
+		h = Math.min(h, other.h);
+		
+		return this;
 	}
 
 	public boolean isCollapsed() {
 		// TODO: Scale this a bit based off the DPI
 		return w <= 0 || h <= 0;
 	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 71 * hash + Float.floatToIntBits(this.w);
+		hash = 71 * hash + Float.floatToIntBits(this.h);
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Size other = (Size) obj;
+		if (Float.floatToIntBits(this.w) != Float.floatToIntBits(other.w)) {
+			return false;
+		}
+		if (Float.floatToIntBits(this.h) != Float.floatToIntBits(other.h)) {
+			return false;
+		}
+		return true;
+	}
+	
+	
 	
 }

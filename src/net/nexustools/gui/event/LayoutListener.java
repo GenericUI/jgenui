@@ -17,7 +17,7 @@ package net.nexustools.gui.event;
 
 import java.util.EventListener;
 import net.nexustools.event.Event;
-import net.nexustools.gui.LayoutContainer;
+import net.nexustools.gui.impl.LayoutContainer;
 import net.nexustools.gui.geom.Size;
 
 /**

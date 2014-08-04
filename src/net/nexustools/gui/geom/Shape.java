@@ -73,4 +73,6 @@ public interface Shape extends Iterable<Point> {
 	// Upgrade to ListIterator
 	public ListIterator<Point> iterator();
 	
+	public Shape clone();
+	
 }

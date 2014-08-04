@@ -15,8 +15,8 @@
 
 package net.nexustools.gui.utils;
 
-import net.nexustools.gui.AbstractAction;
-import net.nexustools.gui.Activateable;
+import net.nexustools.gui.impl.AbstractAction;
+import net.nexustools.gui.impl.Activateable;
 
 /**
  *

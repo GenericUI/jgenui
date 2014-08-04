@@ -56,7 +56,7 @@ public class Painter {
 	private final ArrayList<PushFrame> pushStack = new ArrayList();
 	private PushFrame current;
 	public Painter(Renderer renderer, Renderable renderable) {
-		current = new PushFrame(renderable.shape());
+		current = new PushFrame(renderable.bounds());
 		this.renderer = renderer;
 		target = renderable;
 	}

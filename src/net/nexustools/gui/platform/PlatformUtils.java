@@ -16,8 +16,8 @@
 package net.nexustools.gui.platform;
 
 import net.nexustools.event.ValueListener;
-import net.nexustools.gui.ComboBox;
-import net.nexustools.gui.SingleInput;
+import net.nexustools.gui.impl.ComboBox;
+import net.nexustools.gui.impl.SingleInput;
 import net.nexustools.gui.event.LAFListener;
 
 /**

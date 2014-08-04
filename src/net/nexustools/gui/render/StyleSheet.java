@@ -25,7 +25,7 @@ import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
 import net.nexustools.concurrent.SoftWriteReader;
 import net.nexustools.concurrent.WriteReader;
-import net.nexustools.gui.List;
+import net.nexustools.gui.impl.List;
 import net.nexustools.io.Stream;
 import net.nexustools.utils.Pair;
 

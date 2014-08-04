@@ -17,7 +17,7 @@ package net.nexustools.gui.render;
 
 import net.nexustools.concurrent.CacheProp;
 import net.nexustools.concurrent.Prop;
-import net.nexustools.gui.Widget;
+import net.nexustools.gui.impl.Widget;
 
 /**
  *

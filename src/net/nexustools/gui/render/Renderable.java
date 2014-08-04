@@ -16,7 +16,6 @@
 package net.nexustools.gui.render;
 
 import net.nexustools.gui.geom.Rect;
-import net.nexustools.gui.geom.Shape;
 
 /**
  *
@@ -24,7 +23,6 @@ import net.nexustools.gui.geom.Shape;
  */
 public interface Renderable {
 	
-	public Shape shape();
 	public Rect bounds();
 	public void pushRedraw(Renderer renderer, Painter.Instruction[] instructions);
 	

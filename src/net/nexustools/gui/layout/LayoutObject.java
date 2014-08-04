@@ -28,12 +28,14 @@ public interface LayoutObject {
 	public Size size();
 	public Point pos();
 	public Rect bounds();
-
-	public Size preferredSize();
+	
 	public Size minimumSize();
 	public Size maximumSize();
+	public Size preferredSize();
 
-	public void setBounds(Rect rect);
+	public SizeConstraints constraints();
+
+	public void updateBounds(Rect rect);
 	public void resize(Size size);
 	public void move(Point pos);
 	

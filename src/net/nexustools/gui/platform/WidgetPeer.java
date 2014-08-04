@@ -15,7 +15,7 @@
 
 package net.nexustools.gui.platform;
 
-import net.nexustools.gui.Widget;
+import net.nexustools.gui.impl.Widget;
 
 /**
  *

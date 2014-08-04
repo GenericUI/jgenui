@@ -21,6 +21,9 @@ package net.nexustools.gui.geom;
  */
 public class Vec4f extends Vec3f {
 	
+	public float x;
+	public float y;
+	public float z;
 	public float w;
 	
 	public Vec4f() {}
@@ -44,5 +47,41 @@ public class Vec4f extends Vec3f {
 		set((Vec3f)other);
 		this.w = other.w;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Vec4f other = (Vec4f) obj;
+		if (Float.floatToIntBits(this.x) != Float.floatToIntBits(other.x)) {
+			return false;
+		}
+		if (Float.floatToIntBits(this.y) != Float.floatToIntBits(other.y)) {
+			return false;
+		}
+		if (Float.floatToIntBits(this.z) != Float.floatToIntBits(other.z)) {
+			return false;
+		}
+		if (Float.floatToIntBits(this.w) != Float.floatToIntBits(other.w)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 79 * hash + Float.floatToIntBits(this.x);
+		hash = 79 * hash + Float.floatToIntBits(this.y);
+		hash = 79 * hash + Float.floatToIntBits(this.z);
+		hash = 79 * hash + Float.floatToIntBits(this.w);
+		return hash;
+	}
+	
+	
 	
 }

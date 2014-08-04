@@ -32,9 +32,9 @@ import net.nexustools.concurrent.PropMap;
 import net.nexustools.concurrent.WriteReader;
 import net.nexustools.event.DefaultEventDispatcher;
 import net.nexustools.event.EventDispatcher;
-import net.nexustools.gui.Base;
-import net.nexustools.gui.StyleRoot;
-import net.nexustools.gui.Widget;
+import net.nexustools.gui.impl.Base;
+import net.nexustools.gui.impl.StyleRoot;
+import net.nexustools.gui.impl.Widget;
 import net.nexustools.gui.event.LAFListener;
 import net.nexustools.gui.event.LAFListener.LAFEvent;
 import net.nexustools.gui.render.StyleSheet;
@@ -234,7 +234,7 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 	
 	private final Prop<String> laf = new Prop();
 	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
-	public Platform(String name) {
+	protected Platform(String name) {
         super(name + "-RunQueue");
         System.out.println("Spawning Platform `" + name + '`');
 		populate(new BaseRegistry() {
@@ -242,6 +242,7 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 				typeMap.put(type, creator);
 			}
 		});
+        makeCurrent();
 	}
 	
 	protected abstract void populate(BaseRegistry baseRegistry);

@@ -88,7 +88,7 @@ public class BoxLayout implements Layout<LayoutObject> {
 				float x = 0;
 				for(LayoutObject child : container) {
 					Size newSize = child.minimumSize();
-					child.setBounds(new Rect(x, 0, newSize.w, containerHeight));
+					child.updateBounds(new Rect(x, 0, newSize.w, containerHeight));
 					x += newSize.w;
 				}
 			}
@@ -100,7 +100,7 @@ public class BoxLayout implements Layout<LayoutObject> {
 				float y = 0;
 				for(LayoutObject child : container) {
 					Size newSize = child.minimumSize();
-					child.setBounds(new Rect(0, y, containerWidth, newSize.h));
+					child.updateBounds(new Rect(0, y, containerWidth, newSize.h));
 					y += newSize.h;
 				}
 			}
