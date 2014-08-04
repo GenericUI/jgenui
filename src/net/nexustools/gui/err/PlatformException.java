@@ -13,28 +13,17 @@
  * 
  */
 
-package net.nexustools.gui.impl;
-
-import net.nexustools.gui.event.ActionListener;
+package net.nexustools.gui.err;
 
 /**
  *
  * @author katelyn
  */
-public interface Activateable {
+public class PlatformException extends RuntimeException {
 	
-	public Image icon();
-	
-	public Shortcut shortcut();
-	public void setShortcut(Shortcut shortcut);
-	
-	public void addActionListener(ActionListener actionListener);
-	public void removeActionListener(ActionListener actionListener);
-	
-	public boolean selectable();
-	public void setSelected(boolean selected);
-	public boolean isSelected();
-
-	public void activate();
+	public PlatformException() {}
+	public PlatformException(String msg) {
+		super(msg);
+	}
 	
 }

@@ -15,10 +15,32 @@
 
 package net.nexustools.gui.impl;
 
+import net.nexustools.gui.err.UnsupportedPlatformOperation;
+
 /**
  *
  * @author katelyn
  */
 public interface Body extends Window {
+	
+	/**
+	 * 
+	 * @return The widget representing the Body's title, null if not supported by platform
+	 */
+	public Widget titleWidget();
+	
+	/**
+	 * Sets the Title Widget of this Body to something custom.
+	 * 
+	 * @param widget
+	 * @throws UnsupportedPlatformOperation If the underlying platform does not allow modifying the title widget, such as on most Desktop platforms.
+	 */
+	public void setTitleWidget(Widget widget) throws UnsupportedPlatformOperation;
+	
+	public void addAction(Action action);
+	public boolean hasAction(Action action);
+	public void insertAction(Action action, int at);
+	public void removeAction(Action action);
+	public int indexOfAction(Action action);
 	
 }

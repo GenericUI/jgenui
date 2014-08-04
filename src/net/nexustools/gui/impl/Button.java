@@ -21,6 +21,7 @@ package net.nexustools.gui.impl;
  */
 public interface Button extends TextWidget, Activateable {
 	
+	public void setIcon(Image image);
 	public AbstractAction action();
 	
 }

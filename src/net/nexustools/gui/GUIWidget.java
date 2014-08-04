@@ -1,7 +1,9 @@
+package net.nexustools.gui;
 
-import net.nexustools.concurrent.BaseAccessor;
+
 import net.nexustools.concurrent.BaseReader;
 import net.nexustools.concurrent.BaseWriter;
+import net.nexustools.concurrent.Lockable;
 import net.nexustools.concurrent.ReadWriteConcurrency;
 import net.nexustools.concurrent.ReadWriteLock;
 import net.nexustools.concurrent.Reader;
@@ -54,9 +56,19 @@ public class GUIWidget<W extends Widget> implements Widget, ReadWriteConcurrency
 	protected final W impl;
 	protected final Platform platform;
 	protected final ReadWriteLock<W> lock = new ReadWriteLock();
-	public GUIWidget(Class<W> baseClass, Platform platform) {
-		impl = platform.create(baseClass);
+	GUIWidget(W instance, Platform platform) {
+		impl = instance;
 		this.platform = platform;
+	}
+	protected GUIWidget(Class<? extends Widget> baseClass, Platform platform) {
+		impl = (W)platform.create(baseClass);
+		this.platform = platform;
+	}
+	protected GUIWidget(Platform platform) {
+		this(Widget.class, platform);
+	}
+	protected GUIWidget() {
+		this(Widget.class, Platform.current());
 	}
 
 	public W directAccessor() {
@@ -584,6 +596,10 @@ public class GUIWidget<W extends Widget> implements Widget, ReadWriteConcurrency
 
 	public <R> R read(BaseReader<R, W> reader) {
 		return lock.read(impl, reader);
+	}
+
+	public Lockable<W> lockable() {
+		return lock;
 	}
 	
 }

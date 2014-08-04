@@ -13,52 +13,49 @@
  * 
  */
 
-package net.nexustools.gui.impl;
+package net.nexustools.gui;
 
-import net.nexustools.concurrent.Prop;
+import net.nexustools.gui.impl.Frame;
+import net.nexustools.gui.impl.Menu;
+import net.nexustools.gui.impl.Toolbar;
+import net.nexustools.gui.impl.Window;
+import net.nexustools.gui.platform.Platform;
+import net.nexustools.gui.render.StyleSheet;
 
 /**
  *
  * @author katelyn
  */
-public final class Action extends AbstractAction {
-	
-	Prop<String> text = new Prop();
-	public Action() {}
-	public Action(String text) {
-		setText(text);
-	}
+public class GUIWindow<W extends Window> extends GUIFrame<W> implements Window {
 
-	public void setText(String text) {
-		this.text.set(text);
+	GUIWindow(W instance, Platform platform) {
+		super(instance, platform);
+	}
+	protected GUIWindow(Class<? extends Window> windowClass, Platform platform) {
+		super(windowClass, platform);
 	}
 	
-	public String text() {
-		return text.get();
-	}
-
-	public boolean selectable() {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-	
-	public void setSelectable(boolean selectable) {
-		
-	}
-
-	@Override
-	public void setSelected(boolean selected) {
+	public Menu menu(String pos) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
-	public boolean isSelected() {
+	public void addMenu(String pos, Menu menu) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
-	public Image icon() {
+	public void addToolbar(Toolbar toolbar) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
-	public void setIcon(Image image) {
+	public void removeToolbar(Toolbar toolbar) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	public StyleSheet styleSheet() {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	public void setStyleSheet(StyleSheet styleSheet) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 	

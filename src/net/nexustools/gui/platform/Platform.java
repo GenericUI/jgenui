@@ -16,6 +16,8 @@
 
 package net.nexustools.gui.platform;
 
+import net.nexustools.gui.err.UnsupportedBaseType;
+import net.nexustools.gui.err.PlatformException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
@@ -247,10 +249,10 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 	
 	protected abstract void populate(BaseRegistry baseRegistry);
 	
-	public final <B extends Base> B create(Class<B> type) throws UnsupportedBaseTypeException{
+	public final <B extends Base> B create(Class<B> type) throws UnsupportedBaseType{
 		Creator<B, Platform> creator = typeMap.get(type);
 		if(creator == null)
-			throw new UnsupportedBaseTypeException();
+			throw new UnsupportedBaseType();
 		return creator.create(this);
 	}
 	public final Widget parse(String path) throws PlatformException{

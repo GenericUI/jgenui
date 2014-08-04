@@ -27,20 +27,10 @@ import net.nexustools.gui.geom.Size;
  */
 public interface ContentHolder<T> extends Widget, Iterable<T> {
 	
-	public static interface ContentIterator<T> {
-		public void iterate(ListIterator<T> it);
-	}
-	
-	/**
-	 * Creates a write lock and than runs the content iterator.
-	 * Allows advanced modification of the widget within a locked environment.
-	 * 
-	 * @param it The ContentIterator to use
-	 */
-	public void iterate(ContentIterator<T> it);
-	
 	public Rect contentBounds();
 	public Point contentOffset();
 	public Size contentSize();
+	
+	public ListIterator<T> listIterator();
 	
 }

@@ -13,16 +13,16 @@
  * 
  */
 
-package net.nexustools.gui.platform;
+package net.nexustools.gui.err;
 
 /**
  *
  * @author katelyn
  */
-public class PlatformException extends RuntimeException {
-	
-	public PlatformException() {}
-	public PlatformException(String msg) {
+public class UnsupportedBaseType extends PlatformException {
+
+	public UnsupportedBaseType() {}
+	public UnsupportedBaseType(String msg) {
 		super(msg);
 	}
 	
