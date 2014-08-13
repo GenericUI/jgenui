@@ -21,6 +21,16 @@ import net.nexustools.utils.Creator;
  *
  * @author katelyn
  */
-public interface List<I> extends Input<I>, Options<I, List> {
-
+public interface AdvList<I> extends List<I> {
+	
+	public Creator<Widget, I> cellCreator();
+	public void setCellCreator(Creator<Widget, I> cellCreator);
+	
+	/**
+	 * Adds a creator which can display details about selected items.
+	 * 
+	 * @param detailCreator 
+	 */
+	public void setDetailCreator(Creator<Widget, I> detailCreator);
+	
 }
