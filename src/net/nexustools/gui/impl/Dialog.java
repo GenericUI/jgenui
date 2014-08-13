@@ -26,4 +26,11 @@ public interface Dialog extends Window {
 	public boolean isModal();
 	public void setModal(boolean modal);
 	
+	public Action neutralAction();
+	public Action positiveAction();
+	public Action negativeAction();
+	public void setNeutralAction(Action action);
+	public void setPositiveAction(Action action);
+	public void setNegativeAction(Action action);
+	
 }

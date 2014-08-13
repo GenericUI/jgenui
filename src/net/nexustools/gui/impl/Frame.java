@@ -33,5 +33,6 @@ public interface Frame extends Container {
 	 * @param mainWidget The widget to act as a mainWidget
 	 */
 	public void setMainWidget(Widget mainWidget);
+	public Widget mainWidget();
 	
 }

@@ -220,7 +220,8 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 		 */
 		FastCanvas,
 		
-		AccurateTimers
+		AccurateTimers,
+		MultipleBodies
 	}
 	
 	static {
@@ -234,11 +235,13 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 		public <B extends Widget, P extends GUIPlatform> void add(Class<B> type, Creator<B, P> creator);
 	}
 	
+	private final String name;
 	private final Prop<String> laf = new Prop();
 	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
 	protected GUIPlatform(String name) {
         super(name + "-RunQueue");
         System.out.println("Spawning Platform `" + name + '`');
+		this.name = name;
         makeCurrent();
 	}
 	
@@ -324,6 +327,11 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	@Override
 	public final void makeCurrent() {
 		current.set(this);
+	}
+
+	@Override
+	public String toString() {
+		return name;
 	}
     
 }

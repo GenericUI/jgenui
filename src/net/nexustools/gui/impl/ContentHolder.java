@@ -34,8 +34,8 @@ public interface ContentHolder<T> extends Widget, Iterable<T> {
 	public Point contentOffset();
 	public Size contentSize();
 	
-	public Widget findByID(ID id);
-	public Iterable<Widget> searchByID(ID id);
+	public Widget findByID(String id);
+	public Iterable<Widget> searchByID(String id);
 	public Iterable<Widget> search(ID.Path path);
 	
 	public void iterate(PropList.PropIterator<T> widget);

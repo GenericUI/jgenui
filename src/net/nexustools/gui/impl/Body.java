@@ -27,7 +27,7 @@ public interface Body extends Window {
 	 * 
 	 * @return The widget representing the Body's title, null if not supported by platform
 	 */
-	public Widget titleWidget();
+	public Label titleWidget();
 	
 	/**
 	 * Sets the Title Widget of this Body to something custom.
@@ -35,11 +35,22 @@ public interface Body extends Window {
 	 * @param widget
 	 * @throws UnsupportedPlatformOperation If the underlying platform does not allow modifying the title widget, such as on most Desktop platforms.
 	 */
-	public void setTitleWidget(Widget widget) throws UnsupportedPlatformOperation;
+	public void setTitleWidget(Label widget) throws UnsupportedPlatformOperation;
+	
+	public Widget glassWidget();
+	public void setGlassWidget(Widget widget);
 	
 	public void addAction(Action action);
 	public void insertAction(Action action, Action after);
 	public void removeAction(Action action);
 	public void clearActions();
+	
+	public Action nextAction();
+	public void setNextAction(Action action);
+	
+	public Frame pop();
+	public Frame peek();
+	public void push(Frame frame);
+	public Frame current();
 	
 }

@@ -16,6 +16,7 @@
 package net.nexustools.gui.style;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -47,6 +48,13 @@ public class ID {
 		this.tag = tag;
 		this.states = states;
 		this.properties = values;
+	}
+	public ID(final String id) {
+		this(null, null, new HashMap<String,String>() {
+			{
+				put("id", id);
+			}
+		});
 	}
 	
 }

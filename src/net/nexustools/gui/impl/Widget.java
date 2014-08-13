@@ -17,6 +17,9 @@ package net.nexustools.gui.impl;
 
 import net.nexustools.concurrent.BaseAccessor;
 import net.nexustools.data.Storage;
+import net.nexustools.data.annote.FieldDispatcher;
+import net.nexustools.data.annote.FieldGetter;
+import net.nexustools.data.annote.FieldSetter;
 import net.nexustools.event.EventListenerRedirect;
 import net.nexustools.event.FocusListener;
 import net.nexustools.event.VisibilityListener;
@@ -39,14 +42,21 @@ import net.nexustools.gui.style.StyleSheet;
  */
 public interface Widget extends Renderable, LayoutObject {
 	
+	@FieldGetter
 	public String id();
+	@FieldSetter
 	public void setID(String name);
 	
+	@FieldGetter
 	public String tag();
+	@FieldSetter
 	public void setTag(String name);
 	
-	public boolean isVisible();
+	@FieldGetter
 	public boolean isOnscreen();
+	@FieldGetter
+	public boolean isVisible();
+	@FieldSetter
 	public void setVisible(boolean visible);
 	
 	public Menu contextMenu();
@@ -57,16 +67,22 @@ public interface Widget extends Renderable, LayoutObject {
 	public boolean hasClass(String clazz);
 	public void removeClass(String clazz);
 	
+	public String[] psuedoStates();
+	
 	// Events
 	public void addMoveListener(MoveListener<Widget> moveListener);
 	public void addSizeListener(SizeListener<Widget> sizeListener);
+	@FieldDispatcher(attach = true)
 	public void addVisibilityListener(VisibilityListener<Widget> visibilityListener);
+	@FieldDispatcher(attach = true)
 	public void addOnscreenListener(OnscreenListener<Widget> onscreenListener);
 	public void addFocusListener(FocusListener<Widget> focusListener);
 	
 	public void removeMoveListener(MoveListener<Widget> moveListener);
 	public void removeSizeListener(SizeListener<Widget> sizeListener);
+	@FieldDispatcher(attach = false)
 	public void removeVisibilityListener(VisibilityListener<Widget> visibilityListener);
+	@FieldDispatcher(attach = false)
 	public void removeOnscreenListener(OnscreenListener<Widget> onscreenListener);
 	public void removeFocusListener(FocusListener<Widget> focusListener);
 	
@@ -93,7 +109,9 @@ public interface Widget extends Renderable, LayoutObject {
 	
 	public StyleSheet activeStyleSheet();
 	
+	@FieldGetter
 	public boolean enabled();
+	@FieldSetter
 	public void setEnabled(boolean enabled);
 	
 	/**
@@ -108,18 +126,18 @@ public interface Widget extends Renderable, LayoutObject {
 	 */
 	public Style style();
 	
-	// Dynamic Properties
-	public Storage storage();
-	
-	// Focus1
+	// Focus
 	public boolean hasFocus();
 	public void requestFocus();
 	
+	@FieldGetter
 	public boolean isFocusable();
+	@FieldSetter
 	public void setFocusable(boolean focusable);
 
 	public void showMenu(AbstractMenu menu, Point at);
 	
+	@FieldGetter
 	public GUIPlatform platform();
 	public Widget effective();
 	

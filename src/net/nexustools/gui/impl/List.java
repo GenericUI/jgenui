@@ -22,11 +22,9 @@ import net.nexustools.utils.Creator;
  * @author katelyn
  */
 public interface List<I> extends Input<I>, Options<I, List> {
-
+	
 	/**
-	 * Adds a creator which can display details about selected items when sufficient room is available.
-	 * A detail widget may never actually be used by the underlying platform, so do not rely on it,
-	 * instead use a TabContainer with tabs on the Left or Right to get the same effect.
+	 * Adds a creator which can display details about selected items.
 	 * 
 	 * @param detailCreator 
 	 */
