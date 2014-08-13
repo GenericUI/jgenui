@@ -13,17 +13,19 @@
  * 
  */
 
-package net.nexustools.gui.err;
+package net.nexustools.gui.style;
 
 /**
  *
  * @author katelyn
  */
-public class UnsupportedBaseType extends PlatformException {
-
-	public UnsupportedBaseType() {}
-	public UnsupportedBaseType(String msg) {
-		super(msg);
+public class StyleRule<V> {
+	
+	public final V value;
+	public final String key;
+	public StyleRule(String key, V value) {
+		this.key = key;
+		this.value = value;
 	}
 	
 }

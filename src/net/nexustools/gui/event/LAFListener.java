@@ -17,15 +17,15 @@ package net.nexustools.gui.event;
 
 import java.util.EventListener;
 import net.nexustools.event.Event;
-import net.nexustools.gui.platform.Platform;
+import net.nexustools.gui.platform.GUIPlatform;
 
 /**
  *
  * @author katelyn
  */
-public interface LAFListener<S extends Platform> extends EventListener {
+public interface LAFListener<S extends GUIPlatform> extends EventListener {
 	
-	public static class LAFEvent<S extends Platform> extends Event<S> {
+	public static class LAFEvent<S extends GUIPlatform> extends Event<S> {
 		public final String lafName;
 		public LAFEvent(String lafName, S source) {
 			super(source);

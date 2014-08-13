@@ -16,10 +16,7 @@
 
 package net.nexustools.gui.platform;
 
-import net.nexustools.gui.err.UnsupportedBaseType;
-import net.nexustools.gui.err.PlatformException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,13 +31,17 @@ import net.nexustools.concurrent.PropMap;
 import net.nexustools.concurrent.WriteReader;
 import net.nexustools.event.DefaultEventDispatcher;
 import net.nexustools.event.EventDispatcher;
-import net.nexustools.gui.impl.Base;
-import net.nexustools.gui.impl.StyleRoot;
-import net.nexustools.gui.impl.Widget;
+import net.nexustools.gui.err.GUIPlatformException;
+import net.nexustools.gui.err.UnsupportedWidgetType;
 import net.nexustools.gui.event.LAFListener;
 import net.nexustools.gui.event.LAFListener.LAFEvent;
-import net.nexustools.gui.render.StyleSheet;
-import net.nexustools.io.format.StreamReader;
+import net.nexustools.gui.impl.Widget;
+import net.nexustools.gui.style.StyleRoot;
+import net.nexustools.gui.style.StyleSheet;
+import net.nexustools.io.Stream;
+import net.nexustools.io.format.JSONParser;
+import net.nexustools.io.format.StringParser;
+import net.nexustools.io.format.XMLParser;
 import net.nexustools.runtime.ThreadedRunQueue;
 import net.nexustools.utils.Creator;
 
@@ -49,13 +50,13 @@ import net.nexustools.utils.Creator;
  * @author katelyn
  * 
  */
-public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
+public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot {
 	
-	private static final ThreadLocal<Platform> current = new ThreadLocal();
-	private static final PropMap<Class<? extends Platform>, Platform> platformsByClass = new PropMap();
-	private static final PropMap<String, Platform> platformsByName = new PropMap();
+	private static final ThreadLocal<GUIPlatform> current = new ThreadLocal();
+	private static final PropMap<Class<? extends GUIPlatform>, GUIPlatform> platformsByClass = new PropMap();
+	private static final PropMap<String, GUIPlatform> platformsByName = new PropMap();
 	private static final PropMap<String, StyleSheet> cssLAFs = new PropMap();
-	private static final PropList<Platform> allPlatforms = new PropList();
+	private static final PropList<GUIPlatform> allPlatforms = new PropList();
 	private static boolean needScanPlatforms = true;
 	
 	public static void registerLAF(String name, String path) throws IOException, URISyntaxException {
@@ -72,7 +73,7 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 						}
 					}
 				}))
-			for(final Platform platform : allPlatforms)
+			for(final GUIPlatform platform : allPlatforms)
 				platform.eventDispatcher.dispatch(new EventDispatcher.Processor<LAFListener, LAFEvent>() {
 					public LAFEvent create() {
 						return new LAFEvent(name, platform);
@@ -82,9 +83,17 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 					}
 				});
 	}
+
+	public static void resolve() {
+		if(current.get() == null) {
+			GUIPlatform resolved = allPlatforms.first();
+			
+			current.set(resolved);
+		}
+	}
 	
 	protected void lafChanged(final String name) {
-		for(final Platform platform : allPlatforms)
+		for(final GUIPlatform platform : allPlatforms)
 			platform.eventDispatcher.dispatch(new EventDispatcher.Processor<LAFListener, LAFEvent>() {
 				public LAFEvent create() {
 					return new LAFEvent(name, platform);
@@ -113,27 +122,27 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 		}
 	}
 	
-	public static Platform current() {
+	public static GUIPlatform current() {
 		return current.get();
 	}
 	
 	public static void scanPlatforms() {
 		needScanPlatforms = false;
 	}
-	public static void register(Platform platform) {
+	public static void register(GUIPlatform platform) {
 		if(allPlatforms.unique(platform)) {
 			platformsByName.put(platform.name(), platform);
 			platformsByClass.put(platform.getClass(), platform);
 		}
 	}
 	
-	public static Platform byName(String name) {
+	public static GUIPlatform byName(String name) {
 		if(needScanPlatforms)
 			scanPlatforms();
 		return platformsByName.get(name);
 	}
-	public static Platform byClass(Class<? extends Platform> pClass) {
-		Platform platform = platformsByClass.get(pClass);
+	public static GUIPlatform byClass(Class<? extends GUIPlatform> pClass) {
+		GUIPlatform platform = platformsByClass.get(pClass);
 		if(platform == null) {
 			try {
 				platform = pClass.newInstance();
@@ -146,17 +155,17 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 		}
 		return platform;
 	}
-	public static Platform best(Feature[] desired) {
+	public static GUIPlatform best(Feature[] desired) {
 		return best(desired, new Feature[0]);
 	}
-	public static Platform best(Feature[] desired, Feature[] required) {
+	public static GUIPlatform best(Feature[] desired, Feature[] required) {
 		if(needScanPlatforms)
 			scanPlatforms();
 		
-		List<Platform> compatible = allPlatforms.copy();
-		Iterator<Platform> it = compatible.iterator();
+		List<GUIPlatform> compatible = allPlatforms.copy();
+		Iterator<GUIPlatform> it = compatible.iterator();
 		while(it.hasNext()) {
-			Platform platform = it.next();
+			GUIPlatform platform = it.next();
 			for(Feature req : required)
 				if(!platform.supports(req)) {
 					it.remove();
@@ -211,16 +220,7 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 		 */
 		FastCanvas,
 		
-		AccurateTimers,
-		/**
-		 * Indicates whether or not this platform can have multiple bodies,
-		 * a body is essentially a main window.
-		 * 
-		 * Mobile, Web and Text platforms generally don't support this feature.
-		 * Desktop platforms usually do, but Windows 8 can complicate that.
-		 * 
-		 */
-		MultipleBodies
+		AccurateTimers
 	}
 	
 	static {
@@ -230,36 +230,59 @@ public abstract class Platform extends ThreadedRunQueue implements StyleRoot {
 		} catch (URISyntaxException ex) {}
 	}
 	
-	public static interface BaseRegistry {
-		public <B extends Base, P extends Platform> void add(Class<B> type, Creator<B, P> creator);
+	public static interface WidgetRegistry {
+		public <B extends Widget, P extends GUIPlatform> void add(Class<B> type, Creator<B, P> creator);
 	}
 	
 	private final Prop<String> laf = new Prop();
 	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
-	protected Platform(String name) {
+	protected GUIPlatform(String name) {
         super(name + "-RunQueue");
         System.out.println("Spawning Platform `" + name + '`');
-		populate(new BaseRegistry() {
-			public <B extends Base, P extends Platform> void add(Class<B> type, Creator<B, P> creator) {
-				typeMap.put(type, creator);
-			}
-		});
         makeCurrent();
 	}
 	
-	protected abstract void populate(BaseRegistry baseRegistry);
+	protected abstract void populate(WidgetRegistry baseRegistry);
 	
-	public final <B extends Base> B create(Class<B> type) throws UnsupportedBaseType{
-		Creator<B, Platform> creator = typeMap.get(type);
+	protected void initTypes() {
+		if(typeMap.isEmpty())
+			populate(new WidgetRegistry() {
+				public <B extends Widget, P extends GUIPlatform> void add(Class<B> type, Creator<B, P> creator) {
+					typeMap.put(type, creator);
+				}
+			});
+	}
+	
+	public final <B extends Widget> B create(Class<B> type) throws UnsupportedWidgetType{
+		initTypes();
+		
+		Creator<B, GUIPlatform> creator = typeMap.get(type);
 		if(creator == null)
-			throw new UnsupportedBaseType();
+			throw new UnsupportedWidgetType();
 		return creator.create(this);
 	}
-	public final Widget parse(String path) throws PlatformException{
-		throw new UnsupportedOperationException("Not yet supported.");
+	public final Widget parse(String path) throws GUIPlatformException, IOException, URISyntaxException{
+		Stream stream = Stream.open(path);
+		String mimetype = stream.getMimeType();
+		if(mimetype.endsWith("/xml"))
+			return parse(new XMLParser(stream));
+		else if(mimetype.endsWith("/json"))
+			return parse(new JSONParser(stream));
+		else
+			throw new GUIPlatformException("No parser for: " + mimetype);
 	}
-	public final Widget parse(StreamReader processor) throws PlatformException{
-		throw new UnsupportedOperationException("Not yet supported.");
+	public final Widget parse(XMLParser xmlParser) throws GUIPlatformException{
+		return null;
+	}
+	public final Widget parse(JSONParser jsonParser) throws GUIPlatformException{
+		return null;
+	}
+	public final Widget parse(StringParser parser) throws GUIPlatformException{
+		if(parser instanceof XMLParser)
+			return parse((XMLParser)parser);
+		else if(parser instanceof JSONParser)
+			return parse((JSONParser)parser);
+		throw new GUIPlatformException("Cannot use: " + parser.getClass().getName());
 	}
 	
 	public abstract boolean supports(Feature feature);

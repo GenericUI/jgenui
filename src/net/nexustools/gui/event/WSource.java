@@ -13,16 +13,12 @@
  * 
  */
 
-package net.nexustools.gui.impl;
+package net.nexustools.gui.event;
 
 /**
- * Acts as another widget, by proxying the underlying widget.
- * 
+ *
  * @author katelyn
  */
-public interface WidgetProxy extends Widget {
-	
-	public Widget target();
-	public void setTarget(Widget other);
+public interface WSource {
 	
 }

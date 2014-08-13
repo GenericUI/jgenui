@@ -13,55 +13,27 @@
  * 
  */
 
-package net.nexustools.gui.render;
+package net.nexustools.gui.style;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.Iterator;
 import net.nexustools.concurrent.MapAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
 import net.nexustools.concurrent.SoftWriteReader;
-import net.nexustools.concurrent.WriteReader;
-import net.nexustools.gui.impl.List;
 import net.nexustools.io.Stream;
-import net.nexustools.utils.Pair;
 
 /**
  * 
  * 
  * @author katelyn
  */
-public class StyleSheet {
-	
-	/**
-	 * A element identifier,
-	 * consists of a tag, state, and list of values to match.
-	 * 
-	 * The tag, and values, can be null or "*" implying a "catch-all".
-	 */
-	public static class ID {
-		public final String tag;
-		public final String state;
-		public final Map<String,String> values;
-		
-		public ID(String tag, String state, Map<String,String> values) {
-			this.tag = tag;
-			this.state = state;
-			this.values = values;
-		}
-	}
-	
-	/**
-	 * A element path, consisting of identifiers.
-	 * This allows for selecting elements within a specific hierarchy.
-	 */
-	public static class Path extends ArrayList<ID> {}
+public class StyleSheet implements Iterable<StyleBlock> {
 	
 	public static interface Matcher {
-		public boolean matches(Path id);
+		public boolean matches(ID.Path id);
 	}
 	
 	/**
@@ -94,12 +66,12 @@ public class StyleSheet {
 		protected Selector(String selector) {
 			
 		}
-		public boolean matches(Path id) {
+		public boolean matches(ID.Path id) {
 			return false;
 		}
 	}
 	
-	private final PropList<Pair<Path, Style>> rules = new PropList();
+	private final PropList<StyleBlock> rules = new PropList();
 	public StyleSheet(InputStream inStream) {
 	}
 	public StyleSheet(Stream stream) throws IOException {
@@ -108,12 +80,9 @@ public class StyleSheet {
 	public StyleSheet(String path) throws IOException, URISyntaxException {
 		this(Stream.open(path));
 	}
-	
-	public void inherit(Style style, Matcher matcher) {
-		for(Pair<Path, Style> stylePair : rules) {
-			if(matcher.matches(stylePair.i))
-				style.inherit(stylePair.v);
-		}
+
+	public Iterator<StyleBlock> iterator() {
+		return rules.iterator();
 	}
 	
 }

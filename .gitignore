@@ -20,3 +20,4 @@
 *~
 /platforms/jgenui-awt/build/
 /platforms/web/target/
+*.DS_Store

@@ -21,13 +21,22 @@ package net.nexustools.gui.platform;
  */
 public interface MimeStorage {
 	
+	static enum ContentType {
+		String,
+		Number,
+		Image,
+		Audio
+	}
+	
 	public String string();
 	public void setString(String string);
 	
 	public double number();
 	public void setNumber(double number);
 	
-	public Object get(String mime);
-	public void put(String mime, Object data);
+	public boolean supports(ContentType type);
+	
+	public Object get(ContentType type);
+	public void put(ContentType type, Object data);
 	
 }

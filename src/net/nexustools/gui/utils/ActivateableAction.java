@@ -17,6 +17,7 @@ package net.nexustools.gui.utils;
 
 import net.nexustools.gui.impl.AbstractAction;
 import net.nexustools.gui.impl.Activateable;
+import net.nexustools.gui.impl.Image;
 
 /**
  *
@@ -40,6 +41,10 @@ public class ActivateableAction extends AbstractAction {
 
 	public boolean isSelected() {
 		return deligate.isSelected();
+	}
+
+	public Image icon() {
+		return deligate.icon();
 	}
 	
 }

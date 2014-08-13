@@ -25,7 +25,7 @@ import net.nexustools.runtime.RunQueue;
  *
  * @author katelyn
  */
-public abstract class AbstractAction implements Activateable, MenuItem, Base {
+public abstract class AbstractAction implements Activateable, MenuItem {
 	
 	private DefaultEventDispatcher<RunQueue, ActionListener, ActionEvent> actionDispatcher = new DefaultEventDispatcher(RunQueue.current());
 	public abstract String text();

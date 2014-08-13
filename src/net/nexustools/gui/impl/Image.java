@@ -15,11 +15,15 @@
 
 package net.nexustools.gui.impl;
 
+import java.io.InputStream;
+import net.nexustools.gui.render.Renderer;
+import net.nexustools.io.Stream;
+
 /**
  *
  * @author katelyn
  */
-public interface Image extends Widget, Playback {
+public interface Image extends Widget {
 	
 	public static enum Mode {
 		/**
@@ -47,7 +51,18 @@ public interface Image extends Widget, Playback {
 	public Mode mode();
 	public void setMode(Mode mode);
 	
+	public float speed();
+	public void setSpeed(float speed);
+	
+	public void load(String uri);
+	public void load(Stream stream);
+	public void load(InputStream inStream);
+	
+	public void setLoadRenderer(Renderer renderer);
+	public Renderer loadRenderer();
+	
 	public int currentFrame();
+	public void setCurrentFrame(int frame);
 	public int countFrames();
 
 }

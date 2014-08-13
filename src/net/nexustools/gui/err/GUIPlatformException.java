@@ -13,15 +13,17 @@
  * 
  */
 
-package net.nexustools.gui.impl;
+package net.nexustools.gui.err;
 
 /**
  *
  * @author katelyn
  */
-public interface TextWidget extends Widget {
+public class GUIPlatformException extends RuntimeException {
 	
-	public String text();
-	public void setText(String text);
+	public GUIPlatformException() {}
+	public GUIPlatformException(String msg) {
+		super(msg);
+	}
 	
 }

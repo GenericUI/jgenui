@@ -23,7 +23,15 @@ import net.nexustools.gui.render.Renderer;
  */
 public interface Canvas extends Widget {
 	
-	public Renderer overlayRenderer();
-	public void setOverlayRenderer(Renderer renderer);
+	// Common layers
+	public static final int OVERLAY = 500;
+	
+	public static final int GUI = 1000;
+	public static final int GUI_DIALOGS = GUI+1;
+	public static final int GUI_NOTIFICATIONS = GUI+2;
+	public static final int GUI_MENUS = GUI+3;
+	
+	public Renderer layerRenderer(int layer);
+	public void setLayerRenderer(Renderer renderer, int layer);
 	
 }

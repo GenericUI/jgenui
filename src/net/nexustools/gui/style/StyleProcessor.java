@@ -13,11 +13,20 @@
  * 
  */
 
-package net.nexustools.gui.impl;
+package net.nexustools.gui.style;
+
+import net.nexustools.io.format.StringParser;
+import net.nexustools.io.format.StringParserException;
+import net.nexustools.io.format.StringReader;
 
 /**
- * A base GenUI object
- * 
+ *
  * @author katelyn
  */
-public interface Base {}
+public class StyleProcessor extends StringParser<StyleBlock> {
+	
+	public StyleBlock parse(StringReader reader) throws StringParserException {
+		return null;
+	}
+	
+}

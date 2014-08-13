@@ -24,9 +24,9 @@ import net.nexustools.gui.event.LAFListener;
  *
  * @author katelyn
  */
-public class PlatformUtils {
+public class GUIPlatformUtils {
 	
-	public static ComboBox createLAFController(final Platform platform) {
+	public static ComboBox createLAFController(final GUIPlatform platform) {
 		final ComboBox<String> comboBox = (ComboBox) platform.create(ComboBox.class);
         comboBox.setTemplate("LAF: ####");
 		comboBox.setOptions(platform.LAFs());

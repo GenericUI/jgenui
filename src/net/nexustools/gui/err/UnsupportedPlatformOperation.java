@@ -19,6 +19,6 @@ package net.nexustools.gui.err;
  *
  * @author katelyn
  */
-public class UnsupportedPlatformOperation extends PlatformException {
+public class UnsupportedPlatformOperation extends GUIPlatformException {
 	
 }

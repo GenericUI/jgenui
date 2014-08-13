@@ -15,14 +15,16 @@
 
 package net.nexustools.gui.impl;
 
+import net.nexustools.gui.style.StyleRoot;
+
 /**
  *
  * @author katelyn
  */
 public interface Window extends Frame, StyleRoot {
 	
-	public Menu menu(String pos);
-	public void addMenu(String pos, Menu menu);
+	public Menu menuBar();
+	public void setMenuBar(Menu menu);
 	
 	public void addToolbar(Toolbar toolbar);
 	public void removeToolbar(Toolbar toolbar);

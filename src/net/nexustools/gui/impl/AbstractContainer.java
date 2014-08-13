@@ -22,7 +22,10 @@ package net.nexustools.gui.impl;
 public interface AbstractContainer extends ContentHolder<Widget> {
 	
 	public void add(Widget widget);
+	public void insert(Widget widget, int at);
 	public void remove(Widget widget);
+	public Widget childAt(int pos);
 	public int childCount();
+	
 	
 }

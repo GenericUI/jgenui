@@ -16,7 +16,7 @@
 package net.nexustools.gui.impl;
 
 import net.nexustools.concurrent.BaseAccessor;
-import net.nexustools.concurrent.ReadWriteConcurrency;
+import net.nexustools.data.Storage;
 import net.nexustools.event.EventListenerRedirect;
 import net.nexustools.event.FocusListener;
 import net.nexustools.event.VisibilityListener;
@@ -27,17 +27,20 @@ import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Size;
 import net.nexustools.gui.layout.LayoutObject;
-import net.nexustools.gui.platform.Platform;
+import net.nexustools.gui.platform.GUIPlatform;
 import net.nexustools.gui.render.Renderable;
 import net.nexustools.gui.render.Renderer;
-import net.nexustools.gui.render.Style;
-import net.nexustools.gui.render.StyleSheet;
+import net.nexustools.gui.style.Style;
+import net.nexustools.gui.style.StyleSheet;
 
 /**
  *
  * @author katelyn
  */
-public interface Widget extends BaseAccessor, Renderable, LayoutObject, Base {
+public interface Widget extends Renderable, LayoutObject {
+	
+	public String id();
+	public void setID(String name);
 	
 	public String tag();
 	public void setTag(String name);
@@ -93,8 +96,20 @@ public interface Widget extends BaseAccessor, Renderable, LayoutObject, Base {
 	public boolean enabled();
 	public void setEnabled(boolean enabled);
 	
-	
+	/**
+	 * Gets the style object associated with this Widget.
+	 * 
+	 * Each widget may implement its own version of the style object,
+	 * with support for a different set of selectors and rules.
+	 * So make sure to instanceof with the interface you desire from
+	 * the net.nexustools.gui.style package.
+	 * 
+	 * @return 
+	 */
 	public Style style();
+	
+	// Dynamic Properties
+	public Storage storage();
 	
 	// Focus1
 	public boolean hasFocus();
@@ -104,5 +119,8 @@ public interface Widget extends BaseAccessor, Renderable, LayoutObject, Base {
 	public void setFocusable(boolean focusable);
 
 	public void showMenu(AbstractMenu menu, Point at);
+	
+	public GUIPlatform platform();
+	public Widget effective();
 	
 }

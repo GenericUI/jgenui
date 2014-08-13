@@ -19,7 +19,7 @@ package net.nexustools.gui.impl;
  *
  * @author katelyn
  */
-public interface TextEditor extends TextWidget {
+public interface TextEditor extends Widget {
 	
 	public String getPlaceholder();
 	public void setPlaceholder();

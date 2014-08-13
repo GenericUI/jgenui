@@ -13,14 +13,40 @@
  * 
  */
 
-package net.nexustools.gui.platform;
+package net.nexustools.gui.style;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
- *
+ * A Style Selector Identifier.
+ * 
  * @author katelyn
  */
-public interface Theme {
+public class ID {
 	
+	public static class Path extends ArrayList<ID> {}
 	
+	/**
+	 * The tag this id references.
+	 */
+	public final String tag;
+
+	/**
+	 * The :states or ::seudo-states this ID selects.
+	 */
+	public final String[] states;
+
+	/**
+	 * The properties this id selects,
+	 * 
+	 */
+	public final Map<String,String> properties;
+
+	public ID(String tag, String[] states, Map<String,String> values) {
+		this.tag = tag;
+		this.states = states;
+		this.properties = values;
+	}
 	
 }

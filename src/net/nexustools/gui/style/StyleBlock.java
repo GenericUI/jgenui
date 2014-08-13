@@ -13,18 +13,20 @@
  * 
  */
 
-package net.nexustools.gui.impl;
+package net.nexustools.gui.style;
 
 /**
  *
  * @author katelyn
  */
-public interface Playback {
+public class StyleBlock {
 	
-	public boolean isPlaying();
+	public final ID.Path path;
+	public final StyleRule[] rules;
 	
-	public void play();
-	public void pause();
-	public void stop();
+	public StyleBlock(ID.Path path, StyleRule[] rules) {
+		this.path = path;
+		this.rules = rules;
+	}
 	
 }

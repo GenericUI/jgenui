@@ -15,8 +15,6 @@
 
 package net.nexustools.gui.impl;
 
-import net.nexustools.event.SelectionListener;
-
 /**
  *
  * @author katelyn

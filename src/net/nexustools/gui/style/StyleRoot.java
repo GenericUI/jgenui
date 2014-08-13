@@ -13,12 +13,15 @@
  * 
  */
 
-package net.nexustools.gui.impl;
+package net.nexustools.gui.style;
 
 /**
  *
  * @author katelyn
  */
-public abstract class OptionsMenu<I> extends AbstractMenu implements Options<I, OptionsMenu> {
+public interface StyleRoot {
+	
+	public StyleSheet styleSheet();
+	public void setStyleSheet(StyleSheet styleSheet);
 	
 }

@@ -19,9 +19,8 @@ package net.nexustools.gui.impl;
  *
  * @author katelyn
  */
-public interface Button extends TextWidget, Activateable {
+public interface Button extends Label, Activateable {
 	
-	public void setIcon(Image image);
 	public AbstractAction action();
 	
 }

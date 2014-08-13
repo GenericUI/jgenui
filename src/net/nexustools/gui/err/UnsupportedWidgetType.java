@@ -13,19 +13,17 @@
  * 
  */
 
-package net.nexustools.gui.impl;
-
-import net.nexustools.io.Stream;
+package net.nexustools.gui.err;
 
 /**
  *
  * @author katelyn
  */
-public interface StreamSelector extends SingleInput<String> {
-	
-	public String[] filters();
-	public void setFilters(String[] filters);
-	
-	public Stream open();
+public class UnsupportedWidgetType extends GUIPlatformException {
+
+	public UnsupportedWidgetType() {}
+	public UnsupportedWidgetType(String msg) {
+		super(msg);
+	}
 	
 }

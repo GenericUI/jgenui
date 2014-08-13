@@ -23,7 +23,7 @@ import net.nexustools.concurrent.ReadWriteLock;
  *
  * @author katelyn
  */
-public abstract class AbstractMenu implements Iterable<MenuItem>, MenuItem, Base {
+public abstract class AbstractMenu implements Iterable<MenuItem>, MenuItem {
 	
 	private Shortcut shortcut;
 	public void show(Widget from, Point at) {

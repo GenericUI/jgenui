@@ -38,9 +38,8 @@ public interface Body extends Window {
 	public void setTitleWidget(Widget widget) throws UnsupportedPlatformOperation;
 	
 	public void addAction(Action action);
-	public boolean hasAction(Action action);
-	public void insertAction(Action action, int at);
+	public void insertAction(Action action, Action after);
 	public void removeAction(Action action);
-	public int indexOfAction(Action action);
+	public void clearActions();
 	
 }

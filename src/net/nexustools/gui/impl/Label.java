@@ -19,6 +19,11 @@ package net.nexustools.gui.impl;
  *
  * @author katelyn
  */
-public interface Label extends TextWidget {
+public interface Label extends Widget {
+	
+	public Image icon();
+	public String text();
+	public void setText(String text);
+	public void setIcon(Image image);
 	
 }

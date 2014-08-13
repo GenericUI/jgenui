@@ -15,10 +15,13 @@
 
 package net.nexustools.gui.impl;
 
+import java.util.Iterator;
 import java.util.ListIterator;
+import net.nexustools.concurrent.PropList;
 import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;
 import net.nexustools.gui.geom.Size;
+import net.nexustools.gui.style.ID;
 
 /**
  *
@@ -31,6 +34,11 @@ public interface ContentHolder<T> extends Widget, Iterable<T> {
 	public Point contentOffset();
 	public Size contentSize();
 	
-	public ListIterator<T> listIterator();
+	public Widget findByID(ID id);
+	public Iterable<Widget> searchByID(ID id);
+	public Iterable<Widget> search(ID.Path path);
+	
+	public void iterate(PropList.PropIterator<T> widget);
+	public void clearContent();
 	
 }

@@ -24,6 +24,7 @@ import net.nexustools.gui.event.ActionListener;
 public interface Activateable {
 	
 	public Image icon();
+	public String text();
 	
 	public Shortcut shortcut();
 	public void setShortcut(Shortcut shortcut);
