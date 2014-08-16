@@ -15,27 +15,12 @@
 
 package net.nexustools.gui.impl;
 
-import net.nexustools.utils.Pair;
 
 /**
  *
  * @author katelyn
  */
-public interface TabWidget extends ContentHolder<Pair<String, Widget>> {
+public interface AbstractTable<I> extends CellWidget<I> {
 	
-	/**
-	 * Adds a new tab to this widget.
-	 * 
-	 * @param content Content of this tab
-	 * @param title Title to give this tab
-	 */
-	public void setTab(String title, Widget content);
-	
-	/**
-	 * Removes a tab by its title.
-	 * 
-	 * @param title 
-	 */
-	public void remove(String title);
 	
 }

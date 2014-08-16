@@ -15,8 +15,6 @@
 
 package net.nexustools.gui.impl;
 
-import java.util.Iterator;
-import java.util.ListIterator;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Rect;

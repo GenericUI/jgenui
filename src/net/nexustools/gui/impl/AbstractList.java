@@ -15,12 +15,8 @@
 
 package net.nexustools.gui.impl;
 
-
 /**
  *
  * @author katelyn
  */
-public interface Table<I> extends AdvList<I[]> {
-	
-	
-}
+public interface AbstractList<I> extends Input<I>, CellWidget<I> {}

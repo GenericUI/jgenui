@@ -22,13 +22,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import net.nexustools.concurrent.IfWriter;
+import net.nexustools.concurrent.logic.IfWriter;
 import net.nexustools.concurrent.MapAccessor;
 import net.nexustools.concurrent.Prop;
 import net.nexustools.concurrent.PropAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
-import net.nexustools.concurrent.WriteReader;
+import net.nexustools.concurrent.logic.WriteReader;
 import net.nexustools.event.DefaultEventDispatcher;
 import net.nexustools.event.EventDispatcher;
 import net.nexustools.gui.err.GUIPlatformException;
@@ -44,6 +44,7 @@ import net.nexustools.io.format.StringParser;
 import net.nexustools.io.format.XMLParser;
 import net.nexustools.runtime.ThreadedRunQueue;
 import net.nexustools.utils.Creator;
+import net.nexustools.utils.log.Logger;
 
 /**
  *
@@ -58,6 +59,10 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	private static final PropMap<String, StyleSheet> cssLAFs = new PropMap();
 	private static final PropList<GUIPlatform> allPlatforms = new PropList();
 	private static boolean needScanPlatforms = true;
+	
+	public static GUIPlatform findRichestImpl() {
+		return null;
+	}
 	
 	public static void registerLAF(String name, String path) throws IOException, URISyntaxException {
 		registerLAF(name, new StyleSheet(path));
@@ -114,12 +119,7 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	}
 	
 	static {
-		try {
-			registerLAF("Blank", "resource:/net/nexustools/gui/lafs/Blank.css");
-			registerLAF("HyperSpace", "resource:/net/nexustools/gui/lafs/HyperSpace.css");
-		} catch (IOException ex) {
-		} catch (URISyntaxException ex) {
-		}
+		// TODO: Scan resource:/net/nexustools/gui/lafs/
 	}
 	
 	public static GUIPlatform current() {
@@ -224,13 +224,6 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 		MultipleBodies
 	}
 	
-	static {
-		try {
-			registerLAF("Blank", "resource:/net/nexustools/gui/blank.css");
-		} catch (IOException ex) {
-		} catch (URISyntaxException ex) {}
-	}
-	
 	public static interface WidgetRegistry {
 		public <B extends Widget, P extends GUIPlatform> void add(Class<B> type, Creator<B, P> creator);
 	}
@@ -240,7 +233,7 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
 	protected GUIPlatform(String name) {
         super(name + "-RunQueue");
-        System.out.println("Spawning Platform `" + name + '`');
+        Logger.debug("Spawning Platform `" + name + '`');
 		this.name = name;
         makeCurrent();
 	}
@@ -327,6 +320,7 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	@Override
 	public final void makeCurrent() {
 		current.set(this);
+		register(this);
 	}
 
 	@Override

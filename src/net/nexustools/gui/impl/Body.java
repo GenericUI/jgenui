@@ -48,9 +48,4 @@ public interface Body extends Window {
 	public Action nextAction();
 	public void setNextAction(Action action);
 	
-	public Frame pop();
-	public Frame peek();
-	public void push(Frame frame);
-	public Frame current();
-	
 }

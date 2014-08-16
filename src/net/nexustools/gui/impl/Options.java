@@ -19,7 +19,7 @@ package net.nexustools.gui.impl;
  *
  * @author katelyn
  */
-public interface Options<I, S> {
+public interface Options<I> {
 	
 	public I[] options();
 	public void setOptions(I... options);

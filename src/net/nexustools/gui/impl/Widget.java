@@ -89,7 +89,17 @@ public interface Widget extends Renderable, LayoutObject {
 	public void uninstallRedirect(EventListenerRedirect<Widget> redirect);
 	public void installRedirect(EventListenerRedirect<Widget> redirect);
 	
-	// Cache Boundaries
+	// Boundaries
+	public Point pos();
+	public Size size();
+	public Rect bounds();
+	
+	public void move(int x, int y);
+	public void move(Point pos);
+	
+	public void resize(int w, int h);
+	public void resize(Size size);
+	
 	public Rect visibleBounds();
 	public Rect topBounds();
 	

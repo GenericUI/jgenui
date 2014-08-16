@@ -15,9 +15,9 @@
 
 package net.nexustools.gui.impl;
 
+import net.nexustools.concurrent.Prop;
 import net.nexustools.gui.geom.Point;
 import net.nexustools.gui.geom.Size;
-import net.nexustools.concurrent.ReadWriteLock;
 
 /**
  *
@@ -25,7 +25,7 @@ import net.nexustools.concurrent.ReadWriteLock;
  */
 public abstract class AbstractMenu implements Iterable<MenuItem>, MenuItem {
 	
-	private Shortcut shortcut;
+	private Prop<Shortcut> shortcut = new Prop();
 	public void show(Widget from, Point at) {
 		from.showMenu(this, at);
 	}
@@ -35,10 +35,10 @@ public abstract class AbstractMenu implements Iterable<MenuItem>, MenuItem {
 	}
 	
 	public Shortcut getShortcut() {
-		return null;
+		return shortcut.get();
 	}
 	public void setShortcut(Shortcut shortcut) {
-		
+		this.shortcut.set(shortcut);
 	}
 	
 	public abstract String text();

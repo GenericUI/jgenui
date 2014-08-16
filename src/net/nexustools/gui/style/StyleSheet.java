@@ -22,7 +22,7 @@ import java.util.Iterator;
 import net.nexustools.concurrent.MapAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
-import net.nexustools.concurrent.SoftWriteReader;
+import net.nexustools.concurrent.logic.SoftWriteReader;
 import net.nexustools.io.Stream;
 
 /**

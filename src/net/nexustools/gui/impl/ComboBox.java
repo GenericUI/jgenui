@@ -19,7 +19,7 @@ package net.nexustools.gui.impl;
  *
  * @author katelyn
  */
-public interface ComboBox<I> extends List<I>, SingleInput<I> {
+public interface ComboBox<I> extends AbstractList<I>, SingleInput<I>, Options<I> {
 	
 	public boolean isEditable();
 	public void setEditable(boolean editable);

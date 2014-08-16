@@ -15,12 +15,10 @@
 
 package net.nexustools.gui.impl;
 
-import net.nexustools.utils.Creator;
-
 /**
  *
  * @author katelyn
  */
-public interface List<I> extends Input<I>, Options<I, List> {
+public interface List<I> extends Input<I>, Options<I> {
 
 }
