@@ -143,16 +143,15 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	}
 	public static GUIPlatform byClass(Class<? extends GUIPlatform> pClass) {
 		GUIPlatform platform = platformsByClass.get(pClass);
-		if(platform == null) {
+		if(platform == null)
 			try {
 				platform = pClass.newInstance();
-				register(platform);
+		        Logger.quote("Spawned Platform", platform);
 			} catch (InstantiationException ex) {
 				throw new RuntimeException(ex);
 			} catch (IllegalAccessException ex) {
 				throw new RuntimeException(ex);
 			}
-		}
 		return platform;
 	}
 	public static GUIPlatform best(Feature[] desired) {
@@ -233,7 +232,6 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	private final HashMap<Class<?>, Creator> typeMap = new HashMap();
 	protected GUIPlatform(String name) {
         super(name + "-RunQueue");
-        Logger.debug("Spawning Platform `" + name + '`');
 		this.name = name;
         makeCurrent();
 	}

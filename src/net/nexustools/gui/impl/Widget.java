@@ -15,8 +15,6 @@
 
 package net.nexustools.gui.impl;
 
-import net.nexustools.concurrent.BaseAccessor;
-import net.nexustools.data.Storage;
 import net.nexustools.data.annote.FieldDispatcher;
 import net.nexustools.data.annote.FieldGetter;
 import net.nexustools.data.annote.FieldSetter;

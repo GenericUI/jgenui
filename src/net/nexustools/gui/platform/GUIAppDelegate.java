@@ -16,9 +16,13 @@
 package net.nexustools.gui.platform;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+
 import net.nexustools.AppDelegate;
 import net.nexustools.gui.impl.Body;
+import net.nexustools.utils.Pair;
 import net.nexustools.utils.log.Logger;
 
 /**
@@ -51,10 +55,35 @@ public abstract class GUIAppDelegate<B extends Body, P extends GUIPlatform> exte
 		body.setVisible(true);
 	}
 	protected abstract void populate(String[] args, B body);
-	
-    public static void main(String[] args) throws IOException, URISyntaxException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-		Class<? extends GUIAppDelegate> guiDelegate = (Class<? extends GUIAppDelegate>) Class.forName(args[0]);
-		guiDelegate.newInstance();
+
+    public static GUIAppDelegate start(String[] args) throws NoSuchMethodException, ClassNotFoundException {
+    	return start((Class<? extends GUIAppDelegate>)Class.forName(System.getProperty("")), args);
     }
-	
+    public static GUIAppDelegate start(Class<? extends GUIAppDelegate> guiDelegate, String[] args) throws NoSuchMethodException {
+		try {
+			return tryConstruct(guiDelegate, new Pair(String[].class, args), new Pair(String.class, defaultName()), new Pair(String.class, defaultOrganization()));
+		} catch(Throwable t) {}
+		try {
+			return tryConstruct(guiDelegate, new Pair(String[].class, args));
+		} catch(Throwable t) {}
+		try {
+			GUIAppDelegate delegate = tryConstruct(guiDelegate);
+			Logger.warn("Arguments were ignored by created AppDelegate");
+			return delegate;
+		} catch(Throwable t) {}
+		
+		throw new NoSuchMethodException("No valid constructors found in class: " + guiDelegate.getName());
+    }
+    
+    private static GUIAppDelegate tryConstruct(Class<? extends GUIAppDelegate> delegate, Pair<Class<?>, ?>... args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+		Class<?>[] argClasses = new Class[args.length];
+		Object[] argObjects = new Object[args.length];
+		for(int i=0; i<args.length; i++) {
+			argClasses[i] = args[i].i;
+			argObjects[i] = args[i].v;
+		}
+		Constructor<? extends GUIAppDelegate> constructor = delegate.getConstructor(argClasses);
+		return constructor.newInstance(argObjects);
+    }
+    
 }
