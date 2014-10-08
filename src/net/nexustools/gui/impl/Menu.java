@@ -16,10 +16,10 @@
 package net.nexustools.gui.impl;
 
 import java.util.Iterator;
-import net.nexustools.concurrent.ListAccessor;
 import net.nexustools.concurrent.Prop;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.logic.Writer;
+import net.nexustools.data.accessor.ListAccessor;
 
 /**
  *

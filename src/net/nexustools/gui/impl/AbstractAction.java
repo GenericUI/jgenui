@@ -19,7 +19,8 @@ import net.nexustools.gui.event.ActionListener;
 import net.nexustools.gui.event.ActionListener.ActionEvent;
 import net.nexustools.event.DefaultEventDispatcher;
 import net.nexustools.event.EventDispatcher;
-import net.nexustools.runtime.RunQueue;
+import net.nexustools.gui.platform.GUIPlatform;
+import net.nexustools.tasks.TaskQueue;
 
 /**
  *
@@ -27,7 +28,7 @@ import net.nexustools.runtime.RunQueue;
  */
 public abstract class AbstractAction implements Activateable, MenuItem {
 	
-	private DefaultEventDispatcher<RunQueue, ActionListener, ActionEvent> actionDispatcher = new DefaultEventDispatcher(RunQueue.current());
+	private DefaultEventDispatcher<TaskQueue, ActionListener, ActionEvent> actionDispatcher = new DefaultEventDispatcher(GUIPlatform.current());
 	public abstract String text();
 
 	public final Shortcut shortcut() {

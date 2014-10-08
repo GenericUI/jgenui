@@ -23,12 +23,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import net.nexustools.concurrent.logic.IfWriter;
-import net.nexustools.concurrent.MapAccessor;
 import net.nexustools.concurrent.Prop;
-import net.nexustools.concurrent.PropAccessor;
 import net.nexustools.concurrent.PropList;
 import net.nexustools.concurrent.PropMap;
 import net.nexustools.concurrent.logic.WriteReader;
+import net.nexustools.data.accessor.MapAccessor;
+import net.nexustools.data.accessor.PropAccessor;
 import net.nexustools.event.DefaultEventDispatcher;
 import net.nexustools.event.EventDispatcher;
 import net.nexustools.gui.err.GUIPlatformException;
@@ -42,7 +42,7 @@ import net.nexustools.io.Stream;
 import net.nexustools.io.format.JSONParser;
 import net.nexustools.io.format.StringParser;
 import net.nexustools.io.format.XMLParser;
-import net.nexustools.runtime.ThreadedRunQueue;
+import net.nexustools.tasks.ThreadedTaskQueue;
 import net.nexustools.utils.Creator;
 import net.nexustools.utils.log.Logger;
 
@@ -51,7 +51,7 @@ import net.nexustools.utils.log.Logger;
  * @author katelyn
  * 
  */
-public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot {
+public abstract class GUIPlatform extends ThreadedTaskQueue implements StyleRoot {
 	
 	private static final ThreadLocal<GUIPlatform> current = new ThreadLocal();
 	private static final PropMap<Class<? extends GUIPlatform>, GUIPlatform> platformsByClass = new PropMap();
@@ -131,7 +131,7 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	}
 	public static void register(GUIPlatform platform) {
 		if(allPlatforms.unique(platform)) {
-			platformsByName.put(platform.name(), platform);
+			platformsByName.put(platform.name, platform);
 			platformsByClass.put(platform.getClass(), platform);
 		}
 	}
@@ -161,7 +161,7 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 		if(needScanPlatforms)
 			scanPlatforms();
 		
-		List<GUIPlatform> compatible = allPlatforms.copy();
+		List<GUIPlatform> compatible = allPlatforms.toList();
 		Iterator<GUIPlatform> it = compatible.iterator();
 		while(it.hasNext()) {
 			GUIPlatform platform = it.next();
@@ -257,7 +257,7 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	}
 	public final Widget parse(String path) throws GUIPlatformException, IOException, URISyntaxException{
 		Stream stream = Stream.open(path);
-		String mimetype = stream.getMimeType();
+		String mimetype = stream.mimeType();
 		if(mimetype.endsWith("/xml"))
 			return parse(new XMLParser(stream));
 		else if(mimetype.endsWith("/json"))
@@ -315,7 +315,6 @@ public abstract class GUIPlatform extends ThreadedRunQueue implements StyleRoot 
 	
 	public abstract void open(String url);
 	
-	@Override
 	public final void makeCurrent() {
 		current.set(this);
 		register(this);

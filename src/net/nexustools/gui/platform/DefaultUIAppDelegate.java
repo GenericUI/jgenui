@@ -17,6 +17,7 @@ package net.nexustools.gui.platform;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
 import net.nexustools.DefaultAppDelegate;
 import static net.nexustools.Application.defaultName;
 import static net.nexustools.Application.defaultOrganization;
@@ -30,6 +31,7 @@ import net.nexustools.utils.log.Logger;
  */
 public abstract class DefaultUIAppDelegate<B extends Body, P extends GUIPlatform> extends DefaultAppDelegate<P> {
 	
+	private final P platform;
 	protected DefaultUIAppDelegate(String[] args, P platform) {
 		this(args, defaultName(), defaultOrganization(), platform);
 	}
@@ -37,13 +39,16 @@ public abstract class DefaultUIAppDelegate<B extends Body, P extends GUIPlatform
 		this(args, name, organization, (P)GUIPlatform.findRichestImpl());
 	}
 	protected DefaultUIAppDelegate(String[] args, String name, String organization, P platform) {
-		super(args, name, organization, platform);
+		super(args, name, organization);
+		this.platform = platform;
 	}
 	
 	protected B create() {
-		return (B) queue().create(Body.class);
+		return (B) platform.create(Body.class);
 	}
-	protected void launch(String[] args) {
+
+	@Override
+	protected Runnable launch(String[] args) throws Throwable {
 		Logger.debug("Creating GUI Body");
 		B body = create();
 
@@ -52,6 +57,15 @@ public abstract class DefaultUIAppDelegate<B extends Body, P extends GUIPlatform
 
 		Logger.debug("Showing GUI Body");
 		body.setVisible(true);
+		
+		return new Runnable() {
+			public void run() {
+				while(true)
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException ex) {}
+			}
+		};
 	}
 	protected abstract void populate(String[] args, B body);
 
